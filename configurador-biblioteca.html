@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mueca — configurador biblioteca</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blanco: #ffffff; --crema-fondo: #fcfbfa; --vison-suave: #ebe7e0;
+            --vison-oscuro: #8c857b; --negro-mueca: #242423; --encabezado-amarillo: #FFC770;
+            --madera-activa: #eaddca; --madera-dark-activa: #c8b7a0;
+            --texto-suave: #666666; --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--crema-fondo); color: var(--negro-mueca); }
+        
+        /* HEADER UNIFICADO */
+        header { position: fixed; top: 0; width: 100%; background: var(--encabezado-amarillo); border-bottom: 1px solid rgba(0,0,0,0.08); z-index: 1000; height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; }
+        .logo a { display: flex; align-items: center; }
+        .logo img { height: 65px; width: auto; object-fit: contain; }
+        nav { display: flex; align-items: center; gap: 30px; }
+        .nav-links { display: flex; list-style: none; gap: 30px; align-items: center; }
+        .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 14px; font-weight: 600; }
+        
+.dropdown { position: relative; }
+        /* Corrección estricta para tus archivos */
+.dropdown-menu { 
+    display: none; 
+    position: absolute; 
+    top: 100%; 
+    left: 0; 
+    background: var(--blanco); 
+    min-width: 200px; 
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
+    border: 1px solid var(--vison-suave); 
+    list-style: none; 
+    padding: 10px 0; 
+    border-radius: 4px; 
+    margin-top: 0; /* Cambiado de 10px a 0 para eliminar el gap físico */
+    z-index: 1100;
+}
+
+/* El puente invisible usando tu clase exacta */
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -15px; /* Cubre de forma invisible el espacio hacia arriba por si acaso */
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: transparent;
+}
+
+/* Control del hover */
+.dropdown:hover .dropdown-menu { 
+    display: block; 
+}
+        .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
+        .dropdown:hover .dropdown-menu { display: block; }
+
+
+
+        /* REPOSITORIO INICIAL / CARRUSEL SUPERIOR DE FOTOS */
+.gallery-top-container { max-width: 1200px; margin: 100px auto 20px; padding: 0 20px; position: relative; overflow: hidden; }
+.gallery-top-track { display: flex; gap: 15px; transition: transform 0.3s ease-in-out; }
+
+/* CORRECCIÓN AQUÍ: Cambiamos min-width por width/max-width y forzamos el control del flexbox */
+.gallery-item-top { 
+    width: calc(25% - 12px); 
+    max-width: calc(25% - 12px);
+    min-width: calc(25% - 12px);
+    aspect-ratio: 4/3; 
+    background: var(--vison-suave); 
+    border-radius: 4px; 
+    overflow: hidden; 
+    flex-shrink: 0; 
+}
+
+/* Aseguramos que la imagen no empuje las paredes de la tarjeta */
+.gallery-item-top img { 
+    width: 100% !important; 
+    height: 100% !important; 
+    object-fit: cover !important; /* 'cover' va a hacer que llenen el recuadro estéticamente, cambialo a 'contain' si preferís que no se recorte nada */
+}
+
+.carousel-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: 1px solid var(--vison-suave); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: 800; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        /* ESTRUCTURA CONFIGURADOR */
+        .configurator-layout { display: flex; max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; gap: 30px; }
+        .canvas-panel { flex: 1.2; background: #f2f0ea; border-radius: 6px; display: flex; align-items: center; justify-content: center; padding: 30px; min-height: 480px; }
+        .control-panel { flex: 0.8; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; padding: 30px; display: flex; flex-direction: column; gap: 25px; }
+
+        .panel-title { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
+        .step-block { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--vison-suave); padding-bottom: 20px; }
+        .step-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--vison-oscuro); }
+        
+        .btn-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-opt { padding: 10px 16px; border: 1px solid var(--vison-suave); background: var(--blanco); border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
+        .btn-opt.selected { background: var(--negro-mueca); color: var(--blanco); border-color: var(--negro-mueca); }
+
+        .counter-row { display: flex; align-items: center; gap: 15px; }
+        .btn-counter { width: 36px; height: 36px; border: 1px solid var(--vison-suave); background: var(--blanco); font-size: 18px; cursor: pointer; font-weight: 600; border-radius: 4px; }
+        .counter-display { font-size: 14px; font-weight: 700; min-width: 170px; }
+
+        .summary-box { background: var(--crema-fondo); padding: 15px; border-radius: 4px; border: 1px dashed var(--vison-oscuro); font-family: monospace; font-size: 12px; white-space: pre-wrap; color: var(--negro-mueca); line-height: 1.4; }
+        .btn-submit { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 16px; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase; width: 100%; transition: var(--transition); }
+        .btn-submit:hover { background: #40403f; }
+
+        #tablero-biblioteca { width: 100%; }
+        svg { width: 100%; height: auto; overflow: visible; }
+
+/* --- BLOQUE DE CELULARES ACTUALIZADO --- */
+        @media(max-width: 768px) { 
+            /* Menú del Header para Móviles */
+            header {
+                flex-direction: column !important;
+                height: auto !important;
+                padding: 15px 5px !important;
+                position: relative !important; /* Libera el espacio fijo arriba */
+            }
+            nav {
+                flex-direction: column !important;
+                gap: 15px !important;
+                width: 100%;
+            }
+            .nav-links {
+                flex-direction: column !important;
+                gap: 15px !important;
+                width: 100%;
+                text-align: center;
+            }
+            .dropdown-menu {
+                position: relative !important; /* El desplegable ya no flota, empuja hacia abajo */
+                width: 100% !important;
+                box-shadow: none !important;
+                text-align: center;
+            }
+
+            /* Tamaños de tipografía adaptados */
+            .intro-text-block h1 {
+                font-size: 24px !important;
+            }
+            .text-block h2 {
+                font-size: 20px !important;
+            }
+
+            /* Estructuras en vertical (Lógica original tuya potenciada) */
+            .intro-hero-section { 
+                flex-direction: column-reverse; 
+                margin-top: 20px; /* Se achicó porque el header ya no tapa flotando */
+            } 
+            .novedad-slide { flex-direction: column; padding: 15px; }
+            .content-split-section, .content-split-section.reverse { flex-direction: column; gap: 30px; } 
+            
+            /* Forzar contención de imágenes */
+            .intro-image-block, .image-block, .novedad-img {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><a href="index.html"><img src="logo.png" alt="mueca logo"></a></div>
+        <nav>
+            <ul class="nav-links">
+                <li class="dropdown">
+                    <a href="index.html#novedades" style="text-decoration:none; color:var(--negro-mueca);">Muebles ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mesita-apoyo.html">Mesita de Apoyo</a></li>
+                        <li><a href="repisa-recibidor.html">Repisa Recibidor</a></li>
+                        <li><a href="hanger-modular.html">Hanger Modular</a></li>
+                        <li><a href="escritorio-colgante.html">Escritorio Colgante</a></li>
+                    </ul>
+                </li>
+                <li><a href="configurador-biblioteca.html" style="text-decoration:none; color:var(--negro-mueca);">Bibliotecas</a></li>
+                <li><a href="a-medida.html" style="text-decoration:none; color:var(--negro-mueca);">Especiales</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="gallery-top-container">
+        <button class="carousel-nav-btn" style="left:5px;" onclick="moveTopCarousel(-1)">‹</button>
+        <div class="gallery-top-track" id="topTrack">
+            <div class="gallery-item-top"><img src="biblioteca-1.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+1'"></div>
+            <div class="gallery-item-top"><img src="biblioteca-2.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+2'"></div>
+            <div class="gallery-item-top"><img src="biblioteca-3.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+3'"></div>
+            <div class="gallery-item-top"><img src="biblioteca-4.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+4'"></div>
+            <div class="gallery-item-top"><img src="biblioteca-5.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+5'"></div>
+            <div class="gallery-item-top"><img src="biblioteca-6.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+6'"></div>
+            <div class="gallery-item-top"><img src="biblioteca-7.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+7'"></div>
+            <div class="gallery-item-top"><img src="biblioteca-8.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+8'"></div>
+            <div class="gallery-item-top"><img src="biblioteca-9.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+9'"></div>
+            <div class="gallery-item-top"><img src="biblioteca-10.jpg" onerror="this.src='https://placehold.co/400x300?text=Ejemplo+10'"></div>
+        </div>
+        <button class="carousel-nav-btn" style="right:5px;" onclick="moveTopCarousel(1)">›</button>
+    </div>
+
+    <div class="configurator-layout">
+        <div class="canvas-panel">
+            <div id="tablero-biblioteca"></div>
+        </div>
+
+        <div class="control-panel">
+            <h2 class="panel-title">Configurador de Bibliotecas</h2>
+            
+            <div class="step-block">
+                <span class="step-title">Paso 1: Terminación</span>
+                <div class="btn-grid">
+                    <button class="btn-opt selected" onclick="changeFinish('Multilaminado Guatambú', this)">Multilaminado Guatambú</button>
+                    <button class="btn-opt" onclick="changeFinish('MDF Guatambú', this)">MDF Guatambú</button>
+                    <button class="btn-opt" onclick="changeFinish('Nogalina', this)">Nogalina</button>
+                    <button class="btn-opt" onclick="changeFinish('Negro', this)">Negro</button>
+                </div>
+            </div>
+
+            <div class="step-block">
+                <span class="step-title">Paso 2: Modulación Ancho</span>
+                <div class="counter-row">
+                    <button class="btn-counter" onclick="adjustWidth(-1)">−</button>
+                    <span id="label-ancho-cm" class="counter-display">Ancho: 63 cm</span>
+                    <button class="btn-counter" onclick="adjustWidth(1)">+</button>
+                </div>
+            </div>
+
+            <div class="step-block">
+                <span class="step-title">Paso 3: Modulación Alto</span>
+                <div class="counter-row">
+                    <button class="btn-counter" onclick="adjustHeight(-1)">−</button>
+                    <span id="label-alto-cm" class="counter-display">Alto: 41 cm</span>
+                    <button class="btn-counter" onclick="adjustHeight(1)">+</button>
+                </div>
+            </div>
+
+            <div class="step-block">
+                <span class="step-title">Despiece Técnico Encastrable</span>
+                <div id="library-summary" class="summary-box">Calculando...</div>
+            </div>
+
+            <button class="btn-submit" onclick="addLibraryToCart()">Añadir a la lista de consulta</button>
+        </div>
+    </div>
+
+    <script>
+        let currentTopIndex = 0;
+        function moveTopCarousel(dir) {
+            const track = document.getElementById('topTrack');
+            // Muestra 4 por pantalla, se desplaza de a 1 paso
+            currentTopIndex = Math.max(0, Math.min(currentTopIndex + dir, 6));
+            const widthItem = track.children[0].getBoundingClientRect().width + 15;
+            track.style.transform = `translateX(-${currentTopIndex * widthItem}px)`;
+        }
+
+        let cantCostillas = 2; 
+        let cantNiveles = 2;   
+        let terminacionBiblioteca = "Multilaminado Guatambú";
+        let celdasActivas = {}; 
+
+        function changeFinish(finishName, elem) {
+            terminacionBiblioteca = finishName;
+            elem.parentNode.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('selected'));
+            elem.classList.add('selected');
+            
+            if(finishName === 'Nogalina') {
+                document.documentElement.style.setProperty('--madera-activa', '#8b5a2b');
+                document.documentElement.style.setProperty('--madera-dark-activa', '#5c3a21');
+            } else if(finishName === 'Negro') {
+                document.documentElement.style.setProperty('--madera-activa', '#333333');
+                document.documentElement.style.setProperty('--madera-dark-activa', '#1a1a1a');
+            } else {
+                document.documentElement.style.setProperty('--madera-activa', '#eaddca');
+                document.documentElement.style.setProperty('--madera-dark-activa', '#c8b7a0');
+            }
+            buildTablero();
+        }
+
+        function adjustWidth(dir) {
+            let n = cantCostillas + dir;
+            if(n >= 2 && n <= 5) { cantCostillas = n; limpiarExcedentes(); buildTablero(); }
+        }
+
+        function adjustHeight(dir) {
+            let n = cantNiveles + dir;
+            if(n >= 2 && n <= 5) { cantNiveles = n; limpiarExcedentes(); buildTablero(); }
+        }
+
+        function limpiarExcedentes() {
+            const maxTramos = cantCostillas - 1;
+            for (let key in celdasActivas) {
+                let parts = key.split('-');
+                let nv = parseInt(parts[0]);
+                let tr = parseInt(parts[1]);
+                if (nv > cantNiveles || tr >= maxTramos) { delete celdasActivas[key]; }
+            }
+        }
+
+        function toggleCelda(nivel, tramo) {
+            let key = `${nivel}-${tramo}`;
+            if (celdasActivas[key]) { delete celdasActivas[key]; } else { celdasActivas[key] = true; }
+            buildTablero();
+        }
+
+        function buildTablero() {
+            const tramosAncho = cantCostillas - 1;
+            const anchoTotalCm = (tramosAncho * 57) + 6;
+            const altoTotalCm = ((cantNiveles - 1) * 35) + 6;
+
+            document.getElementById('label-ancho-cm').innerText = `Ancho: ${anchoTotalCm} cm`;
+            document.getElementById('label-alto-cm').innerText = `Alto: ${altoTotalCm} cm`;
+
+            const widthSvg = 600; const heightSvg = 450;
+            const paddingX = 70; const spaceX = (widthSvg - (paddingX * 2)) / 4;
+            
+            const posYPrimerNivel = 65; 
+            const distNivelY = 75;
+            const posYPercha = posYPrimerNivel + 12;
+
+            let svgContent = `<svg id="biblioteca-svg-element" viewBox="0 0 ${widthSvg} ${heightSvg}">`;
+            
+            let anchoPerchaPix = (tramosAncho * spaceX) + 20;
+            svgContent += `<rect x="${paddingX - 10}" y="${posYPercha}" width="${anchoPerchaPix}" height="7" rx="1" fill="var(--madera-dark-activa)" />`;
+
+            for(let c = 0; c < cantCostillas; c++) {
+                let xCostilla = paddingX + (c * spaceX);
+                let nivelMasBajoOcupado = 1;
+
+                for(let key in celdasActivas) {
+                    let parts = key.split('-');
+                    let nv = parseInt(parts[0]);
+                    let tr = parseInt(parts[1]);
+                    if (c === tr || c === (tr + 1)) {
+                        if (nv > nivelMasBajoOcupado) nivelMasBajoOcupado = nv;
+                    }
+                }
+
+                let yFinCostilla = posYPrimerNivel + ((nivelMasBajoOcupado - 1) * distNivelY) + 30;
+                svgContent += `<rect x="${xCostilla - 4}" y="${posYPrimerNivel - 12}" width="8" height="${yFinCostilla - (posYPrimerNivel - 12)}" rx="2" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="1"/>`;
+            }
+
+            for(let n = 1; n <= cantNiveles; n++) {
+                let yNivel = posYPrimerNivel + ((n - 1) * distNivelY);
+                for(let t = 0; t < tramosAncho; t++) {
+                    if (!celdasActivas[`${n}-${t}`]) {
+                        let xStart = paddingX + (t * spaceX) + 4;
+                        let wTramo = spaceX - 8;
+                        svgContent += `<line x1="${xStart}" y1="${yNivel}" x2="${xStart + wTramo}" y2="${yNivel}" stroke="#b0aaf5" stroke-width="1.5" stroke-dasharray="4,4" pointer-events="none" />`;
+                        svgContent += `<rect x="${xStart}" y="${yNivel - 12}" width="${wTramo}" height="24" fill="transparent" style="cursor:pointer;" onclick="toggleCelda(${n}, ${t})" />`;
+                    }
+                }
+            }
+
+            for(let n = 1; n <= cantNiveles; n++) {
+                let yNivel = posYPrimerNivel + ((n - 1) * distNivelY);
+                let t = 0;
+                while (t < tramosAncho) {
+                    if (celdasActivas[`${n}-${t}`]) {
+                        let tramoInicio = t;
+                        let longitud = 1;
+                        
+                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`]) {
+                            longitud++;
+                            t++;
+                        }
+
+                        let xStart = paddingX + (tramoInicio * spaceX) - 2;
+                        let wEstanteContiguo = (longitud * spaceX) + 4;
+
+                        svgContent += `<rect x="${xStart}" y="${yNivel - 4}" width="${wEstanteContiguo}" height="8" rx="1.5" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="1" />`;
+                        svgContent += `<rect x="${xStart}" y="${yNivel - 12}" width="${wEstanteContiguo}" height="24" fill="transparent" style="cursor:pointer;" onclick="removerBloqueAcumulado(${n}, ${tramoInicio}, ${longitud})" />`;
+                    }
+                    t++;
+                }
+            }
+
+            svgContent += `</svg>`;
+            document.getElementById('tablero-biblioteca').innerHTML = svgContent;
+            calcularDespieceEstructural();
+        }
+
+        function removerBloqueAcumulado(nivel, inicio, longitud) {
+            for (let i = 0; i < longitud; i++) { delete celdasActivas[`${nivel}-${inicio + i}`]; }
+            buildTablero();
+        }
+
+        let despieceGlobalTexto = "";
+        function calcularDespieceEstructural() {
+            let conteoEstantes = { simple: 0, doble: 0, triple: 0, cuadruple: 0 };
+            let conteoCostillasAlturas = { simple: 0, doble: 0, triple: 0, cuadruple: 0 };
+            const tramosAncho = cantCostillas - 1;
+
+            // Determinar altura individual de cada costilla física real
+            for(let c = 0; c < cantCostillas; c++) {
+                let maxNivelCostilla = 1;
+                for(let key in celdasActivas) {
+                    let parts = key.split('-');
+                    let nv = parseInt(parts[0]);
+                    let tr = parseInt(parts[1]);
+                    if(c === tr || c === (tr + 1)) {
+                        if(nv > maxNivelCostilla) maxNivelCostilla = nv;
+                    }
+                }
+                if(maxNivelCostilla === 1 || maxNivelCostilla === 2) conteoCostillasAlturas.simple++;
+                if(maxNivelCostilla === 3) conteoCostillasAlturas.doble++;
+                if(maxNivelCostilla === 4) conteoCostillasAlturas.triple++;
+                if(maxNivelCostilla === 5) conteoCostillasAlturas.cuadruple++;
+            }
+
+            // Agrupación automática de estantes contiguos
+            for(let n = 1; n <= cantNiveles; n++) {
+                let t = 0;
+                while (t < tramosAncho) {
+                    if (celdasActivas[`${n}-${t}`]) {
+                        let longitud = 1;
+                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`]) { longitud++; t++; }
+                        if(longitud === 1) conteoEstantes.simple++;
+                        if(longitud === 2) conteoEstantes.doble++;
+                        if(longitud === 3) conteoEstantes.triple++;
+                        if(longitud === 4) conteoEstantes.cuadruple++;
+                    }
+                    t++;
+                }
+            }
+
+            let tramosAnchoActual = cantCostillas - 1;
+            let desglose = `• PERCHA DE SOPORTE: 1 Unidad (${(tramosAnchoActual * 57) + 6} cm)\n• COSTILLAS:`;
+            if(conteoCostillasAlturas.simple > 0) desglose += `\n   - Simples (2 Niveles - 41cm): ${conteoCostillasAlturas.simple}`;
+            if(conteoCostillasAlturas.doble > 0) desglose += `\n   - Dobles (3 Niveles - 76cm): ${conteoCostillasAlturas.doble}`;
+            if(conteoCostillasAlturas.triple > 0) desglose += `\n   - Triples (4 Niveles - 111cm): ${conteoCostillasAlturas.triple}`;
+            if(conteoCostillasAlturas.cuadruple > 0) desglose += `\n   - Cuádruples (5 Niveles - 146cm): ${conteoCostillasAlturas.cuadruple}`;
+            
+            desglose += `\n• ESTANTES ACUMULADOS CONSECUTIVOS:`;
+            if(conteoEstantes.simple > 0) desglose += `\n   - Simples (57cm): ${conteoEstantes.simple}`;
+            if(conteoEstantes.doble > 0) desglose += `\n   - Dobles (114cm): ${conteoEstantes.doble}`;
+            if(conteoEstantes.triple > 0) desglose += `\n   - Triples (171cm): ${conteoEstantes.triple}`;
+            if(conteoEstantes.cuadruple > 0) desglose += `\n   - Cuádruples (228cm): ${conteoEstantes.cuadruple}`;
+            
+            despieceGlobalTexto = desglose;
+            document.getElementById('library-summary').innerText = desglose;
+        }
+
+        function addLibraryToCart() {
+            let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            const tramos = cantCostillas - 1;
+            const anchoTotalCm = (tramos * 57) + 6;
+            let svgString = "";
+            const svgElement = document.getElementById('biblioteca-svg-element');
+            if(svgElement) {
+                svgString = "data:image/svg+xml;base64," + btoa(new XMLSerializer().serializeToString(svgElement));
+            }
+
+            cart.push({
+                nombre: `biblioteca modular custom (${anchoTotalCm}cm ancho)`,
+                terminacion: terminacionBiblioteca,
+                esCustom: true,
+                despachado: despieceGlobalTexto,
+                svgDataImage: svgString
+            });
+            localStorage.setItem('mueca_cart', JSON.stringify(cart));
+            window.location.href = "index.html?openCart=true";
+        }
+
+        window.onload = buildTablero;
+    </script>
+</body>
+</html>

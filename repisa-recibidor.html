@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mueca — repisa recibidor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blanco: #ffffff; --crema-fondo: #fcfbfa; --vison-suave: #ebe7e0;
+            --vison-oscuro: #8c857b; --negro-mueca: #242423; --encabezado-amarillo: #FFC770;
+            --texto-suave: #666666; --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--blanco); color: var(--negro-mueca); line-height: 1.6; }
+        
+        header { position: fixed; top: 0; width: 100%; background: var(--encabezado-amarillo); border-bottom: 1px solid rgba(0,0,0,0.08); z-index: 1000; height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; }
+        .logo a { display: flex; align-items: center; }
+        .logo img { height: 80px; width: auto; object-fit: contain; }
+        nav { display: flex; align-items: center; gap: 30px; }
+        .nav-links { display: flex; list-style: none; gap: 30px; align-items: center; }
+        .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 14px; font-weight: 600; }
+        
+        .dropdown { position: relative; }
+        /* Corrección estricta para tus archivos */
+.dropdown-menu { 
+    display: none; 
+    position: absolute; 
+    top: 100%; 
+    left: 0; 
+    background: var(--blanco); 
+    min-width: 200px; 
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
+    border: 1px solid var(--vison-suave); 
+    list-style: none; 
+    padding: 10px 0; 
+    border-radius: 4px; 
+    margin-top: 0; /* Cambiado de 10px a 0 para eliminar el gap físico */
+    z-index: 1100;
+}
+
+/* El puente invisible usando tu clase exacta */
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -15px; /* Cubre de forma invisible el espacio hacia arriba por si acaso */
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: transparent;
+}
+
+/* Control del hover */
+.dropdown:hover .dropdown-menu { 
+    display: block; 
+}
+        .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
+        .dropdown:hover .dropdown-menu { display: block; }
+
+
+
+        .product-container { max-width: 1200px; margin: 120px auto 60px; display: flex; gap: 50px; padding: 0 20px; }
+        .product-gallery { flex: 1.2; position: relative; overflow: hidden; border-radius: 8px; background: var(--crema-fondo); aspect-ratio: 4/3; }
+        .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s ease-in-out; }
+        .carousel-slide { min-width: 100%; height: 100%; }
+        .carousel-slide img { width: 100%; height: 100%; object-fit: contain; }
+        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.8); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-weight: bold; z-index: 10; }
+
+        .product-info { flex: 0.8; display: flex; flex-direction: column; gap: 22px; }
+        .product-info h1 { font-size: 32px; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
+        .product-tagline { font-size: 15px; color: var(--texto-suave); }
+        
+        .option-group { display: flex; flex-direction: column; gap: 8px; }
+        .option-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--vison-oscuro); }
+        .selector-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-option { padding: 10px 18px; border: 1px solid var(--vison-suave); background: var(--blanco); border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition); }
+        .btn-option.selected { background: var(--negro-mueca); color: var(--blanco); border-color: var(--negro-mueca); }
+
+        .btn-add { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 16px; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: var(--transition); text-align: center; margin-top: 5px; }
+        .btn-add:hover { background: #40403f; }
+
+        .accordion { margin-top: 15px; border-top: 1px solid var(--vison-suave); }
+        .accordion-item { border-bottom: 1px solid var(--vison-suave); }
+        .accordion-header { padding: 15px 0; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; }
+        .accordion-content { padding-bottom: 15px; color: var(--texto-suave); font-size: 14px; display: none; line-height: 1.5; }
+        .accordion-item.active .accordion-content { display: block; }
+/* --- BLOQUE DE CELULARES ACTUALIZADO --- */
+        @media(max-width: 768px) { 
+            /* Menú del Header para Móviles */
+            header {
+                flex-direction: column !important;
+                height: auto !important;
+                padding: 15px 5px !important;
+                position: relative !important; /* Libera el espacio fijo arriba */
+            }
+            nav {
+                flex-direction: column !important;
+                gap: 15px !important;
+                width: 100%;
+            }
+            .nav-links {
+                flex-direction: column !important;
+                gap: 15px !important;
+                width: 100%;
+                text-align: center;
+            }
+            .dropdown-menu {
+                position: relative !important; /* El desplegable ya no flota, empuja hacia abajo */
+                width: 100% !important;
+                box-shadow: none !important;
+                text-align: center;
+            }
+
+            /* Tamaños de tipografía adaptados */
+            .intro-text-block h1 {
+                font-size: 24px !important;
+            }
+            .text-block h2 {
+                font-size: 20px !important;
+            }
+
+            /* Estructuras en vertical (Lógica original tuya potenciada) */
+            .intro-hero-section { 
+                flex-direction: column-reverse; 
+                margin-top: 20px; /* Se achicó porque el header ya no tapa flotando */
+            } 
+            .novedad-slide { flex-direction: column; padding: 15px; }
+            .content-split-section, .content-split-section.reverse { flex-direction: column; gap: 30px; } 
+            
+            /* Forzar contención de imágenes */
+            .intro-image-block, .image-block, .novedad-img {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><a href="index.html"><img src="logo.png" alt="mueca logo"></a></div>
+        <nav>
+            <ul class="nav-links">
+                <li class="dropdown">
+                    <a href="index.html#muebles">Muebles ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="mesita-apoyo.html">Mesita de Apoyo</a></li>
+                        <li><a href="repisa-recibidor.html">Repisa Recibidor</a></li>
+                        <li><a href="hanger-modular.html">Hanger Modular</a></li>
+                        <li><a href="escritorio-colgante.html">Escritorio Colgante</a></li>
+                    </ul>
+                </li>
+                <li><a href="configurador-biblioteca.html">Bibliotecas</a></li>
+                <li><a href="a-medida.html">Especiales</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="product-container">
+        <div class="product-gallery">
+            <button class="carousel-btn" style="left:20px;" onclick="moveCarousel(-1)">‹</button>
+            <div class="carousel-track" id="carouselTrack">
+                <div class="carousel-slide"><img src="repisa-recibidor-1.jpg" alt="Repisa 1" onerror="this.src='https://placehold.co/600x450?text=Repisa+1'"></div>
+		<div class="carousel-slide"><img src="repisa-recibidor-2.jpg" alt="Repisa 2" onerror="this.src='https://placehold.co/600x450?text=Repisa+2'"></div>
+		<div class="carousel-slide"><img src="repisa-recibidor-3.jpg" alt="Repisa 3" onerror="this.src='https://placehold.co/600x450?text=Repisa+3'"></div>
+            	</div>
+            <button class="carousel-btn" style="right:20px;" onclick="moveCarousel(1)">›</button>
+        </div>
+
+        <div class="product-info">
+            <div>
+                <h1>Repisa Recibidor</h1>
+                <p class="product-tagline">La síntesis del acceso. Una consola flotante diseñada para organizar objetos de paso diario con total liviandad.</p>
+            </div>
+
+            <div class="option-group">
+                <span class="option-label">Terminación</span>
+                <div class="selector-buttons">
+                    <button id="btn-finish-multi" class="btn-option selected" onclick="selectFinish('Multilaminado Guatambú')">Multilaminado Guatambú</button>
+                    <button id="btn-finish-mdf" class="btn-option" onclick="selectFinish('MDF Guatambú')">MDF Guatambú</button>
+                    <button id="btn-finish-nogalina" class="btn-option" onclick="selectFinish('Nogalina')">Nogalina</button>
+                    <button id="btn-finish-negro" class="btn-option" onclick="selectFinish('Negro')">Negro</button>
+                </div>
+            </div>
+
+            <button class="btn-add" onclick="agregarAlCarritoGlobal()">Añadir a la lista de consulta</button>
+
+            <div class="accordion">
+                <div class="accordion-item" onclick="toggleAccordion(this)">
+                    <div class="accordion-header">Descripción del Mueble <span>+</span></div>
+                    <div class="accordion-content">
+                        La consola recibidor resuelve el guardado rápido al ingresar a tu hogar. Su estante superior plano alberga correspondencia o llaves, mientras que su percha flotante de encastre sólido aporta elegancia sin ocupar espacio físico en el suelo.
+                    </div>
+                </div>
+                <div class="accordion-item" onclick="toggleAccordion(this)">
+                    <div class="accordion-header">Dimensiones y Especificaciones <span>+</span></div>
+                    <div class="accordion-content">
+                        • Ancho: 57 cm<br>• Profundidad: 20 cm<br>• Alto estructural: 35 cm
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+	let currentSlide = 0; 
+        let selectedFinish = 'Multilaminado Guatambú';
+function moveCarousel(dir) {
+            const track = document.getElementById('carouselTrack');
+            currentSlide = (currentSlide + dir + 3) % 3;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function selectFinish(val) {
+            selectedFinish = val;
+            document.getElementById('btn-finish-multi').classList.toggle('selected', val === 'Multilaminado Guatambú');
+            document.getElementById('btn-finish-mdf').classList.toggle('selected', val === 'MDF Guatambú');
+            document.getElementById('btn-finish-nogalina').classList.toggle('selected', val === 'Nogalina');
+            document.getElementById('btn-finish-negro').classList.toggle('selected', val === 'Negro');
+        }
+        function toggleAccordion(elem) {
+            elem.classList.toggle('active');
+            elem.querySelector('.accordion-header span').innerText = elem.classList.contains('active') ? '−' : '+';
+        }
+        function agregarAlCarritoGlobal() {
+            let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            cart.push({ nombre: 'repisa recibidor', terminacion: selectedFinish, esCustom: false });
+            localStorage.setItem('mueca_cart', JSON.stringify(cart));
+            window.location.href = "index.html?openCart=true";
+        }
+    </script>
+</body>
+</html>
