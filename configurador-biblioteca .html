@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mueca — configurador biblioteca</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;800&display=swap" rel="stylesheet">
+    <!-- Carga de la librería EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
             --blanco: #ffffff; --crema-fondo: #fcfbfa; --vison-suave: #ebe7e0;
@@ -15,85 +17,104 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--crema-fondo); color: var(--negro-mueca); }
         
-        /* HEADER UNIFICADO */
-        header { position: fixed; top: 0; width: 100%; background: var(--encabezado-amarillo); border-bottom: 1px solid rgba(0,0,0,0.08); z-index: 1000; height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; }
+        /* HEADER UNIFICADO Y RESPONSIVE CON HAMBURGUESA */
+        header { 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            background: var(--encabezado-amarillo); 
+            border-bottom: 1px solid rgba(0,0,0,0.08); 
+            z-index: 1000; 
+            min-height: 90px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 5%; 
+            flex-wrap: wrap;
+        }
         .logo a { display: flex; align-items: center; }
         .logo img { height: 65px; width: auto; object-fit: contain; }
+        
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--negro-mueca);
+            padding: 5px;
+        }
+
         nav { display: flex; align-items: center; gap: 30px; }
         .nav-links { display: flex; list-style: none; gap: 30px; align-items: center; }
         .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 14px; font-weight: 600; }
         
-.dropdown { position: relative; }
-        /* Corrección estricta para tus archivos */
-.dropdown-menu { 
-    display: none; 
-    position: absolute; 
-    top: 100%; 
-    left: 0; 
-    background: var(--blanco); 
-    min-width: 200px; 
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
-    border: 1px solid var(--vison-suave); 
-    list-style: none; 
-    padding: 10px 0; 
-    border-radius: 4px; 
-    margin-top: 0; /* Cambiado de 10px a 0 para eliminar el gap físico */
-    z-index: 1100;
-}
+        .dropdown { position: relative; }
+        .dropdown-menu { 
+            display: none; 
+            position: absolute; 
+            top: 100%; 
+            left: 0; 
+            background: var(--blanco); 
+            min-width: 200px; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
+            border: 1px solid var(--vison-suave); 
+            list-style: none; 
+            padding: 10px 0; 
+            border-radius: 4px; 
+            margin-top: 0; 
+            z-index: 1100;
+        }
 
-/* El puente invisible usando tu clase exacta */
-.dropdown-menu::before {
-    content: '';
-    position: absolute;
-    top: -15px; /* Cubre de forma invisible el espacio hacia arriba por si acaso */
-    left: 0;
-    width: 100%;
-    height: 15px;
-    background: transparent;
-}
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -15px; 
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: transparent;
+        }
 
-/* Control del hover */
-.dropdown:hover .dropdown-menu { 
-    display: block; 
-}
-        .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
         .dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
 
+        /* CARRUSEL SUPERIOR DE FOTOS */
+        .gallery-top-container { max-width: 1200px; margin: 110px auto 20px; padding: 0 20px; position: relative; overflow: hidden; }
+        .gallery-top-track { display: flex; gap: 15px; transition: transform 0.3s ease-in-out; }
 
+        .gallery-item-top { 
+            width: calc(25% - 12px); 
+            max-width: calc(25% - 12px);
+            min-width: calc(25% - 12px);
+            aspect-ratio: 4/3; 
+            background: var(--vison-suave); 
+            border-radius: 4px; 
+            overflow: hidden; 
+            flex-shrink: 0; 
+        }
 
-        /* REPOSITORIO INICIAL / CARRUSEL SUPERIOR DE FOTOS */
-.gallery-top-container { max-width: 1200px; margin: 100px auto 20px; padding: 0 20px; position: relative; overflow: hidden; }
-.gallery-top-track { display: flex; gap: 15px; transition: transform 0.3s ease-in-out; }
-
-/* CORRECCIÓN AQUÍ: Cambiamos min-width por width/max-width y forzamos el control del flexbox */
-.gallery-item-top { 
-    width: calc(25% - 12px); 
-    max-width: calc(25% - 12px);
-    min-width: calc(25% - 12px);
-    aspect-ratio: 4/3; 
-    background: var(--vison-suave); 
-    border-radius: 4px; 
-    overflow: hidden; 
-    flex-shrink: 0; 
-}
-
-/* Aseguramos que la imagen no empuje las paredes de la tarjeta */
-.gallery-item-top img { 
-    width: 100% !important; 
-    height: 100% !important; 
-    object-fit: cover !important; /* 'cover' va a hacer que llenen el recuadro estéticamente, cambialo a 'contain' si preferís que no se recorte nada */
-}
-
-.carousel-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: 1px solid var(--vison-suave); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: 800; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        .gallery-item-top img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
+        .carousel-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: 1px solid var(--vison-suave); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: 800; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        
         /* ESTRUCTURA CONFIGURADOR */
         .configurator-layout { display: flex; max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; gap: 30px; }
-        .canvas-panel { flex: 1.2; background: #f2f0ea; border-radius: 6px; display: flex; align-items: center; justify-content: center; padding: 30px; min-height: 480px; }
-        .control-panel { flex: 0.8; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; padding: 30px; display: flex; flex-direction: column; gap: 25px; }
+        
+        .canvas-panel-wrapper {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .canvas-panel { background: #f2f0ea; border-radius: 6px; display: flex; align-items: center; justify-content: center; padding: 30px; min-height: 480px; }
+        .control-panel { flex: 0.8; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; padding: 30px; display: flex; flex-direction: column; gap: 20px; }
 
         .panel-title { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
-        .step-block { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--vison-suave); padding-bottom: 20px; }
+        .step-block { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--vison-suave); padding-bottom: 15px; }
         .step-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--vison-oscuro); }
-        
+        .step-instruction { font-size: 13px; color: var(--negro-mueca); font-weight: 500; line-height: 1.4; }
+
         .btn-grid { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn-opt { padding: 10px 16px; border: 1px solid var(--vison-suave); background: var(--blanco); border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
         .btn-opt.selected { background: var(--negro-mueca); color: var(--blanco); border-color: var(--negro-mueca); }
@@ -106,23 +127,43 @@
         .btn-submit { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 16px; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase; width: 100%; transition: var(--transition); }
         .btn-submit:hover { background: #40403f; }
 
+        /* FORMULARIO DESPLEGABLE / INTEGRADO */
+        .contact-form-container {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px;
+            background: var(--blanco);
+            border: 1px solid var(--vison-suave);
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        .contact-form-container input, .contact-form-container textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--vison-suave);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
         #tablero-biblioteca { width: 100%; }
         svg { width: 100%; height: auto; overflow: visible; }
 
-/* --- BLOQUE DE CELULARES ACTUALIZADO --- */
+        /* MÓVIL Y RESPONSIVE */
         @media(max-width: 768px) { 
-            /* Menú del Header para Móviles */
             header {
-                flex-direction: column !important;
+                padding: 15px 20px !important;
                 height: auto !important;
-                padding: 15px 5px !important;
-                position: relative !important;
             }
+            .hamburger-btn { display: block; }
             nav {
-                flex-direction: column !important;
-                gap: 15px !important;
+                display: none;
                 width: 100%;
+                flex-direction: column;
+                padding-top: 15px;
             }
+            nav.active { display: flex; }
             .nav-links {
                 flex-direction: column !important;
                 gap: 15px !important;
@@ -136,79 +177,36 @@
                 text-align: center;
             }
 
-            /* Tamaños de tipografía adaptados */
-            .intro-text-block h1 {
-                font-size: 24px !important;
-            }
-            .text-block h2 {
-                font-size: 20px !important;
-            }
-
-            /* Estructuras en vertical generales */
-            .intro-hero-section { 
-                flex-direction: column-reverse; 
-                margin-top: 20px;
-            } 
-            .novedad-slide { flex-direction: column; padding: 15px; }
-            .content-split-section, .content-split-section.reverse { flex-direction: column; gap: 30px; } 
-            
-            /* Forzar contención de imágenes */
-            .intro-image-block, .image-block, .novedad-img {
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-
-            /* AJUSTE ESTRATÉGICO DE FLUJO Y AJUSTE ELÁSTICO */
-            .configurator-layout {
-                display: flex !important;
-                flex-direction: column-reverse !important; /* Invierte el flujo en móviles */
-                gap: 20px !important;
-                padding: 0 10px !important;
-                width: 100% !important;
-                overflow: hidden !important;
-            }
-
-            /* 1. Panel de Controles (Queda Arriba) */
-            .control-panel {
-                order: 1 !important;
-                padding: 20px 15px !important;
-                width: 100% !important;
-            }
-
-            /* 2. Panel Gráfico con el Mueble Dibujado (Queda Abajo) */
-            .canvas-panel {
-                order: 2 !important;
-                padding: 10px !important;
-                min-height: auto !important;
-                height: auto !important;
-                width: 100% !important;
-                display: block !important; /* Facilita el correcto redimensionamiento */
-            }
-
-            /* SOLUCIÓN AL RECORTE DEL PLANO: Obliga al SVG y sus padres a reajustarse elásticamente */
-            #tablero-biblioteca {
-                width: 100% !important;
-                height: auto !important;
-                overflow: visible !important;
-            }
-            
-            #tablero-biblioteca svg {
-                width: 100% !important;
-                height: auto !important;
-                max-width: 100% !important;
-                display: block !important;
-            }
-
-            /* Adaptación del carrusel superior */
-            .gallery-top-container {
-                margin: 20px auto 20px !important; 
-            }
+            .gallery-top-container { margin: 110px auto 20px !important; }
             .gallery-item-top {
-                width: calc(100% - 10px) !important; 
+                width: calc(100% - 10px) !important;
                 max-width: calc(100% - 10px) !important;
                 min-width: calc(100% - 10px) !important;
             }
+
+            .configurator-layout {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 20px !important;
+                padding: 0 10px !important;
+            }
+
+            /* ORDEN MÓVIL EXACTO ACORDADO */
+            .gallery-top-container { order: 1; }
+            .control-panel { order: 2 !important; width: 100% !important; padding: 20px 15px !important; }
+            .canvas-panel-wrapper { order: 3 !important; width: 100% !important; }
             
+            .canvas-panel {
+                padding: 10px !important;
+                min-height: auto !important;
+                height: auto !important;
+            }
+            
+            #tablero-biblioteca, #tablero-biblioteca svg {
+                width: 100% !important;
+                height: auto !important;
+            }
+
             .counter-display {
                 min-width: auto !important;
                 flex: 1;
@@ -221,7 +219,8 @@
 
     <header>
         <div class="logo"><a href="index.html"><img src="logo.png" alt="mueca logo"></a></div>
-        <nav>
+        <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+        <nav id="mainNav">
             <ul class="nav-links">
                 <li class="dropdown">
                     <a href="index.html#novedades" style="text-decoration:none; color:var(--negro-mueca);">Muebles ▾</a>
@@ -256,10 +255,31 @@
     </div>
 
     <div class="configurator-layout">
-        <div class="canvas-panel">
-            <div id="tablero-biblioteca"></div>
+        
+        <!-- PANEL CANVAS / GRÁFICO CON EL BOTÓN JUSTO DEBAJO -->
+        <div class="canvas-panel-wrapper">
+            <div class="canvas-panel">
+                <div id="tablero-biblioteca"></div>
+            </div>
+            
+            <!-- BOTÓN UBICADO DEBAJO DEL GRÁFICO -->
+            <button class="btn-submit" onclick="toggleForm()">Añadir a la lista de consulta</button>
+
+            <!-- FORMULARIO DIRECTO EMAILJS -->
+            <form id="contactForm" class="contact-form-container" onsubmit="sendDirectEmail(event)">
+                <span class="step-title">Datos para enviar la consulta</span>
+                <input type="text" id="userName" placeholder="Nombre completo" required>
+                <input type="email" id="userEmail" placeholder="Correo electrónico" required>
+                <input type="tel" id="userPhone" placeholder="Teléfono / WhatsApp" required>
+                <textarea id="userComments" rows="3" placeholder="Comentarios adicionales o dirección de envío..."></textarea>
+                
+                <button type="submit" id="btnSendMail" class="btn-submit" style="background:#28a745;">
+                    Enviar Consulta Ahora
+                </button>
+            </form>
         </div>
 
+        <!-- PANEL DE INSTRUCTIVO Y PARÁMETROS -->
         <div class="control-panel">
             <h2 class="panel-title">Configurador de Bibliotecas</h2>
             
@@ -291,20 +311,77 @@
                 </div>
             </div>
 
+            <!-- PASO 4 AGREGADO EXPLÍCITAMENTE -->
+            <div class="step-block">
+                <span class="step-title">Paso 4: Dibuja tu biblioteca</span>
+                <p class="step-instruction">Toca sobre las líneas punteadas del diseño para agregar o quitar estantes a tu gusto.</p>
+            </div>
+
             <div class="step-block">
                 <span class="step-title">Despiece Técnico Encastrable</span>
                 <div id="library-summary" class="summary-box">Calculando...</div>
             </div>
-
-            <button class="btn-submit" onclick="addLibraryToCart()">Añadir a la lista de consulta</button>
         </div>
+
     </div>
 
     <script>
+        // Inicializar EmailJS con tu Public Key real
+        (function(){
+            emailjs.init("_RxYQ5EVnN6coQIl_");
+        })();
+
+        function toggleMobileMenu() {
+            document.getElementById('mainNav').classList.toggle('active');
+        }
+
+        function toggleForm() {
+            const form = document.getElementById('contactForm');
+            const isHidden = form.style.display === '' || form.style.display === 'none';
+            form.style.display = isHidden ? 'flex' : 'none';
+            if (isHidden) {
+                form.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function sendDirectEmail(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('btnSendMail');
+            submitBtn.innerText = 'Enviando...';
+            submitBtn.disabled = true;
+
+            const svgElement = document.getElementById('biblioteca-svg-element');
+            const svgData = svgElement ? new XMLSerializer().serializeToString(svgElement) : '';
+
+            const templateParams = {
+                from_name: document.getElementById('userName').value,
+                from_email: document.getElementById('userEmail').value,
+                phone: document.getElementById('userPhone').value,
+                comments: document.getElementById('userComments').value,
+                material: terminacionBiblioteca,
+                summary_detail: despieceGlobalTexto,
+                svg_graphic: svgData
+            };
+
+            emailjs.send('service_fpyoqnb', 'template_lcucl54', templateParams)
+                .then(function() {
+                    alert('¡Consulta enviada con éxito! Nos pondremos en contacto pronto.');
+                    document.getElementById('contactForm').reset();
+                    toggleForm();
+                    submitBtn.innerText = 'Enviar Consulta Ahora';
+                    submitBtn.disabled = false;
+                }, function(error) {
+                    alert('Ocurrió un error al enviar el mensaje. Por favor intenta nuevamente.');
+                    console.error('EmailJS Error:', error);
+                    submitBtn.innerText = 'Enviar Consulta Ahora';
+                    submitBtn.disabled = false;
+                });
+        }
+
         let currentTopIndex = 0;
         function moveTopCarousel(dir) {
             const track = document.getElementById('topTrack');
-            // Muestra 4 por pantalla, se desplaza de a 1 paso
             currentTopIndex = Math.max(0, Math.min(currentTopIndex + dir, 6));
             const widthItem = track.children[0].getBoundingClientRect().width + 15;
             track.style.transform = `translateX(-${currentTopIndex * widthItem}px)`;
@@ -447,7 +524,6 @@
             let conteoCostillasAlturas = { simple: 0, doble: 0, triple: 0, cuadruple: 0 };
             const tramosAncho = cantCostillas - 1;
 
-            // Determinar altura individual de cada costilla física real
             for(let c = 0; c < cantCostillas; c++) {
                 let maxNivelCostilla = 1;
                 for(let key in celdasActivas) {
@@ -464,7 +540,6 @@
                 if(maxNivelCostilla === 5) conteoCostillasAlturas.cuadruple++;
             }
 
-            // Agrupación automática de estantes contiguos
             for(let n = 1; n <= cantNiveles; n++) {
                 let t = 0;
                 while (t < tramosAncho) {
@@ -495,27 +570,6 @@
             
             despieceGlobalTexto = desglose;
             document.getElementById('library-summary').innerText = desglose;
-        }
-
-        function addLibraryToCart() {
-            let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            const tramos = cantCostillas - 1;
-            const anchoTotalCm = (tramos * 57) + 6;
-            let svgString = "";
-            const svgElement = document.getElementById('biblioteca-svg-element');
-            if(svgElement) {
-                svgString = "data:image/svg+xml;base64," + btoa(new XMLSerializer().serializeToString(svgElement));
-            }
-
-            cart.push({
-                nombre: `biblioteca modular custom (${anchoTotalCm}cm ancho)`,
-                terminacion: terminacionBiblioteca,
-                esCustom: true,
-                despachado: despieceGlobalTexto,
-                svgDataImage: svgString
-            });
-            localStorage.setItem('mueca_cart', JSON.stringify(cart));
-            window.location.href = "index.html?openCart=true";
         }
 
         window.onload = buildTablero;
