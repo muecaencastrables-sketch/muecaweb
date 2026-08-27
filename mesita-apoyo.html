@@ -14,51 +14,36 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--blanco); color: var(--negro-mueca); line-height: 1.6; }
         
-        header { position: fixed; top: 0; width: 100%; background: var(--encabezado-amarillo); border-bottom: 1px solid rgba(0,0,0,0.08); z-index: 1000; height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; }
+        /* HEADER UNIFICADO */
+        header { 
+            position: fixed; top: 0; width: 100%; background: var(--encabezado-amarillo); 
+            border-bottom: 1px solid rgba(0,0,0,0.08); z-index: 1000; min-height: 90px; 
+            display: flex; align-items: center; justify-content: space-between; padding: 0 5%; flex-wrap: wrap;
+        }
         .logo a { display: flex; align-items: center; }
-        .logo img { height: 80px; width: auto; object-fit: contain; }
+        .logo img { height: 65px; width: auto; object-fit: contain; }
         
-        nav { display: flex; align-items: center; gap: 30px; }
-        .nav-links { display: flex; list-style: none; gap: 30px; align-items: center; }
+        .hamburger-btn {
+            display: none; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--negro-mueca); padding: 5px;
+        }
+
+        nav { display: flex; align-items: center; gap: 20px; }
+        .nav-links { display: flex; list-style: none; gap: 25px; align-items: center; }
         .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 14px; font-weight: 600; }
         
         .dropdown { position: relative; }
-        /* Corrección estricta para tus archivos */
-.dropdown-menu { 
-    display: none; 
-    position: absolute; 
-    top: 100%; 
-    left: 0; 
-    background: var(--blanco); 
-    min-width: 200px; 
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
-    border: 1px solid var(--vison-suave); 
-    list-style: none; 
-    padding: 10px 0; 
-    border-radius: 4px; 
-    margin-top: 0; /* Cambiado de 10px a 0 para eliminar el gap físico */
-    z-index: 1100;
-}
-
-/* El puente invisible usando tu clase exacta */
-.dropdown-menu::before {
-    content: '';
-    position: absolute;
-    top: -15px; /* Cubre de forma invisible el espacio hacia arriba por si acaso */
-    left: 0;
-    width: 100%;
-    height: 15px;
-    background: transparent;
-}
-
-/* Control del hover */
-.dropdown:hover .dropdown-menu { 
-    display: block; 
-}
-        .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
+        .dropdown-menu { 
+            display: none; position: absolute; top: 100%; left: 0; background: var(--blanco); 
+            min-width: 200px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 1px solid var(--vison-suave); 
+            list-style: none; padding: 10px 0; border-radius: 4px; margin-top: 0; z-index: 1100;
+        }
+        .dropdown-menu::before { content: ''; position: absolute; top: -15px; left: 0; width: 100%; height: 15px; background: transparent; }
         .dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
 
-        /* FORMATO DOS COLUMNAS - COPIADO DE REPISA */
+        .btn-cart-nav { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+        /* PRODUCTO Y GALERÍA */
         .product-container { max-width: 1200px; margin: 120px auto 60px; display: flex; gap: 50px; padding: 0 20px; }
         .product-gallery { flex: 1.2; position: relative; overflow: hidden; border-radius: 8px; background: var(--crema-fondo); aspect-ratio: 4/3; }
         .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s ease-in-out; }
@@ -84,55 +69,24 @@
         .accordion-header { padding: 15px 0; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; }
         .accordion-content { padding-bottom: 15px; color: var(--texto-suave); font-size: 13px; display: none; line-height: 1.5; }
         .accordion-item.active .accordion-content { display: block; }
-        
-/* --- BLOQUE DE CELULARES ACTUALIZADO --- */
+
+        /* SIDEBAR / CONSULTAS */
+        .sidebar-modal { position: fixed; top: 0; right: -450px; width: 420px; height: 100vh; background: var(--blanco); box-shadow: -10px 0 30px rgba(0,0,0,0.06); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
+        .sidebar-modal.active { right: 0; }
+        .sidebar-body { flex-grow: 1; overflow-y: auto; padding: 25px; }
+
+        /* MÓVIL UNIFICADO */
         @media(max-width: 768px) { 
-            /* Menú del Header para Móviles */
-            header {
-                flex-direction: column !important;
-                height: auto !important;
-                padding: 15px 5px !important;
-                position: relative !important; /* Libera el espacio fijo arriba */
-            }
-            nav {
-                flex-direction: column !important;
-                gap: 15px !important;
-                width: 100%;
-            }
-            .nav-links {
-                flex-direction: column !important;
-                gap: 15px !important;
-                width: 100%;
-                text-align: center;
-            }
-            .dropdown-menu {
-                position: relative !important; /* El desplegable ya no flota, empuja hacia abajo */
-                width: 100% !important;
-                box-shadow: none !important;
-                text-align: center;
-            }
+            header { padding: 15px 20px !important; height: auto !important; }
+            .hamburger-btn { display: block; }
+            nav { display: none; width: 100%; flex-direction: column; padding-top: 15px; gap: 15px !important; }
+            nav.active { display: flex; }
+            .nav-links { flex-direction: column !important; gap: 15px !important; width: 100%; text-align: center; }
+            .dropdown-menu { position: relative !important; width: 100% !important; box-shadow: none !important; text-align: center; }
 
-            /* Tamaños de tipografía adaptados */
-            .intro-text-block h1 {
-                font-size: 24px !important;
-            }
-            .text-block h2 {
-                font-size: 20px !important;
-            }
-
-            /* Estructuras en vertical (Lógica original tuya potenciada) */
-            .intro-hero-section { 
-                flex-direction: column-reverse; 
-                margin-top: 20px; /* Se achicó porque el header ya no tapa flotando */
-            } 
-            .novedad-slide { flex-direction: column; padding: 15px; }
-            .content-split-section, .content-split-section.reverse { flex-direction: column; gap: 30px; } 
-            
-            /* Forzar contención de imágenes */
-            .intro-image-block, .image-block, .novedad-img {
-                width: 100% !important;
-                max-width: 100% !important;
-            }
+            .product-container { flex-direction: column !important; margin: 110px auto 40px !important; gap: 25px !important; padding: 0 15px !important; }
+            .product-gallery { width: 100% !important; }
+            .sidebar-modal { width: 100%; right: -100%; }
         }
     </style>
 </head>
@@ -140,7 +94,8 @@
 
     <header>
         <div class="logo"><a href="index.html"><img src="logo.png" alt="mueca logo"></a></div>
-        <nav>
+        <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+        <nav id="mainNav">
             <ul class="nav-links">
                 <li class="dropdown">
                     <a href="index.html#novedades">Muebles ▾</a>
@@ -152,8 +107,8 @@
                     </ul>
                 </li>
                 <li><a href="configurador-biblioteca.html">Bibliotecas</a></li>
-                <li><a href="a-medida.html">Especiales</a></li>
             </ul>
+            <button class="btn-cart-nav" onclick="toggleSidebar(true)">Consultas (<span id="cart-count">0</span>)</button>
         </nav>
     </header>
 
@@ -163,8 +118,8 @@
             <div class="carousel-track" id="carouselTrack">
                 <div class="carousel-slide"><img src="mesita-apoyo-1.jpg" alt="Mesita Apoyo 1" onerror="this.src='https://placehold.co/600x450?text=Mesita+Apoyo+1'"></div>
                 <div class="carousel-slide"><img src="mesita-apoyo-2.jpg" alt="Mesita Apoyo 2" onerror="this.src='https://placehold.co/600x450?text=Mesita+Apoyo+2'"></div>
-		<div class="carousel-slide"><img src="mesita-apoyo-3.jpg" alt="Mesita Apoyo 3" onerror="this.src='https://placehold.co/600x450?text=Mesita+Apoyo+3'"></div>
-            	</div>
+                <div class="carousel-slide"><img src="mesita-apoyo-3.jpg" alt="Mesita Apoyo 3" onerror="this.src='https://placehold.co/600x450?text=Mesita+Apoyo+3'"></div>
+            </div>
             <button class="carousel-btn" style="right:20px;" onclick="moveCarousel(1)">›</button>
         </div>
 
@@ -217,7 +172,71 @@
         </div>
     </main>
 
+    <div class="sidebar-modal" id="consulta-sidebar">
+        <div style="padding:20px; border-bottom:1px solid var(--vison-suave); display:flex; justify-content:space-between; background:var(--crema-fondo);">
+            <h3 style="font-size:14px; font-weight:800; text-transform:uppercase;">Lista de Consulta</h3>
+            <button onclick="toggleSidebar(false)" style="background:none; border:none; font-size:22px; cursor:pointer; color:var(--vison-oscuro);">×</button>
+        </div>
+        <div class="sidebar-body">
+            <div id="items-consulta-container"></div>
+            <form onsubmit="enviarConsultaPorEmail(event)" style="margin-top:20px; border-top:1px solid var(--vison-suave); padding-top:20px;">
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Nombre Completo *</label><input type="text" id="modal-nombre" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required></div>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Email de Contacto *</label><input type="email" id="modal-email" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required></div>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Teléfono</label><input type="tel" id="modal-telefono" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;"></div>
+                <button type="submit" style="background:var(--negro-mueca); color:var(--blanco); border:none; padding:15px; width:100%; border-radius:4px; font-weight:700; text-transform:uppercase; cursor:pointer;">Enviar Solicitud</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        function toggleMobileMenu() { document.getElementById('mainNav').classList.toggle('active'); }
+        function toggleSidebar(show) {
+            document.getElementById('consulta-sidebar').classList.toggle('active', show);
+            if(show) renderListaConsultas();
+        }
+
+        function actualizarContadorNav() {
+            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            document.getElementById('cart-count').innerText = cart.length;
+        }
+
+        function renderListaConsultas() {
+            const contenedor = document.getElementById('items-consulta-container');
+            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            if(cart.length === 0) { contenedor.innerHTML = "<p style='font-size:13px; color:#666;'>No hay muebles en tu lista.</p>"; return; }
+            let html = "";
+            cart.forEach((item, index) => {
+                html += `
+                    <div style="padding:12px 0; border-bottom:1px solid #ebe7e0; position:relative;">
+                        <h4 style="font-size:12px; font-weight:700; text-transform:uppercase;">${item.nombre}</h4>
+                        <p style="font-size:11px; color:#666;">Terminación: ${item.terminacion}</p>
+                        ${item.esCustom ? `<pre style="font-size:10px; background:#fcfbfa; padding:5px; margin-top:5px; font-family:monospace;">${item.despachado}</pre>` : ''}
+                        <button onclick="eliminarItem(${index})" style="position:absolute; right:0; top:12px; background:none; border:none; color:#8c857b; cursor:pointer; font-size:11px; font-weight:600;">Quitar</button>
+                    </div>`;
+            });
+            contenedor.innerHTML = html;
+        }
+
+        function eliminarItem(idx) {
+            let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            cart.splice(idx, 1);
+            localStorage.setItem('mueca_cart', JSON.stringify(cart));
+            renderListaConsultas();
+            actualizarContadorNav();
+        }
+
+        function enviarConsultaPorEmail(e) {
+            e.preventDefault();
+            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            if(cart.length === 0) return;
+            let cuerpo = `Consulta de Cotización — Mueca\n\nNombre: ${document.getElementById('modal-nombre').value}\nEmail: ${document.getElementById('modal-email').value}\nTeléfono: ${document.getElementById('modal-telefono').value || 'No indicado'}\n\nProductos:\n`;
+            cart.forEach((i, idx) => {
+                cuerpo += `${idx+1}. ${i.nombre.toUpperCase()} [${i.terminacion}]\n`;
+                if(i.despachado) cuerpo += `${i.despachado}\n`;
+            });
+            window.location.href = `mailto:mueca.encastrables@gmail.com?subject=Nueva Cotizacion Mueca&body=${encodeURIComponent(cuerpo)}`;
+        }
+
         let currentSlide = 0;
         let configuracion = { model: 'Oval', finish: 'Multilaminado Guatambú' };
 
@@ -260,8 +279,14 @@
                 esCustom: false
             });
             localStorage.setItem('mueca_cart', JSON.stringify(cart));
-            window.location.href = "index.html?openCart=true";
+            actualizarContadorNav();
+            toggleSidebar(true);
         }
+
+        window.onload = () => {
+            actualizarContadorNav();
+            if(new URLSearchParams(window.location.search).get('openCart') === 'true') toggleSidebar(true);
+        };
     </script>
 </body>
 </html>

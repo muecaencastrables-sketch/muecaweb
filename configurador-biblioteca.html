@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mueca — configurador biblioteca</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;800&display=swap" rel="stylesheet">
-    <!-- Carga de la librería EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
@@ -17,96 +16,48 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--crema-fondo); color: var(--negro-mueca); }
         
-        /* HEADER UNIFICADO Y RESPONSIVE CON HAMBURGUESA */
         header { 
-            position: fixed; 
-            top: 0; 
-            width: 100%; 
-            background: var(--encabezado-amarillo); 
-            border-bottom: 1px solid rgba(0,0,0,0.08); 
-            z-index: 1000; 
-            min-height: 90px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            padding: 0 5%; 
-            flex-wrap: wrap;
+            position: fixed; top: 0; width: 100%; background: var(--encabezado-amarillo); 
+            border-bottom: 1px solid rgba(0,0,0,0.08); z-index: 1000; min-height: 90px; 
+            display: flex; align-items: center; justify-content: space-between; padding: 0 5%; flex-wrap: wrap;
         }
         .logo a { display: flex; align-items: center; }
         .logo img { height: 65px; width: auto; object-fit: contain; }
         
         .hamburger-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-            color: var(--negro-mueca);
-            padding: 5px;
+            display: none; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--negro-mueca); padding: 5px;
         }
 
-        nav { display: flex; align-items: center; gap: 30px; }
-        .nav-links { display: flex; list-style: none; gap: 30px; align-items: center; }
+        nav { display: flex; align-items: center; gap: 20px; }
+        .nav-links { display: flex; list-style: none; gap: 25px; align-items: center; }
         .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 14px; font-weight: 600; }
         
         .dropdown { position: relative; }
         .dropdown-menu { 
-            display: none; 
-            position: absolute; 
-            top: 100%; 
-            left: 0; 
-            background: var(--blanco); 
-            min-width: 200px; 
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
-            border: 1px solid var(--vison-suave); 
-            list-style: none; 
-            padding: 10px 0; 
-            border-radius: 4px; 
-            margin-top: 0; 
-            z-index: 1100;
+            display: none; position: absolute; top: 100%; left: 0; background: var(--blanco); 
+            min-width: 200px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 1px solid var(--vison-suave); 
+            list-style: none; padding: 10px 0; border-radius: 4px; margin-top: 0; z-index: 1100;
         }
-
-        .dropdown-menu::before {
-            content: '';
-            position: absolute;
-            top: -15px; 
-            left: 0;
-            width: 100%;
-            height: 15px;
-            background: transparent;
-        }
-
+        .dropdown-menu::before { content: ''; position: absolute; top: -15px; left: 0; width: 100%; height: 15px; background: transparent; }
         .dropdown:hover .dropdown-menu { display: block; }
         .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
 
-        /* CARRUSEL SUPERIOR DE FOTOS */
+        .btn-cart-nav { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
         .gallery-top-container { max-width: 1200px; margin: 110px auto 20px; padding: 0 20px; position: relative; overflow: hidden; }
         .gallery-top-track { display: flex; gap: 15px; transition: transform 0.3s ease-in-out; }
 
         .gallery-item-top { 
-            width: calc(25% - 12px); 
-            max-width: calc(25% - 12px);
-            min-width: calc(25% - 12px);
-            aspect-ratio: 4/3; 
-            background: var(--vison-suave); 
-            border-radius: 4px; 
-            overflow: hidden; 
-            flex-shrink: 0; 
+            width: calc(25% - 12px); max-width: calc(25% - 12px); min-width: calc(25% - 12px);
+            aspect-ratio: 4/3; background: var(--vison-suave); border-radius: 4px; overflow: hidden; flex-shrink: 0; 
         }
 
         .gallery-item-top img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
         .carousel-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: 1px solid var(--vison-suave); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: 800; z-index: 10; display: flex; align-items: center; justify-content: center; }
         
-        /* ESTRUCTURA CONFIGURADOR */
         .configurator-layout { display: flex; max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; gap: 30px; }
         
-        .canvas-panel-wrapper {
-            flex: 1.2;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
+        .canvas-panel-wrapper { flex: 1.2; display: flex; flex-direction: column; gap: 15px; }
         .canvas-panel { background: #f2f0ea; border-radius: 6px; display: flex; align-items: center; justify-content: center; padding: 30px; min-height: 480px; }
         .control-panel { flex: 0.8; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; padding: 30px; display: flex; flex-direction: column; gap: 20px; }
 
@@ -127,91 +78,34 @@
         .btn-submit { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 16px; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase; width: 100%; transition: var(--transition); }
         .btn-submit:hover { background: #40403f; }
 
-        /* FORMULARIO DESPLEGABLE / INTEGRADO */
-        .contact-form-container {
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            padding: 20px;
-            background: var(--blanco);
-            border: 1px solid var(--vison-suave);
-            border-radius: 6px;
-            margin-top: 10px;
-        }
-        .contact-form-container input, .contact-form-container textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--vison-suave);
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 13px;
-        }
+        .contact-form-container { display: none; flex-direction: column; gap: 12px; padding: 20px; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; margin-top: 10px; }
+        .contact-form-container input, .contact-form-container textarea { width: 100%; padding: 10px; border: 1px solid var(--vison-suave); border-radius: 4px; font-family: inherit; font-size: 13px; }
+
+        .sidebar-modal { position: fixed; top: 0; right: -450px; width: 420px; height: 100vh; background: var(--blanco); box-shadow: -10px 0 30px rgba(0,0,0,0.06); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
+        .sidebar-modal.active { right: 0; }
+        .sidebar-body { flex-grow: 1; overflow-y: auto; padding: 25px; }
 
         #tablero-biblioteca { width: 100%; }
         svg { width: 100%; height: auto; overflow: visible; }
 
-        /* MÓVIL Y RESPONSIVE */
         @media(max-width: 768px) { 
-            header {
-                padding: 15px 20px !important;
-                height: auto !important;
-            }
+            header { padding: 15px 20px !important; height: auto !important; }
             .hamburger-btn { display: block; }
-            nav {
-                display: none;
-                width: 100%;
-                flex-direction: column;
-                padding-top: 15px;
-            }
+            nav { display: none; width: 100%; flex-direction: column; padding-top: 15px; gap: 15px !important; }
             nav.active { display: flex; }
-            .nav-links {
-                flex-direction: column !important;
-                gap: 15px !important;
-                width: 100%;
-                text-align: center;
-            }
-            .dropdown-menu {
-                position: relative !important;
-                width: 100% !important;
-                box-shadow: none !important;
-                text-align: center;
-            }
+            .nav-links { flex-direction: column !important; gap: 15px !important; width: 100%; text-align: center; }
+            .dropdown-menu { position: relative !important; width: 100% !important; box-shadow: none !important; text-align: center; }
 
-            .gallery-top-container { margin: 110px auto 20px !important; }
-            .gallery-item-top {
-                width: calc(100% - 10px) !important;
-                max-width: calc(100% - 10px) !important;
-                min-width: calc(100% - 10px) !important;
-            }
-
-            .configurator-layout {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 20px !important;
-                padding: 0 10px !important;
-            }
-
-            /* ORDEN MÓVIL EXACTO ACORDADO */
-            .gallery-top-container { order: 1; }
+            .gallery-top-container { margin: 110px auto 20px !important; order: 1; }
             .control-panel { order: 2 !important; width: 100% !important; padding: 20px 15px !important; }
             .canvas-panel-wrapper { order: 3 !important; width: 100% !important; }
             
-            .canvas-panel {
-                padding: 10px !important;
-                min-height: auto !important;
-                height: auto !important;
-            }
-            
-            #tablero-biblioteca, #tablero-biblioteca svg {
-                width: 100% !important;
-                height: auto !important;
-            }
-
-            .counter-display {
-                min-width: auto !important;
-                flex: 1;
-                text-align: center;
-            }
+            .configurator-layout { display: flex !important; flex-direction: column !important; gap: 20px !important; padding: 0 10px !important; }
+            .gallery-item-top { width: calc(100% - 10px) !important; max-width: calc(100% - 10px) !important; min-width: calc(100% - 10px) !important; }
+            .canvas-panel { padding: 10px !important; min-height: auto !important; height: auto !important; }
+            #tablero-biblioteca, #tablero-biblioteca svg { width: 100% !important; height: auto !important; }
+            .counter-display { min-width: auto !important; flex: 1; text-align: center; }
+            .sidebar-modal { width: 100%; right: -100%; }
         }
     </style>
 </head>
@@ -223,7 +117,7 @@
         <nav id="mainNav">
             <ul class="nav-links">
                 <li class="dropdown">
-                    <a href="index.html#novedades" style="text-decoration:none; color:var(--negro-mueca);">Muebles ▾</a>
+                    <a href="index.html#novedades">Muebles ▾</a>
                     <ul class="dropdown-menu">
                         <li><a href="mesita-apoyo.html">Mesita de Apoyo</a></li>
                         <li><a href="repisa-recibidor.html">Repisa Recibidor</a></li>
@@ -231,9 +125,9 @@
                         <li><a href="escritorio-colgante.html">Escritorio Colgante</a></li>
                     </ul>
                 </li>
-                <li><a href="configurador-biblioteca.html" style="text-decoration:none; color:var(--negro-mueca);">Bibliotecas</a></li>
-                <li><a href="a-medida.html" style="text-decoration:none; color:var(--negro-mueca);">Especiales</a></li>
+                <li><a href="configurador-biblioteca.html">Bibliotecas</a></li>
             </ul>
+            <button class="btn-cart-nav" onclick="toggleSidebar(true)">Consultas (<span id="cart-count">0</span>)</button>
         </nav>
     </header>
 
@@ -255,17 +149,13 @@
     </div>
 
     <div class="configurator-layout">
-        
-        <!-- PANEL CANVAS / GRÁFICO CON EL BOTÓN JUSTO DEBAJO -->
         <div class="canvas-panel-wrapper">
             <div class="canvas-panel">
                 <div id="tablero-biblioteca"></div>
             </div>
             
-            <!-- BOTÓN UBICADO DEBAJO DEL GRÁFICO -->
             <button class="btn-submit" onclick="toggleForm()">Añadir a la lista de consulta</button>
 
-            <!-- FORMULARIO DIRECTO EMAILJS -->
             <form id="contactForm" class="contact-form-container" onsubmit="sendDirectEmail(event)">
                 <span class="step-title">Datos para enviar la consulta</span>
                 <input type="text" id="userName" placeholder="Nombre completo" required>
@@ -279,7 +169,6 @@
             </form>
         </div>
 
-        <!-- PANEL DE INSTRUCTIVO Y PARÁMETROS -->
         <div class="control-panel">
             <h2 class="panel-title">Configurador de Bibliotecas</h2>
             
@@ -311,7 +200,6 @@
                 </div>
             </div>
 
-            <!-- PASO 4 AGREGADO EXPLÍCITAMENTE -->
             <div class="step-block">
                 <span class="step-title">Paso 4: Dibuja tu biblioteca</span>
                 <p class="step-instruction">Toca sobre las líneas punteadas del diseño para agregar o quitar estantes a tu gusto.</p>
@@ -322,37 +210,94 @@
                 <div id="library-summary" class="summary-box">Calculando...</div>
             </div>
         </div>
+    </div>
 
+    <div class="sidebar-modal" id="consulta-sidebar">
+        <div style="padding:20px; border-bottom:1px solid var(--vison-suave); display:flex; justify-content:space-between; background:var(--crema-fondo);">
+            <h3 style="font-size:14px; font-weight:800; text-transform:uppercase;">Lista de Consulta</h3>
+            <button onclick="toggleSidebar(false)" style="background:none; border:none; font-size:22px; cursor:pointer; color:var(--vison-oscuro);">×</button>
+        </div>
+        <div class="sidebar-body">
+            <div id="items-consulta-container"></div>
+            <form onsubmit="enviarConsultaPorEmailModal(event)" style="margin-top:20px; border-top:1px solid var(--vison-suave); padding-top:20px;">
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Nombre Completo *</label><input type="text" id="modal-nombre" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required></div>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Email de Contacto *</label><input type="email" id="modal-email" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required></div>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Teléfono</label><input type="tel" id="modal-telefono" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;"></div>
+                <button type="submit" style="background:var(--negro-mueca); color:var(--blanco); border:none; padding:15px; width:100%; border-radius:4px; font-weight:700; text-transform:uppercase; cursor:pointer;">Enviar Solicitud</button>
+            </form>
+        </div>
     </div>
 
     <script>
-        // Inicializar EmailJS con tu Public Key real
-        (function(){
-            emailjs.init("_RxYQ5EVnN6coQIl_");
-        })();
+        (function(){ emailjs.init("_RxYQ5EVnN6coQIl_"); })();
 
-        function toggleMobileMenu() {
-            document.getElementById('mainNav').classList.toggle('active');
+        function toggleMobileMenu() { document.getElementById('mainNav').classList.toggle('active'); }
+        function toggleSidebar(show) {
+            document.getElementById('consulta-sidebar').classList.toggle('active', show);
+            if(show) renderListaConsultas();
+        }
+
+        function actualizarContadorNav() {
+            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            document.getElementById('cart-count').innerText = cart.length;
+        }
+
+        function renderListaConsultas() {
+            const contenedor = document.getElementById('items-consulta-container');
+            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            if(cart.length === 0) { contenedor.innerHTML = "<p style='font-size:13px; color:#666;'>No hay muebles en tu lista.</p>"; return; }
+            let html = "";
+            cart.forEach((item, index) => {
+                html += `
+                    <div style="padding:12px 0; border-bottom:1px solid #ebe7e0; position:relative;">
+                        <h4 style="font-size:12px; font-weight:700; text-transform:uppercase;">${item.nombre}</h4>
+                        <p style="font-size:11px; color:#666;">Terminación: ${item.terminacion}</p>
+                        ${item.esCustom ? `<pre style="font-size:10px; background:#fcfbfa; padding:5px; margin-top:5px; font-family:monospace;">${item.despachado}</pre>` : ''}
+                        <button onclick="eliminarItem(${index})" style="position:absolute; right:0; top:12px; background:none; border:none; color:#8c857b; cursor:pointer; font-size:11px; font-weight:600;">Quitar</button>
+                    </div>`;
+            });
+            contenedor.innerHTML = html;
+        }
+
+        function eliminarItem(idx) {
+            let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            cart.splice(idx, 1);
+            localStorage.setItem('mueca_cart', JSON.stringify(cart));
+            renderListaConsultas();
+            actualizarContadorNav();
         }
 
         function toggleForm() {
             const form = document.getElementById('contactForm');
             const isHidden = form.style.display === '' || form.style.display === 'none';
             form.style.display = isHidden ? 'flex' : 'none';
-            if (isHidden) {
-                form.scrollIntoView({ behavior: 'smooth' });
-            }
+            if (isHidden) { form.scrollIntoView({ behavior: 'smooth' }); }
+        }
+
+        function generateSvgDataUrl(svgElement) {
+            let colorActivo = '#eaddca'; let colorOscuro = '#c8b7a0';
+            if (terminacionBiblioteca === 'Nogalina') { colorActivo = '#8b5a2b'; colorOscuro = '#5c3a21'; } 
+            else if (terminacionBiblioteca === 'Negro') { colorActivo = '#333333'; colorOscuro = '#1a1a1a'; }
+
+            let svgClon = svgElement.cloneNode(true);
+            svgClon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+            svgClon.setAttribute("width", "600"); svgClon.setAttribute("height", "450");
+            
+            let svgString = new XMLSerializer().serializeToString(svgClon);
+            svgString = svgString.replace(/fill="var\(--madera-activa\)"/g, `fill="${colorActivo}"`);
+            svgString = svgString.replace(/fill="var\(--madera-dark-activa\)"/g, `fill="${colorOscuro}"`);
+            svgString = svgString.replace(/stroke="var\(--madera-dark-activa\)"/g, `stroke="${colorOscuro}"`);
+
+            return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgString);
         }
 
         function sendDirectEmail(e) {
             e.preventDefault();
-            
             const submitBtn = document.getElementById('btnSendMail');
-            submitBtn.innerText = 'Enviando...';
-            submitBtn.disabled = true;
+            submitBtn.innerText = 'Enviando...'; submitBtn.disabled = true;
 
             const svgElement = document.getElementById('biblioteca-svg-element');
-            const svgData = svgElement ? new XMLSerializer().serializeToString(svgElement) : '';
+            let imageSvgDataUrl = svgElement ? generateSvgDataUrl(svgElement) : "";
 
             const templateParams = {
                 from_name: document.getElementById('userName').value,
@@ -361,7 +306,7 @@
                 comments: document.getElementById('userComments').value,
                 material: terminacionBiblioteca,
                 summary_detail: despieceGlobalTexto,
-                svg_graphic: svgData
+                svg_graphic: imageSvgDataUrl
             };
 
             emailjs.send('service_fpyoqnb', 'template_lcucl54', templateParams)
@@ -369,14 +314,23 @@
                     alert('¡Consulta enviada con éxito! Nos pondremos en contacto pronto.');
                     document.getElementById('contactForm').reset();
                     toggleForm();
-                    submitBtn.innerText = 'Enviar Consulta Ahora';
-                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Enviar Consulta Ahora'; submitBtn.disabled = false;
                 }, function(error) {
                     alert('Ocurrió un error al enviar el mensaje. Por favor intenta nuevamente.');
-                    console.error('EmailJS Error:', error);
-                    submitBtn.innerText = 'Enviar Consulta Ahora';
-                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Enviar Consulta Ahora'; submitBtn.disabled = false;
                 });
+        }
+
+        function enviarConsultaPorEmailModal(e) {
+            e.preventDefault();
+            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+            if(cart.length === 0) return;
+            let cuerpo = `Consulta de Cotización — Mueca\n\nNombre: ${document.getElementById('modal-nombre').value}\nEmail: ${document.getElementById('modal-email').value}\nTeléfono: ${document.getElementById('modal-telefono').value || 'No indicado'}\n\nProductos:\n`;
+            cart.forEach((i, idx) => {
+                cuerpo += `${idx+1}. ${i.nombre.toUpperCase()} [${i.terminacion}]\n`;
+                if(i.despachado) cuerpo += `${i.despachado}\n`;
+            });
+            window.location.href = `mailto:mueca.encastrables@gmail.com?subject=Nueva Cotizacion Mueca&body=${encodeURIComponent(cuerpo)}`;
         }
 
         let currentTopIndex = 0;
@@ -387,16 +341,13 @@
             track.style.transform = `translateX(-${currentTopIndex * widthItem}px)`;
         }
 
-        let cantCostillas = 2; 
-        let cantNiveles = 2;   
-        let terminacionBiblioteca = "Multilaminado Guatambú";
-        let celdasActivas = {}; 
+        let cantCostillas = 2; let cantNiveles = 2;   
+        let terminacionBiblioteca = "Multilaminado Guatambú"; let celdasActivas = {}; 
 
         function changeFinish(finishName, elem) {
             terminacionBiblioteca = finishName;
             elem.parentNode.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('selected'));
             elem.classList.add('selected');
-            
             if(finishName === 'Nogalina') {
                 document.documentElement.style.setProperty('--madera-activa', '#8b5a2b');
                 document.documentElement.style.setProperty('--madera-dark-activa', '#5c3a21');
@@ -424,8 +375,7 @@
             const maxTramos = cantCostillas - 1;
             for (let key in celdasActivas) {
                 let parts = key.split('-');
-                let nv = parseInt(parts[0]);
-                let tr = parseInt(parts[1]);
+                let nv = parseInt(parts[0]); let tr = parseInt(parts[1]);
                 if (nv > cantNiveles || tr >= maxTramos) { delete celdasActivas[key]; }
             }
         }
@@ -446,13 +396,9 @@
 
             const widthSvg = 600; const heightSvg = 450;
             const paddingX = 70; const spaceX = (widthSvg - (paddingX * 2)) / 4;
-            
-            const posYPrimerNivel = 65; 
-            const distNivelY = 75;
-            const posYPercha = posYPrimerNivel + 12;
+            const posYPrimerNivel = 65; const distNivelY = 75; const posYPercha = posYPrimerNivel + 12;
 
             let svgContent = `<svg id="biblioteca-svg-element" viewBox="0 0 ${widthSvg} ${heightSvg}">`;
-            
             let anchoPerchaPix = (tramosAncho * spaceX) + 20;
             svgContent += `<rect x="${paddingX - 10}" y="${posYPercha}" width="${anchoPerchaPix}" height="7" rx="1" fill="var(--madera-dark-activa)" />`;
 
@@ -462,8 +408,7 @@
 
                 for(let key in celdasActivas) {
                     let parts = key.split('-');
-                    let nv = parseInt(parts[0]);
-                    let tr = parseInt(parts[1]);
+                    let nv = parseInt(parts[0]); let tr = parseInt(parts[1]);
                     if (c === tr || c === (tr + 1)) {
                         if (nv > nivelMasBajoOcupado) nivelMasBajoOcupado = nv;
                     }
@@ -490,14 +435,8 @@
                 let t = 0;
                 while (t < tramosAncho) {
                     if (celdasActivas[`${n}-${t}`]) {
-                        let tramoInicio = t;
-                        let longitud = 1;
-                        
-                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`]) {
-                            longitud++;
-                            t++;
-                        }
-
+                        let tramoInicio = t; let longitud = 1;
+                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`]) { longitud++; t++; }
                         let xStart = paddingX + (tramoInicio * spaceX) - 2;
                         let wEstanteContiguo = (longitud * spaceX) + 4;
 
@@ -528,8 +467,7 @@
                 let maxNivelCostilla = 1;
                 for(let key in celdasActivas) {
                     let parts = key.split('-');
-                    let nv = parseInt(parts[0]);
-                    let tr = parseInt(parts[1]);
+                    let nv = parseInt(parts[0]); let tr = parseInt(parts[1]);
                     if(c === tr || c === (tr + 1)) {
                         if(nv > maxNivelCostilla) maxNivelCostilla = nv;
                     }
@@ -572,7 +510,11 @@
             document.getElementById('library-summary').innerText = desglose;
         }
 
-        window.onload = buildTablero;
+        window.onload = () => {
+            buildTablero();
+            actualizarContadorNav();
+            if(new URLSearchParams(window.location.search).get('openCart') === 'true') toggleSidebar(true);
+        };
     </script>
 </body>
 </html>
