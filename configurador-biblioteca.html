@@ -274,51 +274,88 @@
             if (isHidden) { form.scrollIntoView({ behavior: 'smooth' }); }
         }
 
-        function generateSvgDataUrl(svgElement) {
-            let colorActivo = '#eaddca'; let colorOscuro = '#c8b7a0';
-            if (terminacionBiblioteca === 'Nogalina') { colorActivo = '#8b5a2b'; colorOscuro = '#5c3a21'; } 
-            else if (terminacionBiblioteca === 'Negro') { colorActivo = '#333333'; colorOscuro = '#1a1a1a'; }
+        // Convierte el SVG activo en un PNG real en Base64 (compatible con Gmail)
+        function generatePngFromSvg(svgElement) {
+            return new Promise((resolve) => {
+                let colorActivo = '#eaddca'; 
+                let colorOscuro = '#c8b7a0';
+                if (terminacionBiblioteca === 'Nogalina') { colorActivo = '#8b5a2b'; colorOscuro = '#5c3a21'; } 
+                else if (terminacionBiblioteca === 'Negro') { colorActivo = '#333333'; colorOscuro = '#1a1a1a'; }
 
-            let svgClon = svgElement.cloneNode(true);
-            svgClon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-            svgClon.setAttribute("width", "600"); svgClon.setAttribute("height", "450");
-            
-            let svgString = new XMLSerializer().serializeToString(svgClon);
-            svgString = svgString.replace(/fill="var\(--madera-activa\)"/g, `fill="${colorActivo}"`);
-            svgString = svgString.replace(/fill="var\(--madera-dark-activa\)"/g, `fill="${colorOscuro}"`);
-            svgString = svgString.replace(/stroke="var\(--madera-dark-activa\)"/g, `stroke="${colorOscuro}"`);
+                let svgClon = svgElement.cloneNode(true);
+                svgClon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+                svgClon.setAttribute("width", "800");
+                svgClon.setAttribute("height", "600");
 
-            return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgString);
+                // Remover líneas guía e interactividad para el render final
+                const guias = svgClon.querySelectorAll('line, rect[fill="transparent"]');
+                guias.forEach(g => g.remove());
+
+                let svgString = new XMLSerializer().serializeToString(svgClon);
+                svgString = svgString.replace(/fill="var\(--madera-activa\)"/g, `fill="${colorActivo}"`);
+                svgString = svgString.replace(/fill="var\(--madera-dark-activa\)"/g, `fill="${colorOscuro}"`);
+                svgString = svgString.replace(/stroke="var\(--madera-dark-activa\)"/g, `stroke="${colorOscuro}"`);
+
+                const img = new Image();
+                const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgString);
+
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 800;
+                    canvas.height = 600;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Fondo crema para la imagen
+                    ctx.fillStyle = '#fcfbfa';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    
+                    resolve(canvas.toDataURL('image/png'));
+                };
+
+                img.src = svgUrl;
+            });
         }
 
-        function sendDirectEmail(e) {
+        // Función de envío adaptada a Asíncrona (async/await)
+        async function sendDirectEmail(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('btnSendMail');
-            submitBtn.innerText = 'Enviando...'; submitBtn.disabled = true;
+            submitBtn.innerText = 'Generando Render...'; 
+            submitBtn.disabled = true;
 
-            const svgElement = document.getElementById('biblioteca-svg-element');
-            let imageSvgDataUrl = svgElement ? generateSvgDataUrl(svgElement) : "";
+            try {
+                const svgElement = document.getElementById('biblioteca-svg-element');
+                let imagePngDataUrl = "";
+                
+                if (svgElement) {
+                    imagePngDataUrl = await generatePngFromSvg(svgElement);
+                }
 
-            const templateParams = {
-                from_name: document.getElementById('userName').value,
-                from_email: document.getElementById('userEmail').value,
-                phone: document.getElementById('userPhone').value,
-                comments: document.getElementById('userComments').value,
-                material: terminacionBiblioteca,
-                summary_detail: despieceGlobalTexto,
-                svg_graphic: imageSvgDataUrl
-            };
+                submitBtn.innerText = 'Enviando...';
 
-            emailjs.send('service_fpyoqnb', 'template_lcucl54', templateParams)
-                .then(function() {
-                    alert('¡Consulta enviada con éxito! Nos pondremos en contacto pronto.');
-                    document.getElementById('contactForm').reset();
-                    toggleForm();
-                    submitBtn.innerText = 'Enviar Consulta Ahora'; submitBtn.disabled = false;
-                }, function(error) {
-                    alert('Ocurrió un error al enviar el mensaje. Por favor intenta nuevamente.');
-                    submitBtn.innerText = 'Enviar Consulta Ahora'; submitBtn.disabled = false;
-                });
+                const templateParams = {
+                    from_name: document.getElementById('userName').value,
+                    from_email: document.getElementById('userEmail').value,
+                    phone: document.getElementById('userPhone').value,
+                    comments: document.getElementById('userComments').value,
+                    material: terminacionBiblioteca,
+                    summary_detail: despieceGlobalTexto,
+                    svg_graphic: imagePngDataUrl // Envía data:image/png;base64,...
+                };
+
+                await emailjs.send('service_fpyoqnb', 'template_lcucl54', templateParams);
+                
+                alert('¡Consulta enviada con éxito! Nos pondremos en contacto pronto.');
+                document.getElementById('contactForm').reset();
+                toggleForm();
+            } catch (error) {
+                console.error("Error al enviar email:", error);
+                alert('Ocurrió un error al enviar el mensaje. Por favor intenta nuevamente.');
+            } finally {
+                submitBtn.innerText = 'Enviar Consulta Ahora'; 
+                submitBtn.disabled = false;
+            }
         }
 
         function enviarConsultaPorEmailModal(e) {
