@@ -62,17 +62,45 @@
         .control-panel { flex: 0.8; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; padding: 30px; display: flex; flex-direction: column; gap: 20px; }
 
         .panel-title { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
-        .step-block { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--vison-suave); padding-bottom: 15px; }
-        .step-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--vison-oscuro); }
-        .step-instruction { font-size: 13px; color: var(--negro-mueca); font-weight: 500; line-height: 1.4; }
+        
+        .wizard-steps-indicator { display: flex; justify-content: space-between; border-bottom: 2px solid var(--vison-suave); padding-bottom: 12px; margin-bottom: 5px; }
+        .step-dot { font-size: 11px; font-weight: 700; color: var(--vison-oscuro); text-transform: uppercase; cursor: default; }
+        .step-dot.active { color: var(--negro-mueca); border-bottom: 2px solid var(--negro-mueca); margin-bottom: -14px; padding-bottom: 12px; }
 
-        .btn-grid { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-opt { padding: 10px 16px; border: 1px solid var(--vison-suave); background: var(--blanco); border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
-        .btn-opt.selected { background: var(--negro-mueca); color: var(--blanco); border-color: var(--negro-mueca); }
+        .step-block { display: none; flex-direction: column; gap: 15px; }
+        .step-block.active { display: flex; }
+
+        .step-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--negro-mueca); }
+        .step-instruction { font-size: 13px; color: var(--texto-suave); font-weight: 500; line-height: 1.4; }
+
+        .btn-grid-vertical { display: flex; flex-direction: column; gap: 10px; }
+        .btn-opt-card {
+            display: flex; align-items: center; gap: 15px; padding: 10px 14px;
+            border: 1px solid var(--vison-suave); background: var(--blanco);
+            border-radius: 6px; cursor: pointer; text-align: left; transition: var(--transition);
+        }
+        .btn-opt-card:hover { border-color: var(--vison-oscuro); }
+        .btn-opt-card.selected { border-color: var(--negro-mueca); background: #f7f5f0; }
+        .btn-opt-card img { width: 42px; height: 42px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+        .btn-opt-card .opt-info { display: flex; flex-direction: column; gap: 2px; }
+        .btn-opt-card .opt-title { font-size: 13px; font-weight: 700; color: var(--negro-mueca); }
+        .btn-opt-card .opt-desc { font-size: 11px; color: var(--texto-suave); }
 
         .counter-row { display: flex; align-items: center; gap: 15px; }
         .btn-counter { width: 36px; height: 36px; border: 1px solid var(--vison-suave); background: var(--blanco); font-size: 18px; cursor: pointer; font-weight: 600; border-radius: 4px; }
         .counter-display { font-size: 14px; font-weight: 700; min-width: 170px; }
+
+        .wizard-nav-buttons { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-step { flex: 1; padding: 12px; border: 1px solid var(--negro-mueca); background: var(--blanco); color: var(--negro-mueca); border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: var(--transition); text-align: center; }
+        .btn-step.primary { background: var(--negro-mueca); color: var(--blanco); }
+        .btn-step:hover { opacity: 0.85; }
+
+        .accessory-selector { display: flex; gap: 8px; margin-bottom: 10px; }
+        .btn-acc { flex: 1; padding: 8px 4px; border: 1px dashed var(--vison-oscuro); background: var(--blanco); border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; text-align: center; }
+        .btn-acc.active { background: var(--negro-mueca); color: var(--blanco); border-style: solid; }
+
+        .tv-config-box { display: none; background: #f7f5f0; padding: 12px; border-radius: 4px; border: 1px solid var(--vison-suave); flex-direction: column; gap: 8px; margin-bottom: 10px; }
+        .tv-config-box.active { display: flex; }
 
         .summary-box { background: var(--crema-fondo); padding: 15px; border-radius: 4px; border: 1px dashed var(--vison-oscuro); font-family: monospace; font-size: 12px; white-space: pre-wrap; color: var(--negro-mueca); line-height: 1.4; }
         .btn-submit { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 16px; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase; width: 100%; transition: var(--transition); }
@@ -170,44 +198,120 @@
         </div>
 
         <div class="control-panel">
-            <h2 class="panel-title">Configurador de Bibliotecas</h2>
+            <h2 class="panel-title">Configurador</h2>
             
-            <div class="step-block">
-                <span class="step-title">Paso 1: Terminación</span>
-                <div class="btn-grid">
-                    <button class="btn-opt selected" onclick="changeFinish('Multilaminado Guatambú', this)">Multilaminado Guatambú</button>
-                    <button class="btn-opt" onclick="changeFinish('MDF Guatambú', this)">MDF Guatambú</button>
-                    <button class="btn-opt" onclick="changeFinish('Nogalina', this)">Nogalina</button>
-                    <button class="btn-opt" onclick="changeFinish('Negro', this)">Negro</button>
+            <div class="wizard-steps-indicator">
+                <span class="step-dot active" id="dot-step-1">1. Medidas</span>
+                <span class="step-dot" id="dot-step-2">2. Croquis</span>
+                <span class="step-dot" id="dot-step-3">3. Color</span>
+            </div>
+
+            <!-- PASO 1: Dimensiones -->
+            <div class="step-block active" id="step-block-1">
+                <span class="step-title">Elegí el Ancho y Alto base</span>
+                <p class="step-instruction">Definí las proporciones exteriores de la estructura principal.</p>
+                
+                <div style="display:flex; flex-direction:column; gap:12px; margin-top:5px;">
+                    <div>
+                        <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Ancho total (Máx. 4 Módulos)</span>
+                        <div class="counter-row" style="margin-top:4px;">
+                            <button class="btn-counter" onclick="adjustWidth(-1)">−</button>
+                            <span id="label-ancho-cm" class="counter-display">Ancho: 65 cm</span>
+                            <button class="btn-counter" onclick="adjustWidth(1)">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Alto total</span>
+                        <div class="counter-row" style="margin-top:4px;">
+                            <button class="btn-counter" onclick="adjustHeight(-1)">−</button>
+                            <span id="label-alto-cm" class="counter-display">Alto: 43.6 cm</span>
+                            <button class="btn-counter" onclick="adjustHeight(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wizard-nav-buttons">
+                    <button class="btn-step primary" onclick="goToStep(2)">Siguiente: Diseñar Croquis ➔</button>
                 </div>
             </div>
 
-            <div class="step-block">
-                <span class="step-title">Paso 2: Modulación Ancho</span>
-                <div class="counter-row">
-                    <button class="btn-counter" onclick="adjustWidth(-1)">−</button>
-                    <span id="label-ancho-cm" class="counter-display">Ancho: 63 cm</span>
-                    <button class="btn-counter" onclick="adjustWidth(1)">+</button>
+            <!-- PASO 2: Croquis & Accesorios -->
+            <div class="step-block" id="step-block-2">
+                <span class="step-title">Dibuja tu biblioteca</span>
+                <p class="step-instruction">Elegí una herramienta y haz clic sobre la cuadrícula.</p>
+                
+                <div style="margin-top:5px;">
+                    <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro); display:block; margin-bottom:5px;">Herramienta Activa:</span>
+                    <div class="accessory-selector">
+                        <button class="btn-acc active" id="acc-estante" onclick="setAccessoryMode('estante')">Estante</button>
+                        <button class="btn-acc" id="acc-escritorio" onclick="setAccessoryMode('escritorio')">Escritorio</button>
+                        <button class="btn-acc" id="acc-tv" onclick="setAccessoryMode('tv')">Soporte TV</button>
+                    </div>
+                </div>
+
+                <!-- Opciones cuando se activa Soporte TV -->
+                <div class="tv-config-box" id="tv-options">
+                    <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--negro-mueca);">Tamaño de tu TV:</span>
+                    <select id="tv-size-select" onchange="updateTvSize()" style="padding:8px; border:1px solid var(--vison-suave); border-radius:4px; font-size:12px; background:#fff;">
+                        <option value="43">43" (Ancho ~95cm)</option>
+                        <option value="55" selected>55" (Ancho ~121cm)</option>
+                        <option value="65">65" (Ancho ~143cm)</option>
+                        <option value="75">75" (Ancho ~165cm)</option>
+                    </select>
+                    <span style="font-size:10px; color:var(--texto-suave);">Haz clic en un casillero para ubicar la tele. Clic en otro casillero la reubica. Clic sobre la misma la quita.</span>
+                </div>
+
+                <div class="wizard-nav-buttons">
+                    <button class="btn-step" onclick="goToStep(1)">🠔 Atrás</button>
+                    <button class="btn-step primary" onclick="goToStep(3)">Siguiente: Color ➔</button>
                 </div>
             </div>
 
-            <div class="step-block">
-                <span class="step-title">Paso 3: Modulación Alto</span>
-                <div class="counter-row">
-                    <button class="btn-counter" onclick="adjustHeight(-1)">−</button>
-                    <span id="label-alto-cm" class="counter-display">Alto: 41 cm</span>
-                    <button class="btn-counter" onclick="adjustHeight(1)">+</button>
+            <!-- PASO 3: Color y Terminación -->
+            <div class="step-block" id="step-block-3">
+                <span class="step-title">Elegí la terminación de tu biblioteca</span>
+                <p class="step-instruction">Seleccioná la madera o color de acabado preferido.</p>
+
+                <div class="btn-grid-vertical">
+                    <div class="btn-opt-card selected" onclick="changeFinish('Multilaminado Guatambú', this)">
+                        <img src="https://placehold.co/100x100/eaddca/8c857b?text=Guatamb%C3%BA" alt="Multilaminado Guatambú">
+                        <div class="opt-info">
+                            <span class="opt-title">Multilaminado Guatambú</span>
+                            <span class="opt-desc">Veta natural clara con bordes multilaminados vistos.</span>
+                        </div>
+                    </div>
+                    <div class="btn-opt-card" onclick="changeFinish('MDF Guatambú', this)">
+                        <img src="https://placehold.co/100x100/dfd8ca/8c857b?text=MDF" alt="MDF Guatambú">
+                        <div class="opt-info">
+                            <span class="opt-title">MDF Guatambú</span>
+                            <span class="opt-desc">Enchapado uniforme con textura lisa y cálida.</span>
+                        </div>
+                    </div>
+                    <div class="btn-opt-card" onclick="changeFinish('Nogalina', this)">
+                        <img src="https://placehold.co/100x100/8b5a2b/ffffff?text=Nogal" alt="Nogalina">
+                        <div class="opt-info">
+                            <span class="opt-title">Nogalina</span>
+                            <span class="opt-desc">Tono nogal oscuro elegante y sobrio.</span>
+                        </div>
+                    </div>
+                    <div class="btn-opt-card" onclick="changeFinish('Negro', this)">
+                        <img src="https://placehold.co/100x100/242423/ffffff?text=Negro" alt="Negro">
+                        <div class="opt-info">
+                            <span class="opt-title">Negro Mate</span>
+                            <span class="opt-desc">Acabado negro contemporáneo continuo.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wizard-nav-buttons">
+                    <button class="btn-step" onclick="goToStep(2)">🠔 Atrás</button>
                 </div>
             </div>
 
-            <div class="step-block">
-                <span class="step-title">Paso 4: Dibuja tu biblioteca</span>
-                <p class="step-instruction">Toca sobre las líneas punteadas del diseño para agregar o quitar estantes a tu gusto.</p>
-            </div>
-
-            <div class="step-block">
-                <span class="step-title">Despiece Técnico Encastrable</span>
-                <div id="library-summary" class="summary-box">Calculando...</div>
+            <!-- Despiece Técnico Encastrable -->
+            <div style="margin-top:15px; border-top:1px solid var(--vison-suave); padding-top:15px;">
+                <span class="step-title" style="font-size:11px; color:var(--vison-oscuro);">Despiece Técnico Encastrable</span>
+                <div id="library-summary" class="summary-box" style="margin-top:8px;">Calculando...</div>
             </div>
         </div>
     </div>
@@ -274,7 +378,6 @@
             if (isHidden) { form.scrollIntoView({ behavior: 'smooth' }); }
         }
 
-        // Convierte el SVG activo en un PNG real en Base64 (compatible con Gmail)
         function generatePngFromSvg(svgElement) {
             return new Promise((resolve) => {
                 let colorActivo = '#eaddca'; 
@@ -287,7 +390,6 @@
                 svgClon.setAttribute("width", "800");
                 svgClon.setAttribute("height", "600");
 
-                // Remover líneas guía e interactividad para el render final
                 const guias = svgClon.querySelectorAll('line, rect[fill="transparent"]');
                 guias.forEach(g => g.remove());
 
@@ -305,7 +407,6 @@
                     canvas.height = 600;
                     const ctx = canvas.getContext('2d');
                     
-                    // Fondo crema para la imagen
                     ctx.fillStyle = '#fcfbfa';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0);
@@ -317,7 +418,6 @@
             });
         }
 
-        // Función de envío adaptada a Asíncrona (async/await)
         async function sendDirectEmail(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('btnSendMail');
@@ -341,7 +441,7 @@
                     comments: document.getElementById('userComments').value,
                     material: terminacionBiblioteca,
                     summary_detail: despieceGlobalTexto,
-                    svg_graphic: imagePngDataUrl // Envía data:image/png;base64,...
+                    svg_graphic: imagePngDataUrl
                 };
 
                 await emailjs.send('service_fpyoqnb', 'template_lcucl54', templateParams);
@@ -378,12 +478,53 @@
             track.style.transform = `translateX(-${currentTopIndex * widthItem}px)`;
         }
 
+        // CONSTANTES FÍSICAS MUECA (UNIDAD 1 = 1 CM EN SVG)
+        const SPACING_X = 57;        // Distancia entre ejes de costillas
+        const SPACING_Y = 35;        // Distancia entre ejes de estantes
+        const OVERHANG_ESTANTE = 4;   // Voladizo lateral del estante
+        const OVERHANG_COSTILLA = 4.3; // Voladizo de la costilla arriba y abajo
+        const PERCHA_OVERHANG = 5;   // Percha sobresale 5cm de cada eje lateral (10cm total)
+        const PERCHA_DIST_Y = 13;     // Borde inferior de la percha colgada a 13cm por debajo del eje del 1er estante
+        const PERCHA_THICK = 10;      // Percha con alto/ancho de banda de 10 cm hacia arriba
+        const WOOD_THICK = 1.8;       // Espesor estándar madera 18mm
+
+        // VARIABLES Y ESTADOS
+        let currentStep = 1;
         let cantCostillas = 2; let cantNiveles = 2;   
-        let terminacionBiblioteca = "Multilaminado Guatambú"; let celdasActivas = {}; 
+        let terminacionBiblioteca = "Multilaminado Guatambú"; 
+        let celdasActivas = {}; 
+        let placaTV = null; // { nivel, tramo, tvPulgadas }
+        let accesorioModo = 'estante'; // 'estante', 'escritorio', 'tv'
+        let tvPulgadasSeleccionada = 55;
+
+        function goToStep(step) {
+            currentStep = step;
+            document.querySelectorAll('.step-block').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
+            
+            document.getElementById(`step-block-${step}`).classList.add('active');
+            document.getElementById(`dot-step-${step}`).classList.add('active');
+        }
+
+        function setAccessoryMode(mode) {
+            accesorioModo = mode;
+            document.querySelectorAll('.btn-acc').forEach(b => b.classList.remove('active'));
+            document.getElementById(`acc-${mode}`).classList.add('active');
+            document.getElementById('tv-options').classList.toggle('active', mode === 'tv');
+            buildTablero();
+        }
+
+        function updateTvSize() {
+            tvPulgadasSeleccionada = parseInt(document.getElementById('tv-size-select').value);
+            if (placaTV) {
+                placaTV.tvPulgadas = tvPulgadasSeleccionada;
+            }
+            buildTablero();
+        }
 
         function changeFinish(finishName, elem) {
             terminacionBiblioteca = finishName;
-            elem.parentNode.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('selected'));
+            document.querySelectorAll('.btn-opt-card').forEach(b => b.classList.remove('selected'));
             elem.classList.add('selected');
             if(finishName === 'Nogalina') {
                 document.documentElement.style.setProperty('--madera-activa', '#8b5a2b');
@@ -403,9 +544,10 @@
             if(n >= 2 && n <= 5) { cantCostillas = n; limpiarExcedentes(); buildTablero(); }
         }
 
+        // CORREGIDO: PERMITE ELEGIR MÁS DE 2 NIVELES DE ALTURA NORMALMENTE
         function adjustHeight(dir) {
             let n = cantNiveles + dir;
-            if(n >= 2 && n <= 5) { cantNiveles = n; limpiarExcedentes(); buildTablero(); }
+            if(n >= 2 && n <= 6) { cantNiveles = n; limpiarExcedentes(); buildTablero(); }
         }
 
         function limpiarExcedentes() {
@@ -415,32 +557,97 @@
                 let nv = parseInt(parts[0]); let tr = parseInt(parts[1]);
                 if (nv > cantNiveles || tr >= maxTramos) { delete celdasActivas[key]; }
             }
+            if (placaTV) {
+                if (placaTV.nivel >= cantNiveles || placaTV.tramo >= maxTramos) {
+                    placaTV = null;
+                }
+            }
         }
 
         function toggleCelda(nivel, tramo) {
             let key = `${nivel}-${tramo}`;
-            if (celdasActivas[key]) { delete celdasActivas[key]; } else { celdasActivas[key] = true; }
+            if (celdasActivas[key]) { 
+                delete celdasActivas[key]; 
+            } else { 
+                celdasActivas[key] = accesorioModo; 
+            }
             buildTablero();
+        }
+
+        function seleccionarPlacaTV(nivel, tramo) {
+            if (placaTV && placaTV.nivel === nivel && placaTV.tramo === tramo) {
+                placaTV = null;
+            } else {
+                placaTV = { nivel, tramo, tvPulgadas: tvPulgadasSeleccionada };
+            }
+            buildTablero();
+        }
+
+        // DIMENSIONES REALES DE PANTALLA EN MODO 16:9 (ESCALA CM)
+        function getTvDimensions(pulgadas) {
+            let wTele = 121; let hTele = 68; // 55" por defecto
+            if (pulgadas === 43) { wTele = 95; hTele = 53; }
+            else if (pulgadas === 65) { wTele = 143; hTele = 80; }
+            else if (pulgadas === 75) { wTele = 165; hTele = 93; }
+            return { wTele, hTele };
         }
 
         function buildTablero() {
             const tramosAncho = cantCostillas - 1;
-            const anchoTotalCm = (tramosAncho * 57) + 6;
-            const altoTotalCm = ((cantNiveles - 1) * 35) + 6;
+            
+            // Medidas totales exteriores basadas en ejes + voladizos
+            const anchoEjesTotal = tramosAncho * SPACING_X;
+            const anchoTotalCm = anchoEjesTotal + (OVERHANG_ESTANTE * 2);
+            const altoEjesTotal = (cantNiveles - 1) * SPACING_Y;
+            const altoTotalCm = altoEjesTotal + (OVERHANG_COSTILLA * 2);
 
-            document.getElementById('label-ancho-cm').innerText = `Ancho: ${anchoTotalCm} cm`;
-            document.getElementById('label-alto-cm').innerText = `Alto: ${altoTotalCm} cm`;
+            document.getElementById('label-ancho-cm').innerText = `Ancho: ${anchoTotalCm.toFixed(1)} cm`;
+            document.getElementById('label-alto-cm').innerText = `Alto: ${altoTotalCm.toFixed(1)} cm`;
 
-            const widthSvg = 600; const heightSvg = 450;
-            const paddingX = 70; const spaceX = (widthSvg - (paddingX * 2)) / 4;
-            const posYPrimerNivel = 65; const distNivelY = 75; const posYPercha = posYPrimerNivel + 12;
+            // Geometría paramétrica real (1 unidad SVG = 1 cm real)
+            const marginX = 65; 
+            const marginY = 40; 
+            
+            const viewBoxWidth = anchoTotalCm + (marginX * 2);
+            const viewBoxHeight = altoTotalCm + (marginY * 2);
 
-            let svgContent = `<svg id="biblioteca-svg-element" viewBox="0 0 ${widthSvg} ${heightSvg}">`;
-            let anchoPerchaPix = (tramosAncho * spaceX) + 20;
-            svgContent += `<rect x="${paddingX - 10}" y="${posYPercha}" width="${anchoPerchaPix}" height="7" rx="1" fill="var(--madera-dark-activa)" />`;
+            // Coordenada Y de los ejes de niveles (Nivel 1 = superior)
+            const yEjeNivel1 = marginY + OVERHANG_COSTILLA;
+            const xEjeCostilla0 = marginX + OVERHANG_ESTANTE;
 
+            let svgContent = `<svg id="biblioteca-svg-element" viewBox="0 0 ${viewBoxWidth} ${viewBoxHeight}">`;
+
+            // 1. RENDER PERCHA DE SOPORTE (ALTO 10 CM HACIA ARRIBA DESDE EL BORDE INFERIOR COLGADO)
+            let xPerchaStart = xEjeCostilla0 - PERCHA_OVERHANG;
+            let wPercha = anchoEjesTotal + (PERCHA_OVERHANG * 2);
+            let yPerchaBottom = yEjeNivel1 + PERCHA_DIST_Y;
+            let yPerchaStart = yPerchaBottom - PERCHA_THICK;
+
+            svgContent += `<rect x="${xPerchaStart}" y="${yPerchaStart}" width="${wPercha}" height="${PERCHA_THICK}" rx="0.5" fill="var(--madera-dark-activa)" />`;
+
+            // 2. RENDER PLACA TV FIJA EN MÓDULO (57 cm x 35 cm entre ejes)
+            if (placaTV) {
+                let xTV = xEjeCostilla0 + (placaTV.tramo * SPACING_X) + (WOOD_THICK / 2);
+                let yTV = yEjeNivel1 + ((placaTV.nivel - 1) * SPACING_Y) + (WOOD_THICK / 2);
+                let wTV = SPACING_X - WOOD_THICK;
+                let hTV = SPACING_Y - WOOD_THICK;
+
+                // Placa Soporte
+                svgContent += `<rect x="${xTV}" y="${yTV}" width="${wTV}" height="${hTV}" rx="0.5" fill="var(--vison-suave)" stroke="var(--vison-oscuro)" stroke-width="0.3" />`;
+                svgContent += `<text x="${xTV + (wTV/2)}" y="${yTV + (hTV/2) + 1}" font-size="3" font-weight="bold" fill="var(--vison-oscuro)" text-anchor="middle">SOPORTE TV</text>`;
+
+                // Proyección Punteada Real del TV (Proporcional a escala 1:1)
+                let { wTele, hTele } = getTvDimensions(placaTV.tvPulgadas);
+                let xTele = (xTV + (wTV / 2)) - (wTele / 2);
+                let yTele = (yTV + (hTV / 2)) - (hTele / 2);
+
+                svgContent += `<rect x="${xTele}" y="${yTele}" width="${wTele}" height="${hTele}" rx="1" fill="rgba(36, 36, 35, 0.08)" stroke="#242423" stroke-width="0.5" stroke-dasharray="1.5,1" pointer-events="none" />`;
+                svgContent += `<text x="${xTV + (wTV/2)}" y="${yTele - 1.5}" font-size="3.5" font-weight="bold" fill="#242423" text-anchor="middle" pointer-events="none">TELEVISOR ${placaTV.tvPulgadas}"</text>`;
+            }
+
+            // 3. RENDER COSTILLAS ESTRUCTURALES
             for(let c = 0; c < cantCostillas; c++) {
-                let xCostilla = paddingX + (c * spaceX);
+                let xCostillaEje = xEjeCostilla0 + (c * SPACING_X);
                 let nivelMasBajoOcupado = 1;
 
                 for(let key in celdasActivas) {
@@ -450,35 +657,64 @@
                         if (nv > nivelMasBajoOcupado) nivelMasBajoOcupado = nv;
                     }
                 }
+                if (placaTV && (c === placaTV.tramo || c === placaTV.tramo + 1)) {
+                    let nvTV = placaTV.nivel + 1;
+                    if (nvTV > nivelMasBajoOcupado) nivelMasBajoOcupado = nvTV;
+                }
 
-                let yFinCostilla = posYPrimerNivel + ((nivelMasBajoOcupado - 1) * distNivelY) + 30;
-                svgContent += `<rect x="${xCostilla - 4}" y="${posYPrimerNivel - 12}" width="8" height="${yFinCostilla - (posYPrimerNivel - 12)}" rx="2" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="1"/>`;
+                let yInicioCostilla = yEjeNivel1 - OVERHANG_COSTILLA;
+                let yFinEje = yEjeNivel1 + ((nivelMasBajoOcupado - 1) * SPACING_Y);
+                let largoCostilla = (yFinEje + OVERHANG_COSTILLA) - yInicioCostilla;
+
+                svgContent += `<rect x="${xCostillaEje - (WOOD_THICK / 2)}" y="${yInicioCostilla}" width="${WOOD_THICK}" height="${largoCostilla}" rx="0.4" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="0.3"/>`;
             }
 
+            // 4. RENDER MÓDULOS DE INTERACCIÓN Y LÍNEAS GUÍA
             for(let n = 1; n <= cantNiveles; n++) {
-                let yNivel = posYPrimerNivel + ((n - 1) * distNivelY);
+                let yEje = yEjeNivel1 + ((n - 1) * SPACING_Y);
                 for(let t = 0; t < tramosAncho; t++) {
+                    let xEjeInicio = xEjeCostilla0 + (t * SPACING_X);
+
+                    // Zona de clic para Herramienta TV
+                    if (accesorioModo === 'tv' && n < cantNiveles) {
+                        svgContent += `<rect x="${xEjeInicio}" y="${yEje}" width="${SPACING_X}" height="${SPACING_Y}" fill="transparent" style="cursor:pointer;" onclick="seleccionarPlacaTV(${n}, ${t})" />`;
+                    }
+
+                    // Guía punteada de estantes
                     if (!celdasActivas[`${n}-${t}`]) {
-                        let xStart = paddingX + (t * spaceX) + 4;
-                        let wTramo = spaceX - 8;
-                        svgContent += `<line x1="${xStart}" y1="${yNivel}" x2="${xStart + wTramo}" y2="${yNivel}" stroke="#b0aaf5" stroke-width="1.5" stroke-dasharray="4,4" pointer-events="none" />`;
-                        svgContent += `<rect x="${xStart}" y="${yNivel - 12}" width="${wTramo}" height="24" fill="transparent" style="cursor:pointer;" onclick="toggleCelda(${n}, ${t})" />`;
+                        svgContent += `<line x1="${xEjeInicio + (WOOD_THICK/2)}" y1="${yEje}" x2="${xEjeInicio + SPACING_X - (WOOD_THICK/2)}" y2="${yEje}" stroke="#b0aaf5" stroke-width="0.4" stroke-dasharray="1.5,1.5" pointer-events="none" />`;
+                        if (accesorioModo !== 'tv') {
+                            svgContent += `<rect x="${xEjeInicio}" y="${yEje - 5}" width="${SPACING_X}" height="10" fill="transparent" style="cursor:pointer;" onclick="toggleCelda(${n}, ${t})" />`;
+                        }
                     }
                 }
             }
 
+            // 5. RENDER ESTANTES Y ESCRITORIOS
             for(let n = 1; n <= cantNiveles; n++) {
-                let yNivel = posYPrimerNivel + ((n - 1) * distNivelY);
+                let yEje = yEjeNivel1 + ((n - 1) * SPACING_Y);
                 let t = 0;
                 while (t < tramosAncho) {
                     if (celdasActivas[`${n}-${t}`]) {
+                        let tipoAcc = celdasActivas[`${n}-${t}`];
                         let tramoInicio = t; let longitud = 1;
-                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`]) { longitud++; t++; }
-                        let xStart = paddingX + (tramoInicio * spaceX) - 2;
-                        let wEstanteContiguo = (longitud * spaceX) + 4;
+                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`] === tipoAcc) { longitud++; t++; }
+                        
+                        let xInicioEstante = xEjeCostilla0 + (tramoInicio * SPACING_X) - (tramoInicio === 0 ? OVERHANG_ESTANTE : 0);
+                        let xFinEstante = xEjeCostilla0 + ((tramoInicio + longitud) * SPACING_X) + ((tramoInicio + longitud) === tramosAncho ? OVERHANG_ESTANTE : 0);
+                        let wEstanteTotal = xFinEstante - xInicioEstante;
 
-                        svgContent += `<rect x="${xStart}" y="${yNivel - 4}" width="${wEstanteContiguo}" height="8" rx="1.5" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="1" />`;
-                        svgContent += `<rect x="${xStart}" y="${yNivel - 12}" width="${wEstanteContiguo}" height="24" fill="transparent" style="cursor:pointer;" onclick="removerBloqueAcumulado(${n}, ${tramoInicio}, ${longitud})" />`;
+                        if (tipoAcc === 'escritorio') {
+                            let hEscritorio = 4.5; // Espesor visual de placa de escritorio
+                            svgContent += `<rect x="${xInicioEstante}" y="${yEje - (hEscritorio/2)}" width="${wEstanteTotal}" height="${hEscritorio}" rx="0.5" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="0.4" />`;
+                            svgContent += `<text x="${xInicioEstante + (wEstanteTotal/2)}" y="${yEje + 0.8}" font-size="2.8" font-weight="bold" fill="var(--vison-oscuro)" text-anchor="middle">ESCRITORIO</text>`;
+                        } else {
+                            svgContent += `<rect x="${xInicioEstante}" y="${yEje - (WOOD_THICK/2)}" width="${wEstanteTotal}" height="${WOOD_THICK}" rx="0.3" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="0.3" />`;
+                        }
+
+                        if (accesorioModo !== 'tv') {
+                            svgContent += `<rect x="${xInicioEstante}" y="${yEje - 5}" width="${wEstanteTotal}" height="10" fill="transparent" style="cursor:pointer;" onclick="removerBloqueAcumulado(${n}, ${tramoInicio}, ${longitud})" />`;
+                        }
                     }
                     t++;
                 }
@@ -497,52 +733,65 @@
         let despieceGlobalTexto = "";
         function calcularDespieceEstructural() {
             let conteoEstantes = { simple: 0, doble: 0, triple: 0, cuadruple: 0 };
-            let conteoCostillasAlturas = { simple: 0, doble: 0, triple: 0, cuadruple: 0 };
+            let conteoEscritorios = 0;
+            let costillasNormales = 0;
+            let costillasEscritorio = 0;
             const tramosAncho = cantCostillas - 1;
 
-            for(let c = 0; c < cantCostillas; c++) {
-                let maxNivelCostilla = 1;
-                for(let key in celdasActivas) {
+            let costillasAfectadasEscritorio = new Set();
+            for(let key in celdasActivas) {
+                if(celdasActivas[key] === 'escritorio') {
                     let parts = key.split('-');
-                    let nv = parseInt(parts[0]); let tr = parseInt(parts[1]);
-                    if(c === tr || c === (tr + 1)) {
-                        if(nv > maxNivelCostilla) maxNivelCostilla = nv;
-                    }
+                    let tr = parseInt(parts[1]);
+                    costillasAfectadasEscritorio.add(tr);
+                    costillasAfectadasEscritorio.add(tr + 1);
                 }
-                if(maxNivelCostilla === 1 || maxNivelCostilla === 2) conteoCostillasAlturas.simple++;
-                if(maxNivelCostilla === 3) conteoCostillasAlturas.doble++;
-                if(maxNivelCostilla === 4) conteoCostillasAlturas.triple++;
-                if(maxNivelCostilla === 5) conteoCostillasAlturas.cuadruple++;
+            }
+
+            for(let c = 0; c < cantCostillas; c++) {
+                if (costillasAfectadasEscritorio.has(c)) {
+                    costillasEscritorio++;
+                } else {
+                    costillasNormales++;
+                }
             }
 
             for(let n = 1; n <= cantNiveles; n++) {
                 let t = 0;
                 while (t < tramosAncho) {
                     if (celdasActivas[`${n}-${t}`]) {
+                        let tipoAcc = celdasActivas[`${n}-${t}`];
                         let longitud = 1;
-                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`]) { longitud++; t++; }
-                        if(longitud === 1) conteoEstantes.simple++;
-                        if(longitud === 2) conteoEstantes.doble++;
-                        if(longitud === 3) conteoEstantes.triple++;
-                        if(longitud === 4) conteoEstantes.cuadruple++;
+                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`] === tipoAcc) { longitud++; t++; }
+                        
+                        if (tipoAcc === 'escritorio') {
+                            conteoEscritorios++;
+                        } else {
+                            if(longitud === 1) conteoEstantes.simple++;
+                            if(longitud === 2) conteoEstantes.doble++;
+                            if(longitud === 3) conteoEstantes.triple++;
+                            if(longitud === 4) conteoEstantes.cuadruple++;
+                        }
                     }
                     t++;
                 }
             }
 
-            let tramosAnchoActual = cantCostillas - 1;
-            let desglose = `• PERCHA DE SOPORTE: 1 Unidad (${(tramosAnchoActual * 57) + 6} cm)\n• COSTILLAS:`;
-            if(conteoCostillasAlturas.simple > 0) desglose += `\n   - Simples (2 Niveles - 41cm): ${conteoCostillasAlturas.simple}`;
-            if(conteoCostillasAlturas.doble > 0) desglose += `\n   - Dobles (3 Niveles - 76cm): ${conteoCostillasAlturas.doble}`;
-            if(conteoCostillasAlturas.triple > 0) desglose += `\n   - Triples (4 Niveles - 111cm): ${conteoCostillasAlturas.triple}`;
-            if(conteoCostillasAlturas.cuadruple > 0) desglose += `\n   - Cuádruples (5 Niveles - 146cm): ${conteoCostillasAlturas.cuadruple}`;
+            let anchoEjesTotal = tramosAncho * SPACING_X;
+            let anchoTotalCm = anchoEjesTotal + (OVERHANG_ESTANTE * 2);
+            let desglose = `• PERCHA DE SOPORTE: 1 Unidad (${anchoTotalCm.toFixed(1)} cm)\n• COSTILLAS:`;
+            if (costillasNormales > 0) desglose += `\n   - Costillas Estándar: ${costillasNormales}`;
+            if (costillasEscritorio > 0) desglose += `\n   - Costillas con Calado especial para Escritorio: ${costillasEscritorio}`;
             
-            desglose += `\n• ESTANTES ACUMULADOS CONSECUTIVOS:`;
-            if(conteoEstantes.simple > 0) desglose += `\n   - Simples (57cm): ${conteoEstantes.simple}`;
-            if(conteoEstantes.doble > 0) desglose += `\n   - Dobles (114cm): ${conteoEstantes.doble}`;
-            if(conteoEstantes.triple > 0) desglose += `\n   - Triples (171cm): ${conteoEstantes.triple}`;
-            if(conteoEstantes.cuadruple > 0) desglose += `\n   - Cuádruples (228cm): ${conteoEstantes.cuadruple}`;
+            desglose += `\n• ESTANTES Y COMPONENTES:`;
+            if(conteoEstantes.simple > 0) desglose += `\n   - Estantes Simples (65cm de corte): ${conteoEstantes.simple}`;
+            if(conteoEstantes.doble > 0) desglose += `\n   - Estantes Dobles (122cm de corte): ${conteoEstantes.doble}`;
+            if(conteoEstantes.triple > 0) desglose += `\n   - Estantes Triples (179cm de corte): ${conteoEstantes.triple}`;
+            if(conteoEstantes.cuadruple > 0) desglose += `\n   - Estantes Cuádruples (236cm de corte): ${conteoEstantes.cuadruple}`;
             
+            if(conteoEscritorios > 0) desglose += `\n   - Placa/Estante Escritorio Profundo: ${conteoEscritorios}`;
+            if(placaTV) desglose += `\n   - Placa Soporte TV Encastrable (para TV de ${placaTV.tvPulgadas}"): 1 Módulo (57x35cm)`;
+
             despieceGlobalTexto = desglose;
             document.getElementById('library-summary').innerText = desglose;
         }
