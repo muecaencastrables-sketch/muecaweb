@@ -3,89 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mueca — mesita de apoyo</title>
+    <title>mueca — mesitas de apoyo</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
-            --blanco: #ffffff; --crema-fondo: #fcfbfa; --vison-suave: #ebe7e0;
-            --vison-oscuro: #8c857b; --negro-mueca: #242423; --encabezado-amarillo: #FFC770;
-            --texto-suave: #666666; --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --blanco: #ffffff; 
+            --arena-fondo: #F5EBDB; 
+            --vison-suave: #ebe7e0;
+            --vison-oscuro: #8c857b; 
+            --negro-mueca: #0D0D0D; 
+            --azul-acento: #6298AC;
+            --texto-suave: #525252; 
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--blanco); color: var(--negro-mueca); line-height: 1.6; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--arena-fondo); color: var(--negro-mueca); }
         
         /* HEADER UNIFICADO */
         header { 
-            position: fixed; top: 0; width: 100%; background: var(--encabezado-amarillo); 
-            border-bottom: 1px solid rgba(0,0,0,0.08); z-index: 1000; min-height: 90px; 
-            display: flex; align-items: center; justify-content: space-between; padding: 0 5%; flex-wrap: wrap;
+            position: fixed; top: 0; width: 100%; 
+            background: var(--arena-fondo); 
+            border-bottom: 1px solid rgba(0,0,0,0.06); 
+            z-index: 1000; min-height: 70px; 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 5%; flex-wrap: wrap;
         }
-        .logo a { display: flex; align-items: center; }
-        .logo img { height: 80px; width: auto; object-fit: contain; }
+        .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo img { height: 36px; width: auto; object-fit: contain; }
+        .logo-text { font-size: 20px; font-weight: 800; color: var(--negro-mueca); letter-spacing: -0.5px; }
         
         .hamburger-btn {
-            display: none; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--negro-mueca); padding: 5px;
+            display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--negro-mueca); padding: 5px;
         }
 
-        nav { display: flex; align-items: center; gap: 20px; }
-        .nav-links { display: flex; list-style: none; gap: 25px; align-items: center; }
-        .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 14px; font-weight: 600; }
-        
-        .dropdown { position: relative; }
-        .dropdown-menu { 
-            display: none; position: absolute; top: 100%; left: 0; background: var(--blanco); 
-            min-width: 200px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 1px solid var(--vison-suave); 
-            list-style: none; padding: 10px 0; border-radius: 4px; margin-top: 0; z-index: 1100;
+        nav { display: flex; align-items: center; gap: 15px; }
+        .nav-links { display: flex; list-style: none; gap: 20px; align-items: center; }
+        .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-links li a:hover { color: var(--azul-acento); }
+
+        .btn-cart-nav { 
+            background: var(--negro-mueca); color: var(--blanco); border: none; 
+            padding: 6px 14px; border-radius: 16px; font-size: 11px; font-weight: 600; 
+            cursor: pointer; display: flex; align-items: center; gap: 5px; transition: var(--transition);
         }
-        .dropdown-menu::before { content: ''; position: absolute; top: -15px; left: 0; width: 100%; height: 15px; background: transparent; }
-        .dropdown:hover .dropdown-menu { display: block; }
-        .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
+        .btn-cart-nav:hover { background: var(--texto-suave); }
 
-        .btn-cart-nav { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        /* PRODUCTO CONTAINER COMPACTADO */
+        .product-container {
+            max-width: 1100px;
+            margin: 85px auto 30px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 25px;
+            align-items: start;
+        }
 
-        /* PRODUCTO Y GALERÍA */
-        .product-container { max-width: 1200px; margin: 120px auto 60px; display: flex; gap: 50px; padding: 0 20px; }
-        .product-gallery { flex: 1.2; position: relative; overflow: hidden; border-radius: 8px; background: var(--crema-fondo); aspect-ratio: 4/3; }
-        .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s ease-in-out; }
-        .carousel-slide { min-width: 100%; height: 100%; }
-        .carousel-slide img { width: 100%; height: 100%; object-fit: contain; }
-        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.8); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-weight: bold; z-index: 10; }
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .main-image-box {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: var(--vison-suave);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .main-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-        .product-info { flex: 0.8; display: flex; flex-direction: column; gap: 22px; }
-        .product-info h1 { font-size: 30px; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
-        .product-tagline { font-size: 15px; color: var(--texto-suave); }
-        
-        .option-group { display: flex; flex-direction: column; gap: 8px; }
-        .option-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--vison-oscuro); letter-spacing: 0.5px; }
-        .selector-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-option { padding: 10px 18px; border: 1px solid var(--vison-suave); background: var(--blanco); border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition); }
-        .btn-option.selected { background: var(--negro-mueca); color: var(--blanco); border-color: var(--negro-mueca); }
+        .product-details {
+            background: var(--blanco);
+            border: 1px solid var(--vison-suave);
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-        .btn-add { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 16px; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: var(--transition); text-align: center; margin-top: 5px; }
-        .btn-add:hover { background: #40403f; }
+        .product-title {
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+        .product-price {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--negro-mueca);
+            letter-spacing: -0.8px;
+            margin-top: 2px;
+            line-height: 1;
+        }
 
-        .accordion { margin-top: 15px; border-top: 1px solid var(--vison-suave); }
-        .accordion-item { border-bottom: 1px solid var(--vison-suave); }
-        .accordion-header { padding: 15px 0; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; }
-        .accordion-content { padding-bottom: 15px; color: var(--texto-suave); font-size: 13px; display: none; line-height: 1.5; }
-        .accordion-item.active .accordion-content { display: block; }
+        .section-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--vison-oscuro);
+            display: block;
+            margin-bottom: 5px;
+        }
 
-        /* SIDEBAR / CONSULTAS */
-        .sidebar-modal { position: fixed; top: 0; right: -450px; width: 420px; height: 100vh; background: var(--blanco); box-shadow: -10px 0 30px rgba(0,0,0,0.06); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
+        .btn-grid-options {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-option-card {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--vison-suave);
+            background: var(--blanco);
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+        .btn-option-card:hover { border-color: var(--vison-oscuro); }
+        .btn-option-card.selected {
+            border-color: var(--negro-mueca);
+            background: #f7f5f0;
+        }
+
+        /* TARJETAS DE TERMINACIÓN CON IMAGEN (COMPACTAS) */
+        .btn-grid-vertical { display: flex; flex-direction: column; gap: 6px; }
+        .btn-opt-card {
+            display: flex; align-items: center; gap: 10px; padding: 6px 10px;
+            border: 1px solid var(--vison-suave); background: var(--blanco);
+            border-radius: 5px; cursor: pointer; text-align: left; transition: var(--transition);
+        }
+        .btn-opt-card:hover { border-color: var(--vison-oscuro); }
+        .btn-opt-card.selected { border-color: var(--negro-mueca); background: #f7f5f0; }
+        .btn-opt-card img { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+        .btn-opt-card .opt-info { display: flex; flex-direction: column; gap: 1px; }
+        .btn-opt-card .opt-title { font-size: 11px; font-weight: 700; color: var(--negro-mueca); }
+        .btn-opt-card .opt-desc { font-size: 9.5px; color: var(--texto-suave); }
+
+        .summary-box {
+            background: #fff;
+            padding: 12px 14px;
+            border-radius: 5px;
+            border: 1px solid var(--vison-suave);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .summary-line {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--texto-suave);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .summary-highlight-price {
+            margin-top: 4px;
+            padding-top: 6px;
+            border-top: 1px dashed var(--vison-oscuro);
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--negro-mueca);
+            letter-spacing: -0.4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .summary-highlight-price span {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: var(--vison-oscuro);
+            text-transform: uppercase;
+        }
+
+        .btn-submit {
+            background: var(--negro-mueca);
+            color: var(--blanco);
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 2px;
+        }
+        .btn-submit:hover { background: #40403f; }
+
+        /* ESTILOS DEL MODAL LATERAL DE CONSULTAS */
+        .sidebar-modal { 
+            position: fixed; top: 0; right: -450px; width: 420px; height: 100vh; 
+            background: var(--blanco); box-shadow: -10px 0 30px rgba(0,0,0,0.06); 
+            z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; 
+        }
         .sidebar-modal.active { right: 0; }
         .sidebar-body { flex-grow: 1; overflow-y: auto; padding: 25px; }
 
-        /* MÓVIL UNIFICADO */
-        @media(max-width: 768px) { 
-            header { padding: 15px 20px !important; height: auto !important; }
+        @media(max-width: 768px) {
+            header { padding: 12px 15px !important; }
             .hamburger-btn { display: block; }
-            nav { display: none; width: 100%; flex-direction: column; padding-top: 15px; gap: 15px !important; }
+            nav { display: none; width: 100%; flex-direction: column; padding-top: 12px; gap: 12px !important; }
             nav.active { display: flex; }
-            .nav-links { flex-direction: column !important; gap: 15px !important; width: 100%; text-align: center; }
-            .dropdown-menu { position: relative !important; width: 100% !important; box-shadow: none !important; text-align: center; }
-
-            .product-container { flex-direction: column !important; margin: 110px auto 40px !important; gap: 25px !important; padding: 0 15px !important; }
-            .product-gallery { width: 100% !important; }
+            .nav-links { flex-direction: column !important; gap: 12px !important; width: 100%; text-align: center; }
+            .product-container { grid-template-columns: 1fr; margin-top: 80px; gap: 15px; }
             .sidebar-modal { width: 100%; right: -100%; }
         }
     </style>
@@ -93,131 +223,307 @@
 <body>
 
     <header>
-        <div class="logo"><a href="index.html"><img src="logo.png" alt="mueca logo"></a></div>
+        <div class="logo">
+            <a href="index.html">
+                <img src="Dibujo.png" alt="mueca logo" onerror="this.src='https://placehold.co/80x40?text=mueca'">
+                <span class="logo-text">mueca</span>
+            </a>
+        </div>
         <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
         <nav id="mainNav">
             <ul class="nav-links">
-                <li class="dropdown">
-                    <a href="index.html#novedades">Muebles ▾</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="mesita-apoyo.html">Mesita de Apoyo</a></li>
-                        <li><a href="repisa-recibidor.html">Repisa Recibidor</a></li>
-                        <li><a href="hanger-modular.html">Hanger Modular</a></li>
-                        <li><a href="escritorio-colgante.html">Escritorio Colgante</a></li>
-                    </ul>
-                </li>
-                <li><a href="configurador-biblioteca.html">Bibliotecas</a></li>
+                <li><a href="index.html#catalogo">Catálogo</a></li>
+                <li><a href="configurador-biblioteca.html">Bibliotecas Personalizables</a></li>
+                <li><a href="index.html#proceso">Proceso</a></li>
+                <li><a href="index.html#sobre-nosotros">Sobre Nosotros</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
             </ul>
-            <button class="btn-cart-nav" onclick="toggleSidebar(true)">Consultas (<span id="cart-count">0</span>)</button>
+           <button class="btn-cart-nav" onclick="toggleSidebar(true)">Consultas (<span id="cart-count">0</span>)</button>
         </nav>
     </header>
 
-    <main class="product-container">
+    <div class="product-container">
+        <!-- GALERÍA DE IMÁGENES -->
         <div class="product-gallery">
-            <button class="carousel-btn" style="left:20px;" onclick="moveCarousel(-1)">‹</button>
-            <div class="carousel-track" id="carouselTrack">
-                <div class="carousel-slide"><img src="mesita-apoyo-1.jpg" alt="Mesita Apoyo 1" onerror="this.src='https://placehold.co/600x450?text=Mesita+Apoyo+1'"></div>
-                <div class="carousel-slide"><img src="mesita-apoyo-2.jpg" alt="Mesita Apoyo 2" onerror="this.src='https://placehold.co/600x450?text=Mesita+Apoyo+2'"></div>
-                <div class="carousel-slide"><img src="mesita-apoyo-3.jpg" alt="Mesita Apoyo 3" onerror="this.src='https://placehold.co/600x450?text=Mesita+Apoyo+3'"></div>
+            <div class="main-image-box">
+                <img id="product-main-img" src="mesita-apoyo-1.jpg" alt="Mesita de apoyo mueca" onerror="this.src='https://placehold.co/600x450?text=Mesita+de+Apoyo'">
             </div>
-            <button class="carousel-btn" style="right:20px;" onclick="moveCarousel(1)">›</button>
         </div>
 
-        <div class="product-info">
+        <!-- DETALLES Y CONTROLES -->
+        <div class="product-details">
+            <h1 class="product-title">Mesitas de Apoyo</h1>
+            <div id="product-price-display" class="product-price">$ 0</div>
+
+            <!-- SELECTOR DE SUBMODELO -->
             <div>
-                <h1>Mesita de Apoyo</h1>
-                <p class="product-tagline">La compañera ideal para tus espacios. Resolviendo rincones libres con elegancia y versatilidad táctil.</p>
-            </div>
-
-            <div class="option-group">
-                <span class="option-label">Elegí el Modelo</span>
-                <div class="selector-buttons">
-                    <button id="btn-model-oval" class="btn-option selected" onclick="selectOption('model', 'Oval')">Oval</button>
-                    <button id="btn-model-estadio" class="btn-option" onclick="selectOption('model', 'Estadio')">Estadio</button>
+                <span class="section-label">1. Elegí el Formato / Submodelo</span>
+                <div class="btn-grid-options">
+                    <button class="btn-option-card selected" onclick="seleccionarSubmodelo('estadio', this)">Estadio</button>
+                    <button class="btn-option-card" onclick="seleccionarSubmodelo('oval', this)">Oval</button>
                 </div>
             </div>
 
-            <div class="option-group">
-                <span class="option-label">Terminación</span>
-                <div class="selector-buttons">
-                    <button id="btn-finish-multi" class="btn-option selected" onclick="selectOption('finish', 'Multilaminado Guatambú')">Multilaminado Guatambú</button>
-                    <button id="btn-finish-mdf" class="btn-option" onclick="selectOption('finish', 'MDF Guatambú')">MDF Guatambú</button>
-                    <button id="btn-finish-nogalina" class="btn-option" onclick="selectOption('finish', 'Nogalina')">Nogalina</button>
-                    <button id="btn-finish-negro" class="btn-option" onclick="selectOption('finish', 'Negro')">Negro</button>
-                </div>
-            </div>
-
-            <button class="btn-add" onclick="agregarAlCarritoGlobal()">Añadir a la lista de consulta</button>
-
-            <div class="accordion">
-                <div class="accordion-item" onclick="toggleAccordion(this)">
-                    <div class="accordion-header">Descripción del Mueble <span>+</span></div>
-                    <div class="accordion-content">
-                        La mesita de apoyo está pensada para resolver con diseño esos rincones de tu hogar que no estás seguro de cómo aprovechar. Por su altura y proporciones, es perfecta para ubicar junto al sofá o transformar ese spot especial.
+            <!-- SELECTOR DE COLOR / TERMINACIÓN CON MINIATURA DE IMAGEN -->
+            <div>
+                <span class="section-label">2. Elegí la Terminación</span>
+                <div class="btn-grid-vertical">
+                    <div class="btn-opt-card selected" onclick="seleccionarColor('multilaminado guatambú', this)">
+                        <img src="https://placehold.co/100x100/eaddca/8c857b?text=Guatamb%C3%BA" alt="Multilaminado Guatambú">
+                        <div class="opt-info">
+                            <span class="opt-title">Multilaminado Guatambú</span>
+                            <span class="opt-desc">Veta natural clara con bordes multilaminados vistos.</span>
+                        </div>
                     </div>
-                </div>
-                <div class="accordion-item" onclick="toggleAccordion(this)">
-                    <div class="accordion-header">Dimensiones y Especificaciones <span>+</span></div>
-                    <div class="accordion-content" id="dimensions-text">
-                        • Ancho: 43 cm<br>• Profundidad: 28 cm<br>• Alto: 55 cm (Forma de la tapa: Ovalada)
+                    <div class="btn-opt-card" onclick="seleccionarColor('mdf guatambú', this)">
+                        <img src="https://placehold.co/100x100/dfd8ca/8c857b?text=MDF" alt="MDF Guatambú">
+                        <div class="opt-info">
+                            <span class="opt-title">MDF Guatambú</span>
+                            <span class="opt-desc">Enchapado uniforme con textura lisa y cálida.</span>
+                        </div>
                     </div>
-                </div>
-                <div class="accordion-item" onclick="toggleAccordion(this)">
-                    <div class="accordion-header">Protección de Hidrolaca <span>+</span></div>
-                    <div class="accordion-content">
-                        Gracias a su tratamiento protegido por capas de hidrolaca impermeable de alta gama, es ideal para apoyar tus tazas calientes, vasos, libros o macetas sin preocuparte por marcas de humedad ni manchas diarias.
+                    <div class="btn-opt-card" onclick="seleccionarColor('nogalina', this)">
+                        <img src="https://placehold.co/100x100/8b5a2b/ffffff?text=Nogal" alt="Nogalina">
+                        <div class="opt-info">
+                            <span class="opt-title">Nogalina</span>
+                            <span class="opt-desc">Tono nogal oscuro elegante y sobrio.</span>
+                        </div>
+                    </div>
+                    <div class="btn-opt-card" onclick="seleccionarColor('negro mate', this)">
+                        <img src="https://placehold.co/100x100/242423/ffffff?text=Negro" alt="Negro Mate">
+                        <div class="opt-info">
+                            <span class="opt-title">Negro Mate</span>
+                            <span class="opt-desc">Acabado negro contemporáneo continuo.</span>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- RESUMEN DINÁMICO Y PRECIO -->
+            <div>
+                <span class="section-label">Detalle de Cotización</span>
+                <div id="product-summary-text" class="summary-box">Cargando precios...</div>
+            </div>
+
+            <button class="btn-submit" onclick="agregarAConsultas()">Agregar a lista de consultas</button>
         </div>
-    </main>
+    </div>
 
+    <!-- MODAL PANEL LATERAL DE CONSULTAS -->
     <div class="sidebar-modal" id="consulta-sidebar">
-        <div style="padding:20px; border-bottom:1px solid var(--vison-suave); display:flex; justify-content:space-between; background:var(--crema-fondo);">
+        <div style="padding:20px; border-bottom:1px solid var(--arena-fondo); display:flex; justify-content:space-between; background:var(--arena-fondo);">
             <h3 style="font-size:14px; font-weight:800; text-transform:uppercase;">Lista de Consulta</h3>
             <button onclick="toggleSidebar(false)" style="background:none; border:none; font-size:22px; cursor:pointer; color:var(--vison-oscuro);">×</button>
         </div>
         <div class="sidebar-body">
             <div id="items-consulta-container"></div>
-            <form onsubmit="enviarConsultaPorEmail(event)" style="margin-top:20px; border-top:1px solid var(--vison-suave); padding-top:20px;">
-                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Nombre Completo *</label><input type="text" id="modal-nombre" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required></div>
-                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Email de Contacto *</label><input type="email" id="modal-email" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required></div>
-                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Teléfono</label><input type="tel" id="modal-telefono" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;"></div>
-                <button type="submit" style="background:var(--negro-mueca); color:var(--blanco); border:none; padding:15px; width:100%; border-radius:4px; font-weight:700; text-transform:uppercase; cursor:pointer;">Enviar Solicitud</button>
+            <form onsubmit="enviarConsultaPorEmailModal(event)" style="margin-top:20px; border-top:1px solid var(--vison-suave); padding-top:20px;">
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;">
+                    <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Nombre Completo *</label>
+                    <input type="text" id="modal-nombre" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;">
+                    <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Email de Contacto *</label>
+                    <input type="email" id="modal-email" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;">
+                    <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Teléfono</label>
+                    <input type="tel" id="modal-telefono" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;">
+                </div>
+                <button type="submit" style="background:var(--negro-mueca); color:var(--blanco); border:none; padding:15px; width:100%; border-radius:4px; font-weight:700; text-transform:uppercase; cursor:pointer;">Enviar Consulta</button>
             </form>
         </div>
     </div>
 
     <script>
-        function toggleMobileMenu() { document.getElementById('mainNav').classList.toggle('active'); }
+        function toggleMobileMenu() { 
+            document.getElementById('mainNav').classList.toggle('active'); 
+        }
+
+        // CONFIGURACIÓN INICIAL DEL PRODUCTO
+        let matrizPreciosCatalogo = {};
+        let modeloProductoActual = "mesita de apoyo"; 
+        let submodeloProductoActual = "estadio"; 
+        let terminacionSeleccionada = "multilaminado guatambú";
+
+        // 1. Carga y parsing del CSV local
+        async function cargarPreciosCatalogo() {
+            try {
+                const res = await fetch('./Catalogo de precios - Sheet1.csv');
+                if (!res.ok) throw new Error("No se pudo cargar el archivo CSV");
+                
+                const textoCsv = await res.text();
+                const lineas = textoCsv.split(/\r?\n/);
+                
+                matrizPreciosCatalogo = {};
+
+                for (let i = 1; i < lineas.length; i++) {
+                    if (!lineas[i].trim()) continue;
+                    
+                    const separador = lineas[i].includes(';') ? ';' : ',';
+                    const cols = lineas[i].split(separador).map(c => c.replace(/^"|"$/g, '').trim());
+                    
+                    const modelo = (cols[1] || '').toLowerCase().trim();    // Columna B
+                    const submodelo = (cols[2] || '').toLowerCase().trim(); // Columna C
+                    const color = (cols[3] || '').toLowerCase().trim();     // Columna D
+                    
+                    const rawPrecio = (cols[5] || '0').replace(/[^0-9.,]/g, '').replace(',', '.');
+                    const precio = parseFloat(rawPrecio) || 0;
+
+                    if (modelo) {
+                        const claveProducto = submodelo ? `${modelo}-${submodelo}` : modelo;
+                        if (!matrizPreciosCatalogo[claveProducto]) {
+                            matrizPreciosCatalogo[claveProducto] = {};
+                        }
+                        matrizPreciosCatalogo[claveProducto][color || 'base'] = precio;
+                    }
+                }
+
+                actualizarPrecioPantalla();
+            } catch (e) {
+                console.error("Error al cargar el catálogo de precios:", e);
+                document.getElementById('product-summary-text').innerText = "Atención: No se pudo cargar la lista de precios local.";
+            }
+        }
+
+        // 2. Actualización en tiempo real del precio y cuadro informativo
+        function actualizarPrecioPantalla() {
+            const mod = modeloProductoActual.toLowerCase().trim();
+            const sub = submodeloProductoActual ? submodeloProductoActual.toLowerCase().trim() : '';
+            const claveBuscada = sub ? `${mod}-${sub}` : mod;
+            const colorKey = terminacionSeleccionada.toLowerCase().trim();
+
+            let precioEncontrado = 0;
+
+            if (matrizPreciosCatalogo[claveBuscada]) {
+                precioEncontrado = matrizPreciosCatalogo[claveBuscada][colorKey] || 
+                                   matrizPreciosCatalogo[claveBuscada]['base'] || 
+                                   Object.values(matrizPreciosCatalogo[claveBuscada])[0] || 0;
+            }
+
+            const elPrecio = document.getElementById('product-price-display');
+            let textoPrecio = "";
+
+            if (precioEncontrado > 0) {
+                textoPrecio = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(precioEncontrado);
+            } else {
+                textoPrecio = "Consultar cotización";
+            }
+
+            if (elPrecio) {
+                elPrecio.innerText = textoPrecio;
+            }
+
+            const elResumen = document.getElementById('product-summary-text');
+            if (elResumen) {
+                let htmlDetalle = `
+                    <div class="summary-line">• PRODUCTO: <strong>${modeloProductoActual.toUpperCase()}</strong></div>
+                    ${submodeloProductoActual ? `<div class="summary-line">• MODELO: <strong>${submodeloProductoActual.toUpperCase()}</strong></div>` : ''}
+                    <div class="summary-line">• TERMINACIÓN: <strong>${terminacionSeleccionada.toUpperCase()}</strong></div>
+                    <div class="summary-highlight-price">
+                        <span>Precio Final Estimado:</span>
+                        <div>${textoPrecio}</div>
+                    </div>
+                `;
+                elResumen.innerHTML = htmlDetalle;
+            }
+        }
+
+        // 3. Selección de Submodelo (Estadio / Oval)
+        function seleccionarSubmodelo(nombreSubmodelo, elementoBtn) {
+            submodeloProductoActual = nombreSubmodelo;
+            
+            if (elementoBtn && elementoBtn.parentNode) {
+                Array.from(elementoBtn.parentNode.children).forEach(b => b.classList.remove('selected'));
+                elementoBtn.classList.add('selected');
+            }
+
+            const imgEl = document.getElementById('product-main-img');
+            if (imgEl) {
+                imgEl.src = nombreSubmodelo === 'oval' ? 'mesita-apoyo-1.jpg' : 'mesita-apoyo-2.jpg';
+            }
+            
+            actualizarPrecioPantalla();
+        }
+
+        // 4. Selección de Color / Terminación
+        function seleccionarColor(nombreTerminacion, elementoBtn) {
+            terminacionSeleccionada = nombreTerminacion;
+            
+            if (elementoBtn && elementoBtn.parentNode) {
+                Array.from(elementoBtn.parentNode.children).forEach(b => b.classList.remove('selected', 'active'));
+                elementoBtn.classList.add('selected');
+            }
+            
+            actualizarPrecioPantalla();
+        }
+
+        // 5. Agregar el producto configurado a la lista de consultas en LocalStorage
+        function agregarAConsultas() {
+            const mod = modeloProductoActual.toUpperCase();
+            const sub = submodeloProductoActual ? ` (${submodeloProductoActual.toUpperCase()})` : '';
+            const nombreCompleto = `${mod}${sub}`;
+
+            let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+
+            const elResumen = document.getElementById('product-summary-text');
+            const detalleTexto = elResumen ? elResumen.innerText : '';
+
+            const nuevoItem = {
+                nombre: nombreCompleto,
+                terminacion: terminacionSeleccionada.toUpperCase(),
+                despachado: detalleTexto,
+                esCustom: true
+            };
+
+            cart.push(nuevoItem);
+            localStorage.setItem('mueca_cart', JSON.stringify(cart));
+
+            actualizarContadorNav();
+            toggleSidebar(true);
+        }
+
+        // Control del panel lateral de consultas (modal)
         function toggleSidebar(show) {
-            document.getElementById('consulta-sidebar').classList.toggle('active', show);
-            if(show) renderListaConsultas();
+            const sidebar = document.getElementById('consulta-sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('active', show);
+                if (show) renderListaConsultas();
+            } else {
+                alert('Producto agregado a tu lista de consultas.');
+            }
         }
 
         function actualizarContadorNav() {
             const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            document.getElementById('cart-count').innerText = cart.length;
+            const countEl = document.getElementById('cart-count');
+            if (countEl) countEl.innerText = cart.length;
         }
 
         function renderListaConsultas() {
             const contenedor = document.getElementById('items-consulta-container');
+            if (!contenedor) return;
+
             const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            if(cart.length === 0) { contenedor.innerHTML = "<p style='font-size:13px; color:#666;'>No hay muebles en tu lista.</p>"; return; }
+            if (cart.length === 0) {
+                contenedor.innerHTML = "<p style='font-size:13px; color:#666;'>No hay muebles en tu lista.</p>";
+                return;
+            }
+
             let html = "";
             cart.forEach((item, index) => {
                 html += `
                     <div style="padding:12px 0; border-bottom:1px solid #ebe7e0; position:relative;">
                         <h4 style="font-size:12px; font-weight:700; text-transform:uppercase;">${item.nombre}</h4>
                         <p style="font-size:11px; color:#666;">Terminación: ${item.terminacion}</p>
-                        ${item.esCustom ? `<pre style="font-size:10px; background:#fcfbfa; padding:5px; margin-top:5px; font-family:monospace;">${item.despachado}</pre>` : ''}
-                        <button onclick="eliminarItem(${index})" style="position:absolute; right:0; top:12px; background:none; border:none; color:#8c857b; cursor:pointer; font-size:11px; font-weight:600;">Quitar</button>
+                        ${item.despachado ? `<pre style="font-size:10px; background:#fcfbfa; padding:6px; margin-top:5px; font-family:monospace; line-height:1.3; border:1px solid #ebe7e0;">${item.despachado}</pre>` : ''}
+                        <button onclick="eliminarItemConsulta(${index})" style="position:absolute; right:0; top:12px; background:none; border:none; color:#8c857b; cursor:pointer; font-size:11px; font-weight:600;">Quitar</button>
                     </div>`;
             });
             contenedor.innerHTML = html;
         }
 
-        function eliminarItem(idx) {
+        function eliminarItemConsulta(idx) {
             let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
             cart.splice(idx, 1);
             localStorage.setItem('mueca_cart', JSON.stringify(cart));
@@ -225,68 +531,72 @@
             actualizarContadorNav();
         }
 
-        function enviarConsultaPorEmail(e) {
-            e.preventDefault();
-            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            if(cart.length === 0) return;
-            let cuerpo = `Consulta de Cotización — Mueca\n\nNombre: ${document.getElementById('modal-nombre').value}\nEmail: ${document.getElementById('modal-email').value}\nTeléfono: ${document.getElementById('modal-telefono').value || 'No indicado'}\n\nProductos:\n`;
-            cart.forEach((i, idx) => {
-                cuerpo += `${idx+1}. ${i.nombre.toUpperCase()} [${i.terminacion}]\n`;
-                if(i.despachado) cuerpo += `${i.despachado}\n`;
-            });
-            window.location.href = `mailto:mueca.encastrables@gmail.com?subject=Nueva Cotizacion Mueca&body=${encodeURIComponent(cuerpo)}`;
+       (function(){ emailjs.init("_RxYQ5EVnN6coQIl_"); })();
+
+async function enviarConsultaPorEmailModal(e) {
+    e.preventDefault();
+    
+    const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+    if (cart.length === 0) {
+        alert("No hay productos en tu lista de consultas.");
+        return;
+    }
+
+    const btnSubmit = e.target.querySelector('button[type="submit"]');
+    const textoOriginal = btnSubmit.innerText;
+    btnSubmit.innerText = "Enviando...";
+    btnSubmit.disabled = true;
+
+    let detalleProductos = "";
+    let renderBibliotecaEncontrado = "";
+
+    cart.forEach((item, idx) => {
+        detalleProductos += `--- PRODUCTO ${idx + 1}: ${item.nombre.toUpperCase()} ---\n`;
+        detalleProductos += `Terminación: ${item.terminacion}\n`;
+        if (item.despachado) {
+            detalleProductos += `${item.despachado}\n\n`;
+        } else {
+            detalleProductos += `\n`;
         }
 
-        let currentSlide = 0;
-        let configuracion = { model: 'Oval', finish: 'Multilaminado Guatambú' };
-
-        function moveCarousel(dir) {
-            const track = document.getElementById('carouselTrack');
-            currentSlide = (currentSlide + dir + 3) % 3;
-            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        if (item.imagenRender && !renderBibliotecaEncontrado) {
+            renderBibliotecaEncontrado = item.imagenRender;
         }
+    });
 
-        function selectOption(type, value) {
-            configuracion[type] = value;
-            if(type === 'model') {
-                document.getElementById('btn-model-oval').classList.toggle('selected', value === 'Oval');
-                document.getElementById('btn-model-estadio').classList.toggle('selected', value === 'Estadio');
-                
-                const txt = document.getElementById('dimensions-text');
-                if(value === 'Oval') {
-                    txt.innerHTML = `• Ancho: 43 cm<br>• Profundidad: 28 cm<br>• Alto: 55 cm (Forma de la tapa: Ovalada)`;
-                } else {
-                    txt.innerHTML = `• Ancho: 55 cm<br>• Profundidad: 30 cm<br>• Alto: 55 cm (Forma de la tapa: Estadio)`;
-                }
-            } else {
-                document.getElementById('btn-finish-multi').classList.toggle('selected', value === 'Multilaminado Guatambú');
-                document.getElementById('btn-finish-mdf').classList.toggle('selected', value === 'MDF Guatambú');
-                document.getElementById('btn-finish-nogalina').classList.toggle('selected', value === 'Nogalina');
-                document.getElementById('btn-finish-negro').classList.toggle('selected', value === 'Negro');
-            }
-        }
+    const templateParams = {
+        from_name: document.getElementById('modal-nombre').value,
+        from_email: document.getElementById('modal-email').value,
+        phone: document.getElementById('modal-telefono').value || 'No indicado',
+        comments: 'Consulta general consolidada desde la web',
+        material: 'Varios / Combinado',
+        summary_detail: detalleProductos,
+        svg_graphic: renderBibliotecaEncontrado
+    };
 
-        function toggleAccordion(elem) {
-            elem.classList.toggle('active');
-            elem.querySelector('.accordion-header span').innerText = elem.classList.contains('active') ? '−' : '+';
-        }
+    try {
+        await emailjs.send('service_fpyoqnb', 'template_lcucl54', templateParams);
+        
+        alert("¡Consulta enviada con éxito! Nos pondremos en contacto a la brevedad.");
+        
+        localStorage.removeItem('mueca_cart');
+        actualizarContadorNav();
+        renderListaConsultas();
+        toggleSidebar(false);
+        e.target.reset();
+    } catch (error) {
+        console.error("Error al enviar EmailJS:", error);
+        alert("Ocurrió un error al enviar la consulta. Por favor intenta nuevamente.");
+    } finally {
+        btnSubmit.innerText = textoOriginal;
+        btnSubmit.disabled = false;
+    }
+}
 
-        function agregarAlCarritoGlobal() {
-            let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            cart.push({
-                nombre: `mesita de apoyo (${configuracion.model.toLowerCase()})`,
-                terminacion: configuracion.finish,
-                esCustom: false
-            });
-            localStorage.setItem('mueca_cart', JSON.stringify(cart));
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarPreciosCatalogo();
             actualizarContadorNav();
-            toggleSidebar(true);
-        }
-
-        window.onload = () => {
-            actualizarContadorNav();
-            if(new URLSearchParams(window.location.search).get('openCart') === 'true') toggleSidebar(true);
-        };
+        });
     </script>
 </body>
 </html>

@@ -8,106 +8,151 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
-            --blanco: #ffffff; --crema-fondo: #fcfbfa; --vison-suave: #ebe7e0;
-            --vison-oscuro: #8c857b; --negro-mueca: #242423; --encabezado-amarillo: #FFC770;
-            --madera-activa: #eaddca; --madera-dark-activa: #c8b7a0;
-            --texto-suave: #666666; --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --blanco: #ffffff; 
+            --arena-fondo: #F5EBDB; 
+            --vison-suave: #ebe7e0;
+            --vison-oscuro: #8c857b; 
+            --negro-mueca: #0D0D0D; 
+            --amarillo-mueca: #FFC770;
+            --azul-acento: #6298AC;
+            --madera-activa: #eaddca; 
+            --madera-dark-activa: #c8b7a0;
+            --texto-suave: #525252; 
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--crema-fondo); color: var(--negro-mueca); }
+        body { font-family: 'Inter', sans-serif; background-color: var(--arena-fondo); color: var(--negro-mueca); }
         
+        /* HEADER UNIFICADO */
         header { 
-            position: fixed; top: 0; width: 100%; background: var(--encabezado-amarillo); 
-            border-bottom: 1px solid rgba(0,0,0,0.08); z-index: 1000; min-height: 90px; 
-            display: flex; align-items: center; justify-content: space-between; padding: 0 5%; flex-wrap: wrap;
+            position: fixed; top: 0; width: 100%; 
+            background: var(--arena-fondo); 
+            border-bottom: 1px solid rgba(0,0,0,0.06); 
+            z-index: 1000; min-height: 70px; 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 5%; flex-wrap: wrap;
         }
-        .logo a { display: flex; align-items: center; }
-        .logo img { height: 80px; width: auto; object-fit: contain; }
+        .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo img { height: 36px; width: auto; object-fit: contain; }
+        .logo-text { font-size: 20px; font-weight: 800; color: var(--negro-mueca); letter-spacing: -0.5px; }
         
         .hamburger-btn {
-            display: none; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--negro-mueca); padding: 5px;
+            display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--negro-mueca); padding: 5px;
         }
 
-        nav { display: flex; align-items: center; gap: 20px; }
-        .nav-links { display: flex; list-style: none; gap: 25px; align-items: center; }
-        .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 14px; font-weight: 600; }
-        
-        .dropdown { position: relative; }
-        .dropdown-menu { 
-            display: none; position: absolute; top: 100%; left: 0; background: var(--blanco); 
-            min-width: 200px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 1px solid var(--vison-suave); 
-            list-style: none; padding: 10px 0; border-radius: 4px; margin-top: 0; z-index: 1100;
+        nav { display: flex; align-items: center; gap: 15px; }
+        .nav-links { display: flex; list-style: none; gap: 20px; align-items: center; }
+        .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-links li a:hover { color: var(--azul-acento); }
+
+        .btn-cart-nav { 
+            background: var(--negro-mueca); color: var(--blanco); border: none; 
+            padding: 6px 14px; border-radius: 16px; font-size: 11px; font-weight: 600; 
+            cursor: pointer; display: flex; align-items: center; gap: 5px; transition: var(--transition);
         }
-        .dropdown-menu::before { content: ''; position: absolute; top: -15px; left: 0; width: 100%; height: 15px; background: transparent; }
-        .dropdown:hover .dropdown-menu { display: block; }
-        .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
+        .btn-cart-nav:hover { background: var(--texto-suave); }
 
-        .btn-cart-nav { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-
-        .gallery-top-container { max-width: 1200px; margin: 110px auto 20px; padding: 0 20px; position: relative; overflow: hidden; }
-        .gallery-top-track { display: flex; gap: 15px; transition: transform 0.3s ease-in-out; }
+        .gallery-top-container { max-width: 1100px; margin: 85px auto 15px; padding: 0 20px; position: relative; overflow: hidden; }
+        .gallery-top-track { display: flex; gap: 12px; transition: transform 0.3s ease-in-out; }
 
         .gallery-item-top { 
-            width: calc(25% - 12px); max-width: calc(25% - 12px); min-width: calc(25% - 12px);
+            width: calc(25% - 9px); max-width: calc(25% - 9px); min-width: calc(25% - 9px);
             aspect-ratio: 4/3; background: var(--vison-suave); border-radius: 4px; overflow: hidden; flex-shrink: 0; 
         }
 
         .gallery-item-top img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
-        .carousel-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: 1px solid var(--vison-suave); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: 800; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        .carousel-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: 1px solid var(--vison-suave); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: 800; z-index: 10; display: flex; align-items: center; justify-content: center; }
         
-        .configurator-layout { display: flex; max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; gap: 30px; }
+        .configurator-layout { display: flex; max-width: 1100px; margin: 0 auto 40px; padding: 0 20px; gap: 20px; }
         
-        .canvas-panel-wrapper { flex: 1.2; display: flex; flex-direction: column; gap: 15px; }
-        .canvas-panel { background: #f2f0ea; border-radius: 6px; display: flex; align-items: center; justify-content: center; padding: 30px; min-height: 480px; }
-        .control-panel { flex: 0.8; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; padding: 30px; display: flex; flex-direction: column; gap: 20px; }
+        .canvas-panel-wrapper { flex: 1.2; display: flex; flex-direction: column; gap: 12px; }
+        .canvas-panel { background: #f2f0ea; border-radius: 6px; display: flex; align-items: center; justify-content: center; padding: 20px; min-height: 400px; }
+        .control-panel { flex: 0.8; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
 
-        .panel-title { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
+        .panel-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
         
-        .wizard-steps-indicator { display: flex; justify-content: space-between; border-bottom: 2px solid var(--vison-suave); padding-bottom: 12px; margin-bottom: 5px; }
-        .step-dot { font-size: 11px; font-weight: 700; color: var(--vison-oscuro); text-transform: uppercase; cursor: default; }
-        .step-dot.active { color: var(--negro-mueca); border-bottom: 2px solid var(--negro-mueca); margin-bottom: -14px; padding-bottom: 12px; }
+        .wizard-steps-indicator { display: flex; justify-content: space-between; border-bottom: 2px solid var(--vison-suave); padding-bottom: 10px; margin-bottom: 2px; }
+        .step-dot { font-size: 10px; font-weight: 700; color: var(--vison-oscuro); text-transform: uppercase; cursor: default; }
+        .step-dot.active { color: var(--negro-mueca); border-bottom: 2px solid var(--negro-mueca); margin-bottom: -12px; padding-bottom: 10px; }
 
-        .step-block { display: none; flex-direction: column; gap: 15px; }
+        .step-block { display: none; flex-direction: column; gap: 12px; }
         .step-block.active { display: flex; }
 
-        .step-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--negro-mueca); }
-        .step-instruction { font-size: 13px; color: var(--texto-suave); font-weight: 500; line-height: 1.4; }
+        .step-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--negro-mueca); }
+        .step-instruction { font-size: 11px; color: var(--texto-suave); font-weight: 500; line-height: 1.3; }
 
-        .btn-grid-vertical { display: flex; flex-direction: column; gap: 10px; }
+        .btn-grid-vertical { display: flex; flex-direction: column; gap: 8px; }
         .btn-opt-card {
-            display: flex; align-items: center; gap: 15px; padding: 10px 14px;
+            display: flex; align-items: center; gap: 10px; padding: 8px 12px;
             border: 1px solid var(--vison-suave); background: var(--blanco);
-            border-radius: 6px; cursor: pointer; text-align: left; transition: var(--transition);
+            border-radius: 5px; cursor: pointer; text-align: left; transition: var(--transition);
         }
         .btn-opt-card:hover { border-color: var(--vison-oscuro); }
         .btn-opt-card.selected { border-color: var(--negro-mueca); background: #f7f5f0; }
-        .btn-opt-card img { width: 42px; height: 42px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
-        .btn-opt-card .opt-info { display: flex; flex-direction: column; gap: 2px; }
-        .btn-opt-card .opt-title { font-size: 13px; font-weight: 700; color: var(--negro-mueca); }
-        .btn-opt-card .opt-desc { font-size: 11px; color: var(--texto-suave); }
+        .btn-opt-card img { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+        .btn-opt-card .opt-info { display: flex; flex-direction: column; gap: 1px; }
+        .btn-opt-card .opt-title { font-size: 11px; font-weight: 700; color: var(--negro-mueca); }
+        .btn-opt-card .opt-desc { font-size: 9.5px; color: var(--texto-suave); }
 
-        .counter-row { display: flex; align-items: center; gap: 15px; }
-        .btn-counter { width: 36px; height: 36px; border: 1px solid var(--vison-suave); background: var(--blanco); font-size: 18px; cursor: pointer; font-weight: 600; border-radius: 4px; }
-        .counter-display { font-size: 14px; font-weight: 700; min-width: 170px; }
+        .counter-row { display: flex; align-items: center; gap: 10px; }
+        .btn-counter { width: 30px; height: 30px; border: 1px solid var(--vison-suave); background: var(--blanco); font-size: 16px; cursor: pointer; font-weight: 600; border-radius: 4px; }
+        .counter-display { font-size: 12px; font-weight: 700; min-width: 140px; }
 
-        .wizard-nav-buttons { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-step { flex: 1; padding: 12px; border: 1px solid var(--negro-mueca); background: var(--blanco); color: var(--negro-mueca); border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: var(--transition); text-align: center; }
+        .wizard-nav-buttons { display: flex; gap: 8px; margin-top: 5px; }
+        .btn-step { flex: 1; padding: 10px; border: 1px solid var(--negro-mueca); background: var(--blanco); color: var(--negro-mueca); border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: var(--transition); text-align: center; }
         .btn-step.primary { background: var(--negro-mueca); color: var(--blanco); }
         .btn-step:hover { opacity: 0.85; }
 
-        .accessory-selector { display: flex; gap: 8px; margin-bottom: 10px; }
-        .btn-acc { flex: 1; padding: 8px 4px; border: 1px dashed var(--vison-oscuro); background: var(--blanco); border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; text-align: center; }
+        .accessory-selector { display: flex; gap: 6px; margin-bottom: 8px; }
+        .btn-acc { flex: 1; padding: 6px 3px; border: 1px dashed var(--vison-oscuro); background: var(--blanco); border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: 600; text-align: center; }
         .btn-acc.active { background: var(--negro-mueca); color: var(--blanco); border-style: solid; }
 
-        .tv-config-box { display: none; background: #f7f5f0; padding: 12px; border-radius: 4px; border: 1px solid var(--vison-suave); flex-direction: column; gap: 8px; margin-bottom: 10px; }
+        .tv-config-box { display: none; background: #f7f5f0; padding: 10px; border-radius: 4px; border: 1px solid var(--vison-suave); flex-direction: column; gap: 6px; margin-bottom: 8px; }
         .tv-config-box.active { display: flex; }
 
-        .summary-box { background: var(--crema-fondo); padding: 15px; border-radius: 4px; border: 1px dashed var(--vison-oscuro); font-family: monospace; font-size: 12px; white-space: pre-wrap; color: var(--negro-mueca); line-height: 1.4; }
-        .btn-submit { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 16px; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; text-transform: uppercase; width: 100%; transition: var(--transition); }
+        /* SUMMARY BOX & PRECIO DESTACADO */
+        .summary-box { 
+            background: #fff; 
+            padding: 14px; 
+            border-radius: 6px; 
+            border: 1px solid var(--vison-suave); 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+        }
+        .summary-desglose-text { 
+            font-family: monospace; 
+            font-size: 11px; 
+            white-space: pre-wrap; 
+            color: var(--texto-suave); 
+            line-height: 1.4; 
+        }
+        .summary-highlight-price {
+            margin-top: 4px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--vison-oscuro);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--negro-mueca);
+            letter-spacing: -0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .summary-highlight-price span {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--vison-oscuro);
+            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-submit { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; width: 100%; transition: var(--transition); }
         .btn-submit:hover { background: #40403f; }
 
-        .contact-form-container { display: none; flex-direction: column; gap: 12px; padding: 20px; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; margin-top: 10px; }
-        .contact-form-container input, .contact-form-container textarea { width: 100%; padding: 10px; border: 1px solid var(--vison-suave); border-radius: 4px; font-family: inherit; font-size: 13px; }
+        .contact-form-container { display: none; flex-direction: column; gap: 10px; padding: 15px; background: var(--blanco); border: 1px solid var(--vison-suave); border-radius: 6px; margin-top: 10px; }
+        .contact-form-container input, .contact-form-container textarea { width: 100%; padding: 8px; border: 1px solid var(--vison-suave); border-radius: 4px; font-family: inherit; font-size: 12px; }
 
         .sidebar-modal { position: fixed; top: 0; right: -450px; width: 420px; height: 100vh; background: var(--blanco); box-shadow: -10px 0 30px rgba(0,0,0,0.06); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
         .sidebar-modal.active { right: 0; }
@@ -117,18 +162,17 @@
         svg { width: 100%; height: auto; overflow: visible; }
 
         @media(max-width: 768px) { 
-            header { padding: 15px 20px !important; height: auto !important; }
+            header { padding: 12px 15px !important; }
             .hamburger-btn { display: block; }
-            nav { display: none; width: 100%; flex-direction: column; padding-top: 15px; gap: 15px !important; }
+            nav { display: none; width: 100%; flex-direction: column; padding-top: 12px; gap: 12px !important; }
             nav.active { display: flex; }
-            .nav-links { flex-direction: column !important; gap: 15px !important; width: 100%; text-align: center; }
-            .dropdown-menu { position: relative !important; width: 100% !important; box-shadow: none !important; text-align: center; }
+            .nav-links { flex-direction: column !important; gap: 12px !important; width: 100%; text-align: center; }
 
-            .gallery-top-container { margin: 110px auto 20px !important; order: 1; }
-            .control-panel { order: 2 !important; width: 100% !important; padding: 20px 15px !important; }
+            .gallery-top-container { margin: 80px auto 15px !important; order: 1; }
+            .control-panel { order: 2 !important; width: 100% !important; padding: 15px !important; }
             .canvas-panel-wrapper { order: 3 !important; width: 100% !important; }
             
-            .configurator-layout { display: flex !important; flex-direction: column !important; gap: 20px !important; padding: 0 10px !important; }
+            .configurator-layout { display: flex !important; flex-direction: column !important; gap: 15px !important; padding: 0 10px !important; }
             .gallery-item-top { width: calc(100% - 10px) !important; max-width: calc(100% - 10px) !important; min-width: calc(100% - 10px) !important; }
             .canvas-panel { padding: 10px !important; min-height: auto !important; height: auto !important; }
             #tablero-biblioteca, #tablero-biblioteca svg { width: 100% !important; height: auto !important; }
@@ -140,20 +184,20 @@
 <body>
 
     <header>
-        <div class="logo"><a href="index.html"><img src="logo.png" alt="mueca logo"></a></div>
+        <div class="logo">
+            <a href="index.html">
+                <img src="Dibujo.png" alt="mueca isotipo" onerror="this.src='https://placehold.co/80x40?text=mueca'">
+                <span class="logo-text">mueca</span>
+            </a>
+        </div>
         <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
         <nav id="mainNav">
             <ul class="nav-links">
-                <li class="dropdown">
-                    <a href="index.html#novedades">Muebles ▾</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="mesita-apoyo.html">Mesita de Apoyo</a></li>
-                        <li><a href="repisa-recibidor.html">Repisa Recibidor</a></li>
-                        <li><a href="hanger-modular.html">Hanger Modular</a></li>
-                        <li><a href="escritorio-colgante.html">Escritorio Colgante</a></li>
-                    </ul>
-                </li>
-                <li><a href="configurador-biblioteca.html">Bibliotecas</a></li>
+                <li><a href="index.html#catalogo">Catálogo</a></li>
+                <li><a href="configurador-biblioteca.html">Bibliotecas Personalizables</a></li>
+                <li><a href="index.html#proceso">Proceso</a></li>
+                <li><a href="index.html#sobre-nosotros">Sobre Nosotros</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
             </ul>
             <button class="btn-cart-nav" onclick="toggleSidebar(true)">Consultas (<span id="cart-count">0</span>)</button>
         </nav>
@@ -182,7 +226,7 @@
                 <div id="tablero-biblioteca"></div>
             </div>
             
-            <button class="btn-submit" onclick="toggleForm()">Añadir a la lista de consulta</button>
+            <button class="btn-submit" onclick="toggleForm()">Enviar Consulta de Biblioteca</button>
 
             <form id="contactForm" class="contact-form-container" onsubmit="sendDirectEmail(event)">
                 <span class="step-title">Datos para enviar la consulta</span>
@@ -211,18 +255,18 @@
                 <span class="step-title">Elegí el Ancho y Alto base</span>
                 <p class="step-instruction">Definí las proporciones exteriores de la estructura principal.</p>
                 
-                <div style="display:flex; flex-direction:column; gap:12px; margin-top:5px;">
+                <div style="display:flex; flex-direction:column; gap:10px; margin-top:2px;">
                     <div>
-                        <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Ancho total (Máx. 4 Módulos)</span>
-                        <div class="counter-row" style="margin-top:4px;">
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Ancho total (Máx. 4 Módulos)</span>
+                        <div class="counter-row" style="margin-top:3px;">
                             <button class="btn-counter" onclick="adjustWidth(-1)">−</button>
                             <span id="label-ancho-cm" class="counter-display">Ancho: 65 cm</span>
                             <button class="btn-counter" onclick="adjustWidth(1)">+</button>
                         </div>
                     </div>
                     <div>
-                        <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Alto total</span>
-                        <div class="counter-row" style="margin-top:4px;">
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Alto total</span>
+                        <div class="counter-row" style="margin-top:3px;">
                             <button class="btn-counter" onclick="adjustHeight(-1)">−</button>
                             <span id="label-alto-cm" class="counter-display">Alto: 43.6 cm</span>
                             <button class="btn-counter" onclick="adjustHeight(1)">+</button>
@@ -240,8 +284,8 @@
                 <span class="step-title">Dibuja tu biblioteca</span>
                 <p class="step-instruction">Elegí una herramienta y haz clic sobre la cuadrícula.</p>
                 
-                <div style="margin-top:5px;">
-                    <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro); display:block; margin-bottom:5px;">Herramienta Activa:</span>
+                <div style="margin-top:2px;">
+                    <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro); display:block; margin-bottom:4px;">Herramienta Activa:</span>
                     <div class="accessory-selector">
                         <button class="btn-acc active" id="acc-estante" onclick="setAccessoryMode('estante')">Estante</button>
                         <button class="btn-acc" id="acc-escritorio" onclick="setAccessoryMode('escritorio')">Escritorio</button>
@@ -251,14 +295,14 @@
 
                 <!-- Opciones cuando se activa Soporte TV -->
                 <div class="tv-config-box" id="tv-options">
-                    <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--negro-mueca);">Tamaño de tu TV:</span>
-                    <select id="tv-size-select" onchange="updateTvSize()" style="padding:8px; border:1px solid var(--vison-suave); border-radius:4px; font-size:12px; background:#fff;">
+                    <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--negro-mueca);">Tamaño de tu TV:</span>
+                    <select id="tv-size-select" onchange="updateTvSize()" style="padding:6px; border:1px solid var(--vison-suave); border-radius:4px; font-size:11px; background:#fff;">
                         <option value="43">43" (Ancho ~95cm)</option>
                         <option value="55" selected>55" (Ancho ~121cm)</option>
                         <option value="65">65" (Ancho ~143cm)</option>
                         <option value="75">75" (Ancho ~165cm)</option>
                     </select>
-                    <span style="font-size:10px; color:var(--texto-suave);">Haz clic en un casillero para ubicar la tele. Clic en otro casillero la reubica. Clic sobre la misma la quita.</span>
+                    <span style="font-size:9.5px; color:var(--texto-suave);">Haz clic en un casillero para ubicar la tele. Clic en otro casillero la reubica. Clic sobre la misma la quita.</span>
                 </div>
 
                 <div class="wizard-nav-buttons">
@@ -308,16 +352,16 @@
                 </div>
             </div>
 
-            <!-- Despiece Técnico Encastrable -->
-            <div style="margin-top:15px; border-top:1px solid var(--vison-suave); padding-top:15px;">
-                <span class="step-title" style="font-size:11px; color:var(--vison-oscuro);">Despiece Técnico Encastrable</span>
-                <div id="library-summary" class="summary-box" style="margin-top:8px;">Calculando...</div>
+            <!-- Despiece Técnico y Presupuesto Estimado -->
+            <div style="margin-top:10px; border-top:1px solid var(--vison-suave); padding-top:10px;">
+                <span class="step-title" style="font-size:10px; color:var(--vison-oscuro);">Despiece Técnico & Presupuesto</span>
+                <div id="library-summary" class="summary-box" style="margin-top:6px;">Cargando lista de precios...</div>
             </div>
         </div>
     </div>
 
     <div class="sidebar-modal" id="consulta-sidebar">
-        <div style="padding:20px; border-bottom:1px solid var(--vison-suave); display:flex; justify-content:space-between; background:var(--crema-fondo);">
+        <div style="padding:20px; border-bottom:1px solid var(--arena-fondo); display:flex; justify-content:space-between; background:var(--arena-fondo);">
             <h3 style="font-size:14px; font-weight:800; text-transform:uppercase;">Lista de Consulta</h3>
             <button onclick="toggleSidebar(false)" style="background:none; border:none; font-size:22px; cursor:pointer; color:var(--vison-oscuro);">×</button>
         </div>
@@ -327,59 +371,88 @@
                 <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Nombre Completo *</label><input type="text" id="modal-nombre" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required></div>
                 <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Email de Contacto *</label><input type="email" id="modal-email" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;" required></div>
                 <div style="display:flex; flex-direction:column; gap:5px; margin-bottom:12px;"><label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--vison-oscuro);">Teléfono</label><input type="tel" id="modal-telefono" style="padding:10px; border:1px solid var(--vison-suave); border-radius:4px;"></div>
-                <button type="submit" style="background:var(--negro-mueca); color:var(--blanco); border:none; padding:15px; width:100%; border-radius:4px; font-weight:700; text-transform:uppercase; cursor:pointer;">Enviar Solicitud</button>
+                <button type="submit" style="background:var(--negro-mueca); color:var(--blanco); border:none; padding:15px; width:100%; border-radius:4px; font-weight:700; text-transform:uppercase; cursor:pointer;">Enviar Consulta</button>
             </form>
         </div>
     </div>
 
     <script>
-        (function(){ emailjs.init("_RxYQ5EVnN6coQIl_"); })();
+    (function(){ emailjs.init("_RxYQ5EVnN6coQIl_"); })();
 
-        function toggleMobileMenu() { document.getElementById('mainNav').classList.toggle('active'); }
-        function toggleSidebar(show) {
-            document.getElementById('consulta-sidebar').classList.toggle('active', show);
-            if(show) renderListaConsultas();
+let tablaPreciosMatriz = null;
+
+function toggleMobileMenu() { 
+    document.getElementById('mainNav').classList.toggle('active'); 
+}
+
+function toggleSidebar(show) {
+    document.getElementById('consulta-sidebar').classList.toggle('active', show);
+    if(show) renderListaConsultas();
+}
+
+function actualizarContadorNav() {
+    const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+    const countEl = document.getElementById('cart-count');
+    if (countEl) countEl.innerText = cart.length;
+}
+
+function renderListaConsultas() {
+    const contenedor = document.getElementById('items-consulta-container');
+    if (!contenedor) return;
+
+    const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+    if(cart.length === 0) { 
+        contenedor.innerHTML = "<p style='font-size:13px; color:#666;'>No hay muebles en tu lista.</p>"; 
+        return; 
+    }
+    let html = "";
+    cart.forEach((item, index) => {
+        html += `
+            <div style="padding:12px 0; border-bottom:1px solid #ebe7e0; position:relative;">
+                <h4 style="font-size:12px; font-weight:700; text-transform:uppercase;">${item.nombre}</h4>
+                <p style="font-size:11px; color:#666;">Terminación: ${item.terminacion}</p>
+                ${item.despachado ? `<pre style="font-size:10px; background:#fcfbfa; padding:6px; margin-top:5px; font-family:monospace; line-height:1.3; border:1px solid #ebe7e0;">${item.despachado}</pre>` : ''}
+                <button onclick="eliminarItemConsulta(${index})" style="position:absolute; right:0; top:12px; background:none; border:none; color:#8c857b; cursor:pointer; font-size:11px; font-weight:600;">Quitar</button>
+            </div>`;
+    });
+    contenedor.innerHTML = html;
+}
+
+function eliminarItemConsulta(idx) {
+    let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+    cart.splice(idx, 1);
+    localStorage.setItem('mueca_cart', JSON.stringify(cart));
+    renderListaConsultas();
+    actualizarContadorNav();
+}
+
+function toggleForm() {
+    const formBox = document.getElementById('contactForm');
+    if (formBox) {
+        formBox.style.display = formBox.style.display === 'flex' ? 'none' : 'flex';
+        if (formBox.style.display === 'flex') {
+            formBox.scrollIntoView({ behavior: 'smooth' });
         }
+    }
+}
 
-        function actualizarContadorNav() {
-            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            document.getElementById('cart-count').innerText = cart.length;
-        }
+// ENVÍO DIRECTO DE BIBLIOTECA CON RENDER HD OPTIMIZADO
+async function sendDirectEmail(e) {
+    e.preventDefault();
+    
+    const btnSubmit = document.getElementById('btnSendMail');
+    const textoOriginal = btnSubmit ? btnSubmit.innerText : "";
+    if (btnSubmit) {
+        btnSubmit.innerText = "Generando imagen HD y enviando...";
+        btnSubmit.disabled = true;
+    }
 
-        function renderListaConsultas() {
-            const contenedor = document.getElementById('items-consulta-container');
-            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            if(cart.length === 0) { contenedor.innerHTML = "<p style='font-size:13px; color:#666;'>No hay muebles en tu lista.</p>"; return; }
-            let html = "";
-            cart.forEach((item, index) => {
-                html += `
-                    <div style="padding:12px 0; border-bottom:1px solid #ebe7e0; position:relative;">
-                        <h4 style="font-size:12px; font-weight:700; text-transform:uppercase;">${item.nombre}</h4>
-                        <p style="font-size:11px; color:#666;">Terminación: ${item.terminacion}</p>
-                        ${item.esCustom ? `<pre style="font-size:10px; background:#fcfbfa; padding:5px; margin-top:5px; font-family:monospace;">${item.despachado}</pre>` : ''}
-                        <button onclick="eliminarItem(${index})" style="position:absolute; right:0; top:12px; background:none; border:none; color:#8c857b; cursor:pointer; font-size:11px; font-weight:600;">Quitar</button>
-                    </div>`;
-            });
-            contenedor.innerHTML = html;
-        }
+    try {
+        let imageJpgDataUrl = "";
+        const svgElement = document.getElementById('biblioteca-svg-element');
 
-        function eliminarItem(idx) {
-            let cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            cart.splice(idx, 1);
-            localStorage.setItem('mueca_cart', JSON.stringify(cart));
-            renderListaConsultas();
-            actualizarContadorNav();
-        }
-
-        function toggleForm() {
-            const form = document.getElementById('contactForm');
-            const isHidden = form.style.display === '' || form.style.display === 'none';
-            form.style.display = isHidden ? 'flex' : 'none';
-            if (isHidden) { form.scrollIntoView({ behavior: 'smooth' }); }
-        }
-
-        function generatePngFromSvg(svgElement) {
-            return new Promise((resolve) => {
+        if (svgElement) {
+            imageJpgDataUrl = await new Promise((resolve) => {
                 let colorActivo = '#eaddca'; 
                 let colorOscuro = '#c8b7a0';
                 if (terminacionBiblioteca === 'Nogalina') { colorActivo = '#8b5a2b'; colorOscuro = '#5c3a21'; } 
@@ -387,6 +460,7 @@
 
                 let svgClon = svgElement.cloneNode(true);
                 svgClon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+                // Resolución HD para nitidez en pantallas de retina
                 svgClon.setAttribute("width", "800");
                 svgClon.setAttribute("height", "600");
 
@@ -403,404 +477,479 @@
 
                 img.onload = function () {
                     const canvas = document.createElement('canvas');
+                    // Canvas de 800x600 px para mayor definición
                     canvas.width = 800;
                     canvas.height = 600;
                     const ctx = canvas.getContext('2d');
                     
+                    // Fondo cálido alineado con la paleta de mueca
                     ctx.fillStyle = '#fcfbfa';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
                     
-                    resolve(canvas.toDataURL('image/png'));
+                    // Dibujamos con un margen interno para mejor encuadre
+                    const margin = 20;
+                    ctx.drawImage(img, margin, margin, canvas.width - (margin * 2), canvas.height - (margin * 2));
+                    
+                    // Exportación limpia a 0.8 de calidad (~22 KB)
+                    resolve(canvas.toDataURL('image/jpeg', 0.8));
+                };
+
+                img.onerror = function () {
+                    resolve("");
                 };
 
                 img.src = svgUrl;
             });
         }
 
-        async function sendDirectEmail(e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('btnSendMail');
-            submitBtn.innerText = 'Generando Render...'; 
-            submitBtn.disabled = true;
-
-            try {
-                const svgElement = document.getElementById('biblioteca-svg-element');
-                let imagePngDataUrl = "";
-                
-                if (svgElement) {
-                    imagePngDataUrl = await generatePngFromSvg(svgElement);
-                }
-
-                submitBtn.innerText = 'Enviando...';
-
-                const templateParams = {
-                    from_name: document.getElementById('userName').value,
-                    from_email: document.getElementById('userEmail').value,
-                    phone: document.getElementById('userPhone').value,
-                    comments: document.getElementById('userComments').value,
-                    material: terminacionBiblioteca,
-                    summary_detail: despieceGlobalTexto,
-                    svg_graphic: imagePngDataUrl
-                };
-
-                await emailjs.send('service_fpyoqnb', 'template_lcucl54', templateParams);
-                
-                alert('¡Consulta enviada con éxito! Nos pondremos en contacto pronto.');
-                document.getElementById('contactForm').reset();
-                toggleForm();
-            } catch (error) {
-                console.error("Error al enviar email:", error);
-                alert('Ocurrió un error al enviar el mensaje. Por favor intenta nuevamente.');
-            } finally {
-                submitBtn.innerText = 'Enviar Consulta Ahora'; 
-                submitBtn.disabled = false;
-            }
-        }
-
-        function enviarConsultaPorEmailModal(e) {
-            e.preventDefault();
-            const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            if(cart.length === 0) return;
-            let cuerpo = `Consulta de Cotización — Mueca\n\nNombre: ${document.getElementById('modal-nombre').value}\nEmail: ${document.getElementById('modal-email').value}\nTeléfono: ${document.getElementById('modal-telefono').value || 'No indicado'}\n\nProductos:\n`;
-            cart.forEach((i, idx) => {
-                cuerpo += `${idx+1}. ${i.nombre.toUpperCase()} [${i.terminacion}]\n`;
-                if(i.despachado) cuerpo += `${i.despachado}\n`;
-            });
-            window.location.href = `mailto:mueca.encastrables@gmail.com?subject=Nueva Cotizacion Mueca&body=${encodeURIComponent(cuerpo)}`;
-        }
-
-        let currentTopIndex = 0;
-        function moveTopCarousel(dir) {
-            const track = document.getElementById('topTrack');
-            currentTopIndex = Math.max(0, Math.min(currentTopIndex + dir, 6));
-            const widthItem = track.children[0].getBoundingClientRect().width + 15;
-            track.style.transform = `translateX(-${currentTopIndex * widthItem}px)`;
-        }
-
-        // CONSTANTES FÍSICAS MUECA (UNIDAD 1 = 1 CM EN SVG)
-        const SPACING_X = 57;        // Distancia entre ejes de costillas
-        const SPACING_Y = 35;        // Distancia entre ejes de estantes
-        const OVERHANG_ESTANTE = 4;   // Voladizo lateral del estante
-        const OVERHANG_COSTILLA = 4.3; // Voladizo de la costilla arriba y abajo
-        const PERCHA_OVERHANG = 5;   // Percha sobresale 5cm de cada eje lateral (10cm total)
-        const PERCHA_DIST_Y = 13;     // Borde inferior de la percha colgada a 13cm por debajo del eje del 1er estante
-        const PERCHA_THICK = 10;      // Percha con alto/ancho de banda de 10 cm hacia arriba
-        const WOOD_THICK = 1.8;       // Espesor estándar madera 18mm
-
-        // VARIABLES Y ESTADOS
-        let currentStep = 1;
-        let cantCostillas = 2; let cantNiveles = 2;   
-        let terminacionBiblioteca = "Multilaminado Guatambú"; 
-        let celdasActivas = {}; 
-        let placaTV = null; // { nivel, tramo, tvPulgadas }
-        let accesorioModo = 'estante'; // 'estante', 'escritorio', 'tv'
-        let tvPulgadasSeleccionada = 55;
-
-        function goToStep(step) {
-            currentStep = step;
-            document.querySelectorAll('.step-block').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
-            
-            document.getElementById(`step-block-${step}`).classList.add('active');
-            document.getElementById(`dot-step-${step}`).classList.add('active');
-        }
-
-        function setAccessoryMode(mode) {
-            accesorioModo = mode;
-            document.querySelectorAll('.btn-acc').forEach(b => b.classList.remove('active'));
-            document.getElementById(`acc-${mode}`).classList.add('active');
-            document.getElementById('tv-options').classList.toggle('active', mode === 'tv');
-            buildTablero();
-        }
-
-        function updateTvSize() {
-            tvPulgadasSeleccionada = parseInt(document.getElementById('tv-size-select').value);
-            if (placaTV) {
-                placaTV.tvPulgadas = tvPulgadasSeleccionada;
-            }
-            buildTablero();
-        }
-
-        function changeFinish(finishName, elem) {
-            terminacionBiblioteca = finishName;
-            document.querySelectorAll('.btn-opt-card').forEach(b => b.classList.remove('selected'));
-            elem.classList.add('selected');
-            if(finishName === 'Nogalina') {
-                document.documentElement.style.setProperty('--madera-activa', '#8b5a2b');
-                document.documentElement.style.setProperty('--madera-dark-activa', '#5c3a21');
-            } else if(finishName === 'Negro') {
-                document.documentElement.style.setProperty('--madera-activa', '#333333');
-                document.documentElement.style.setProperty('--madera-dark-activa', '#1a1a1a');
-            } else {
-                document.documentElement.style.setProperty('--madera-activa', '#eaddca');
-                document.documentElement.style.setProperty('--madera-dark-activa', '#c8b7a0');
-            }
-            buildTablero();
-        }
-
-        function adjustWidth(dir) {
-            let n = cantCostillas + dir;
-            if(n >= 2 && n <= 5) { cantCostillas = n; limpiarExcedentes(); buildTablero(); }
-        }
-
-        // CORREGIDO: PERMITE ELEGIR MÁS DE 2 NIVELES DE ALTURA NORMALMENTE
-        function adjustHeight(dir) {
-            let n = cantNiveles + dir;
-            if(n >= 2 && n <= 6) { cantNiveles = n; limpiarExcedentes(); buildTablero(); }
-        }
-
-        function limpiarExcedentes() {
-            const maxTramos = cantCostillas - 1;
-            for (let key in celdasActivas) {
-                let parts = key.split('-');
-                let nv = parseInt(parts[0]); let tr = parseInt(parts[1]);
-                if (nv > cantNiveles || tr >= maxTramos) { delete celdasActivas[key]; }
-            }
-            if (placaTV) {
-                if (placaTV.nivel >= cantNiveles || placaTV.tramo >= maxTramos) {
-                    placaTV = null;
-                }
-            }
-        }
-
-        function toggleCelda(nivel, tramo) {
-            let key = `${nivel}-${tramo}`;
-            if (celdasActivas[key]) { 
-                delete celdasActivas[key]; 
-            } else { 
-                celdasActivas[key] = accesorioModo; 
-            }
-            buildTablero();
-        }
-
-        function seleccionarPlacaTV(nivel, tramo) {
-            if (placaTV && placaTV.nivel === nivel && placaTV.tramo === tramo) {
-                placaTV = null;
-            } else {
-                placaTV = { nivel, tramo, tvPulgadas: tvPulgadasSeleccionada };
-            }
-            buildTablero();
-        }
-
-        // DIMENSIONES REALES DE PANTALLA EN MODO 16:9 (ESCALA CM)
-        function getTvDimensions(pulgadas) {
-            let wTele = 121; let hTele = 68; // 55" por defecto
-            if (pulgadas === 43) { wTele = 95; hTele = 53; }
-            else if (pulgadas === 65) { wTele = 143; hTele = 80; }
-            else if (pulgadas === 75) { wTele = 165; hTele = 93; }
-            return { wTele, hTele };
-        }
-
-        function buildTablero() {
-            const tramosAncho = cantCostillas - 1;
-            
-            // Medidas totales exteriores basadas en ejes + voladizos
-            const anchoEjesTotal = tramosAncho * SPACING_X;
-            const anchoTotalCm = anchoEjesTotal + (OVERHANG_ESTANTE * 2);
-            const altoEjesTotal = (cantNiveles - 1) * SPACING_Y;
-            const altoTotalCm = altoEjesTotal + (OVERHANG_COSTILLA * 2);
-
-            document.getElementById('label-ancho-cm').innerText = `Ancho: ${anchoTotalCm.toFixed(1)} cm`;
-            document.getElementById('label-alto-cm').innerText = `Alto: ${altoTotalCm.toFixed(1)} cm`;
-
-            // Geometría paramétrica real (1 unidad SVG = 1 cm real)
-            const marginX = 65; 
-            const marginY = 40; 
-            
-            const viewBoxWidth = anchoTotalCm + (marginX * 2);
-            const viewBoxHeight = altoTotalCm + (marginY * 2);
-
-            // Coordenada Y de los ejes de niveles (Nivel 1 = superior)
-            const yEjeNivel1 = marginY + OVERHANG_COSTILLA;
-            const xEjeCostilla0 = marginX + OVERHANG_ESTANTE;
-
-            let svgContent = `<svg id="biblioteca-svg-element" viewBox="0 0 ${viewBoxWidth} ${viewBoxHeight}">`;
-
-            // 1. RENDER PERCHA DE SOPORTE (ALTO 10 CM HACIA ARRIBA DESDE EL BORDE INFERIOR COLGADO)
-            let xPerchaStart = xEjeCostilla0 - PERCHA_OVERHANG;
-            let wPercha = anchoEjesTotal + (PERCHA_OVERHANG * 2);
-            let yPerchaBottom = yEjeNivel1 + PERCHA_DIST_Y;
-            let yPerchaStart = yPerchaBottom - PERCHA_THICK;
-
-            svgContent += `<rect x="${xPerchaStart}" y="${yPerchaStart}" width="${wPercha}" height="${PERCHA_THICK}" rx="0.5" fill="var(--madera-dark-activa)" />`;
-
-            // 2. RENDER PLACA TV FIJA EN MÓDULO (57 cm x 35 cm entre ejes)
-            if (placaTV) {
-                let xTV = xEjeCostilla0 + (placaTV.tramo * SPACING_X) + (WOOD_THICK / 2);
-                let yTV = yEjeNivel1 + ((placaTV.nivel - 1) * SPACING_Y) + (WOOD_THICK / 2);
-                let wTV = SPACING_X - WOOD_THICK;
-                let hTV = SPACING_Y - WOOD_THICK;
-
-                // Placa Soporte
-                svgContent += `<rect x="${xTV}" y="${yTV}" width="${wTV}" height="${hTV}" rx="0.5" fill="var(--vison-suave)" stroke="var(--vison-oscuro)" stroke-width="0.3" />`;
-                svgContent += `<text x="${xTV + (wTV/2)}" y="${yTV + (hTV/2) + 1}" font-size="3" font-weight="bold" fill="var(--vison-oscuro)" text-anchor="middle">SOPORTE TV</text>`;
-
-                // Proyección Punteada Real del TV (Proporcional a escala 1:1)
-                let { wTele, hTele } = getTvDimensions(placaTV.tvPulgadas);
-                let xTele = (xTV + (wTV / 2)) - (wTele / 2);
-                let yTele = (yTV + (hTV / 2)) - (hTele / 2);
-
-                svgContent += `<rect x="${xTele}" y="${yTele}" width="${wTele}" height="${hTele}" rx="1" fill="rgba(36, 36, 35, 0.08)" stroke="#242423" stroke-width="0.5" stroke-dasharray="1.5,1" pointer-events="none" />`;
-                svgContent += `<text x="${xTV + (wTV/2)}" y="${yTele - 1.5}" font-size="3.5" font-weight="bold" fill="#242423" text-anchor="middle" pointer-events="none">TELEVISOR ${placaTV.tvPulgadas}"</text>`;
-            }
-
-            // 3. RENDER COSTILLAS ESTRUCTURALES
-            for(let c = 0; c < cantCostillas; c++) {
-                let xCostillaEje = xEjeCostilla0 + (c * SPACING_X);
-                let nivelMasBajoOcupado = 1;
-
-                for(let key in celdasActivas) {
-                    let parts = key.split('-');
-                    let nv = parseInt(parts[0]); let tr = parseInt(parts[1]);
-                    if (c === tr || c === (tr + 1)) {
-                        if (nv > nivelMasBajoOcupado) nivelMasBajoOcupado = nv;
-                    }
-                }
-                if (placaTV && (c === placaTV.tramo || c === placaTV.tramo + 1)) {
-                    let nvTV = placaTV.nivel + 1;
-                    if (nvTV > nivelMasBajoOcupado) nivelMasBajoOcupado = nvTV;
-                }
-
-                let yInicioCostilla = yEjeNivel1 - OVERHANG_COSTILLA;
-                let yFinEje = yEjeNivel1 + ((nivelMasBajoOcupado - 1) * SPACING_Y);
-                let largoCostilla = (yFinEje + OVERHANG_COSTILLA) - yInicioCostilla;
-
-                svgContent += `<rect x="${xCostillaEje - (WOOD_THICK / 2)}" y="${yInicioCostilla}" width="${WOOD_THICK}" height="${largoCostilla}" rx="0.4" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="0.3"/>`;
-            }
-
-            // 4. RENDER MÓDULOS DE INTERACCIÓN Y LÍNEAS GUÍA
-            for(let n = 1; n <= cantNiveles; n++) {
-                let yEje = yEjeNivel1 + ((n - 1) * SPACING_Y);
-                for(let t = 0; t < tramosAncho; t++) {
-                    let xEjeInicio = xEjeCostilla0 + (t * SPACING_X);
-
-                    // Zona de clic para Herramienta TV
-                    if (accesorioModo === 'tv' && n < cantNiveles) {
-                        svgContent += `<rect x="${xEjeInicio}" y="${yEje}" width="${SPACING_X}" height="${SPACING_Y}" fill="transparent" style="cursor:pointer;" onclick="seleccionarPlacaTV(${n}, ${t})" />`;
-                    }
-
-                    // Guía punteada de estantes
-                    if (!celdasActivas[`${n}-${t}`]) {
-                        svgContent += `<line x1="${xEjeInicio + (WOOD_THICK/2)}" y1="${yEje}" x2="${xEjeInicio + SPACING_X - (WOOD_THICK/2)}" y2="${yEje}" stroke="#b0aaf5" stroke-width="0.4" stroke-dasharray="1.5,1.5" pointer-events="none" />`;
-                        if (accesorioModo !== 'tv') {
-                            svgContent += `<rect x="${xEjeInicio}" y="${yEje - 5}" width="${SPACING_X}" height="10" fill="transparent" style="cursor:pointer;" onclick="toggleCelda(${n}, ${t})" />`;
-                        }
-                    }
-                }
-            }
-
-            // 5. RENDER ESTANTES Y ESCRITORIOS
-            for(let n = 1; n <= cantNiveles; n++) {
-                let yEje = yEjeNivel1 + ((n - 1) * SPACING_Y);
-                let t = 0;
-                while (t < tramosAncho) {
-                    if (celdasActivas[`${n}-${t}`]) {
-                        let tipoAcc = celdasActivas[`${n}-${t}`];
-                        let tramoInicio = t; let longitud = 1;
-                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`] === tipoAcc) { longitud++; t++; }
-                        
-                        let xInicioEstante = xEjeCostilla0 + (tramoInicio * SPACING_X) - (tramoInicio === 0 ? OVERHANG_ESTANTE : 0);
-                        let xFinEstante = xEjeCostilla0 + ((tramoInicio + longitud) * SPACING_X) + ((tramoInicio + longitud) === tramosAncho ? OVERHANG_ESTANTE : 0);
-                        let wEstanteTotal = xFinEstante - xInicioEstante;
-
-                        if (tipoAcc === 'escritorio') {
-                            let hEscritorio = 4.5; // Espesor visual de placa de escritorio
-                            svgContent += `<rect x="${xInicioEstante}" y="${yEje - (hEscritorio/2)}" width="${wEstanteTotal}" height="${hEscritorio}" rx="0.5" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="0.4" />`;
-                            svgContent += `<text x="${xInicioEstante + (wEstanteTotal/2)}" y="${yEje + 0.8}" font-size="2.8" font-weight="bold" fill="var(--vison-oscuro)" text-anchor="middle">ESCRITORIO</text>`;
-                        } else {
-                            svgContent += `<rect x="${xInicioEstante}" y="${yEje - (WOOD_THICK/2)}" width="${wEstanteTotal}" height="${WOOD_THICK}" rx="0.3" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="0.3" />`;
-                        }
-
-                        if (accesorioModo !== 'tv') {
-                            svgContent += `<rect x="${xInicioEstante}" y="${yEje - 5}" width="${wEstanteTotal}" height="10" fill="transparent" style="cursor:pointer;" onclick="removerBloqueAcumulado(${n}, ${tramoInicio}, ${longitud})" />`;
-                        }
-                    }
-                    t++;
-                }
-            }
-
-            svgContent += `</svg>`;
-            document.getElementById('tablero-biblioteca').innerHTML = svgContent;
-            calcularDespieceEstructural();
-        }
-
-        function removerBloqueAcumulado(nivel, inicio, longitud) {
-            for (let i = 0; i < longitud; i++) { delete celdasActivas[`${nivel}-${inicio + i}`]; }
-            buildTablero();
-        }
-
-        let despieceGlobalTexto = "";
-        function calcularDespieceEstructural() {
-            let conteoEstantes = { simple: 0, doble: 0, triple: 0, cuadruple: 0 };
-            let conteoEscritorios = 0;
-            let costillasNormales = 0;
-            let costillasEscritorio = 0;
-            const tramosAncho = cantCostillas - 1;
-
-            let costillasAfectadasEscritorio = new Set();
-            for(let key in celdasActivas) {
-                if(celdasActivas[key] === 'escritorio') {
-                    let parts = key.split('-');
-                    let tr = parseInt(parts[1]);
-                    costillasAfectadasEscritorio.add(tr);
-                    costillasAfectadasEscritorio.add(tr + 1);
-                }
-            }
-
-            for(let c = 0; c < cantCostillas; c++) {
-                if (costillasAfectadasEscritorio.has(c)) {
-                    costillasEscritorio++;
-                } else {
-                    costillasNormales++;
-                }
-            }
-
-            for(let n = 1; n <= cantNiveles; n++) {
-                let t = 0;
-                while (t < tramosAncho) {
-                    if (celdasActivas[`${n}-${t}`]) {
-                        let tipoAcc = celdasActivas[`${n}-${t}`];
-                        let longitud = 1;
-                        while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`] === tipoAcc) { longitud++; t++; }
-                        
-                        if (tipoAcc === 'escritorio') {
-                            conteoEscritorios++;
-                        } else {
-                            if(longitud === 1) conteoEstantes.simple++;
-                            if(longitud === 2) conteoEstantes.doble++;
-                            if(longitud === 3) conteoEstantes.triple++;
-                            if(longitud === 4) conteoEstantes.cuadruple++;
-                        }
-                    }
-                    t++;
-                }
-            }
-
-            let anchoEjesTotal = tramosAncho * SPACING_X;
-            let anchoTotalCm = anchoEjesTotal + (OVERHANG_ESTANTE * 2);
-            let desglose = `• PERCHA DE SOPORTE: 1 Unidad (${anchoTotalCm.toFixed(1)} cm)\n• COSTILLAS:`;
-            if (costillasNormales > 0) desglose += `\n   - Costillas Estándar: ${costillasNormales}`;
-            if (costillasEscritorio > 0) desglose += `\n   - Costillas con Calado especial para Escritorio: ${costillasEscritorio}`;
-            
-            desglose += `\n• ESTANTES Y COMPONENTES:`;
-            if(conteoEstantes.simple > 0) desglose += `\n   - Estantes Simples (65cm de corte): ${conteoEstantes.simple}`;
-            if(conteoEstantes.doble > 0) desglose += `\n   - Estantes Dobles (122cm de corte): ${conteoEstantes.doble}`;
-            if(conteoEstantes.triple > 0) desglose += `\n   - Estantes Triples (179cm de corte): ${conteoEstantes.triple}`;
-            if(conteoEstantes.cuadruple > 0) desglose += `\n   - Estantes Cuádruples (236cm de corte): ${conteoEstantes.cuadruple}`;
-            
-            if(conteoEscritorios > 0) desglose += `\n   - Placa/Estante Escritorio Profundo: ${conteoEscritorios}`;
-            if(placaTV) desglose += `\n   - Placa Soporte TV Encastrable (para TV de ${placaTV.tvPulgadas}"): 1 Módulo (57x35cm)`;
-
-            despieceGlobalTexto = desglose;
-            document.getElementById('library-summary').innerText = desglose;
-        }
-
-        window.onload = () => {
-            buildTablero();
-            actualizarContadorNav();
-            if(new URLSearchParams(window.location.search).get('openCart') === 'true') toggleSidebar(true);
+        const templateParams = {
+            from_name: document.getElementById('userName').value,
+            from_email: document.getElementById('userEmail').value,
+            phone: document.getElementById('userPhone').value || 'No indicado',
+            comments: document.getElementById('userComments').value || 'Sin comentarios',
+            material: terminacionBiblioteca,
+            summary_detail: despieceGlobalTexto,
+            svg_graphic: imageJpgDataUrl
         };
+
+        await emailjs.send('service_fpyoqnb', 'template_lcucl54', templateParams);
+        
+        alert("¡Consulta enviada con éxito! Nos pondremos en contacto a la brevedad.");
+        e.target.reset();
+        document.getElementById('contactForm').style.display = 'none';
+    } catch (error) {
+        console.error("Error EmailJS Biblioteca:", error);
+        alert("Ocurrió un error al enviar la consulta. Por favor reintenta.");
+    } finally {
+        if (btnSubmit) {
+            btnSubmit.innerText = textoOriginal;
+            btnSubmit.disabled = false;
+        }
+    }
+}
+// ENVÍO DEL CARRETE DEL CATÁLOGO
+async function enviarConsultaPorEmailModal(e) {
+    e.preventDefault();
+    
+    const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
+    if (cart.length === 0) {
+        alert("No hay productos en tu lista de consultas.");
+        return;
+    }
+
+    const btnSubmit = e.target.querySelector('button[type="submit"]');
+    const textoOriginal = btnSubmit.innerText;
+    btnSubmit.innerText = "Enviando...";
+    btnSubmit.disabled = true;
+
+    let detalleProductos = "";
+    cart.forEach((item, idx) => {
+        detalleProductos += `=== PRODUCTO ${idx + 1}: ${item.nombre.toUpperCase()} ===\n`;
+        detalleProductos += `Terminación: ${item.terminacion}\n`;
+        if (item.despachado) detalleProductos += `${item.despachado}\n\n`;
+        else detalleProductos += `\n`;
+    });
+
+    const templateParams = {
+        from_name: document.getElementById('modal-nombre').value,
+        from_email: document.getElementById('modal-email').value,
+        phone: document.getElementById('modal-telefono').value || 'No indicado',
+        comments: 'Consulta general desde la web mueca',
+        summary_detail: detalleProductos
+    };
+
+    try {
+        await emailjs.send('service_fpyoqnb', 'template_catalogo', templateParams);
+        
+        alert("¡Consulta enviada con éxito! Nos pondremos en contacto a la brevedad.");
+        localStorage.removeItem('mueca_cart');
+        actualizarContadorNav();
+        renderListaConsultas();
+        toggleSidebar(false);
+        e.target.reset();
+    } catch (error) {
+        console.error("Error EmailJS Catálogo:", error);
+        alert("Ocurrió un error al enviar la consulta.");
+    } finally {
+        btnSubmit.innerText = textoOriginal;
+        btnSubmit.disabled = false;
+    }
+}
+
+let currentTopIndex = 0;
+function moveTopCarousel(dir) {
+    const track = document.getElementById('topTrack');
+    currentTopIndex = Math.max(0, Math.min(currentTopIndex + dir, 6));
+    const widthItem = track.children[0].getBoundingClientRect().width + 12;
+    track.style.transform = `translateX(-${currentTopIndex * widthItem}px)`;
+}
+
+const SPACING_X = 57; const SPACING_Y = 35;
+const OVERHANG_ESTANTE = 4; const OVERHANG_COSTILLA = 4.3;
+const PERCHA_OVERHANG = 5; const PERCHA_DIST_Y = 13;
+const PERCHA_THICK = 10; const WOOD_THICK = 1.8;
+
+let currentStep = 1; let cantCostillas = 2; let cantNiveles = 2;   
+let terminacionBiblioteca = "Multilaminado Guatambú"; 
+let celdasActivas = {}; let placaTV = null; 
+let accesorioModo = 'estante'; let tvPulgadasSeleccionada = 55;
+
+async function cargarPreciosDesdeCSV() {
+    try {
+        const res = await fetch('./Catalogo de precios - Sheet1.csv');
+        if (!res.ok) throw new Error("No se pudo cargar el CSV");
+        const textoCsv = await res.text();
+        const lineas = textoCsv.split(/\r?\n/);
+        tablaPreciosMatriz = {};
+
+        for (let i = 1; i < lineas.length; i++) {
+            if (!lineas[i].trim()) continue;
+            const separador = lineas[i].includes(';') ? ';' : ',';
+            const cols = lineas[i].split(separador).map(c => c.replace(/^"|"$/g, '').trim());
+            const grupo = (cols[0] || '').toLowerCase();     
+            const modelo = (cols[1] || '').toLowerCase();    
+            const submodelo = (cols[2] || '').toLowerCase(); 
+            const color = (cols[3] || '').toLowerCase();     
+            const rawPrecio = (cols[5] || '0').replace(/[^0-9.,]/g, '').replace(',', '.');
+            const precio = parseFloat(rawPrecio) || 0;
+
+            if (grupo === 'bibliotecas') {
+                const piezaKey = submodelo ? `${modelo}-${submodelo}` : modelo;
+                if (!tablaPreciosMatriz[piezaKey]) tablaPreciosMatriz[piezaKey] = {};
+                tablaPreciosMatriz[piezaKey][color || 'base'] = precio;
+            }
+        }
+        calcularDespieceEstructural();
+    } catch (e) { console.error("Error precios:", e); }
+}
+
+function goToStep(step) {
+    currentStep = step;
+    document.querySelectorAll('.step-block').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
+    document.getElementById(`step-block-${step}`).classList.add('active');
+    document.getElementById(`dot-step-${step}`).classList.add('active');
+}
+
+function setAccessoryMode(mode) {
+    accesorioModo = mode;
+    document.querySelectorAll('.btn-acc').forEach(b => b.classList.remove('active'));
+    document.getElementById(`acc-${mode}`).classList.add('active');
+    document.getElementById('tv-options').classList.toggle('active', mode === 'tv');
+    buildTablero();
+}
+
+function updateTvSize() {
+    tvPulgadasSeleccionada = parseInt(document.getElementById('tv-size-select').value);
+    if (placaTV) placaTV.tvPulgadas = tvPulgadasSeleccionada;
+    buildTablero();
+}
+
+function changeFinish(finishName, elem) {
+    terminacionBiblioteca = finishName;
+    document.querySelectorAll('.btn-opt-card').forEach(b => b.classList.remove('selected'));
+    elem.classList.add('selected');
+    if(finishName === 'Nogalina') {
+        document.documentElement.style.setProperty('--madera-activa', '#8b5a2b');
+        document.documentElement.style.setProperty('--madera-dark-activa', '#5c3a21');
+    } else if(finishName === 'Negro') {
+        document.documentElement.style.setProperty('--madera-activa', '#333333');
+        document.documentElement.style.setProperty('--madera-dark-activa', '#1a1a1a');
+    } else {
+        document.documentElement.style.setProperty('--madera-activa', '#eaddca');
+        document.documentElement.style.setProperty('--madera-dark-activa', '#c8b7a0');
+    }
+    buildTablero();
+}
+
+function adjustWidth(dir) {
+    let n = cantCostillas + dir;
+    if(n >= 2 && n <= 5) { cantCostillas = n; limpiarExcedentes(); buildTablero(); }
+}
+
+function adjustHeight(dir) {
+    let n = cantNiveles + dir;
+    if(n >= 2 && n <= 6) { cantNiveles = n; limpiarExcedentes(); buildTablero(); }
+}
+
+function limpiarExcedentes() {
+    const maxTramos = cantCostillas - 1;
+    for (let key in celdasActivas) {
+        let parts = key.split('-');
+        let nv = parseInt(parts[0]); let tr = parseInt(parts[1]);
+        if (nv > cantNiveles || tr >= maxTramos) { delete celdasActivas[key]; }
+    }
+    if (placaTV && (placaTV.nivel >= cantNiveles || placaTV.tramo >= maxTramos)) placaTV = null;
+}
+
+function toggleCelda(nivel, tramo) {
+    let key = `${nivel}-${tramo}`;
+    if (celdasActivas[key]) delete celdasActivas[key]; 
+    else celdasActivas[key] = accesorioModo; 
+    buildTablero();
+}
+
+function seleccionarPlacaTV(nivel, tramo) {
+    if (placaTV && placaTV.nivel === nivel && placaTV.tramo === tramo) placaTV = null;
+    else placaTV = { nivel, tramo, tvPulgadas: tvPulgadasSeleccionada };
+    buildTablero();
+}
+
+function getTvDimensions(pulgadas) {
+    let wTele = 121; let hTele = 68;
+    if (pulgadas === 43) { wTele = 95; hTele = 53; }
+    else if (pulgadas === 65) { wTele = 143; hTele = 80; }
+    else if (pulgadas === 75) { wTele = 165; hTele = 93; }
+    return { wTele, hTele };
+}
+
+function buildTablero() {
+    const tramosAncho = cantCostillas - 1;
+    const anchoEjesTotal = tramosAncho * SPACING_X;
+    const anchoTotalCm = anchoEjesTotal + (OVERHANG_ESTANTE * 2);
+    const altoEjesTotal = (cantNiveles - 1) * SPACING_Y;
+    const altoTotalCm = altoEjesTotal + (OVERHANG_COSTILLA * 2);
+
+    document.getElementById('label-ancho-cm').innerText = `Ancho: ${anchoTotalCm.toFixed(1)} cm`;
+    document.getElementById('label-alto-cm').innerText = `Alto: ${altoTotalCm.toFixed(1)} cm`;
+
+    const marginX = 65; const marginY = 40; 
+    const viewBoxWidth = anchoTotalCm + (marginX * 2);
+    const viewBoxHeight = altoTotalCm + (marginY * 2);
+
+    const yEjeNivel1 = marginY + OVERHANG_COSTILLA;
+    const xEjeCostilla0 = marginX + OVERHANG_ESTANTE;
+
+    let svgContent = `<svg id="biblioteca-svg-element" viewBox="0 0 ${viewBoxWidth} ${viewBoxHeight}">`;
+
+    let xPerchaStart = xEjeCostilla0 - PERCHA_OVERHANG;
+    let wPercha = anchoEjesTotal + (PERCHA_OVERHANG * 2);
+    let yPerchaBottom = yEjeNivel1 + PERCHA_DIST_Y;
+    let yPerchaStart = yPerchaBottom - PERCHA_THICK;
+
+    svgContent += `<rect x="${xPerchaStart}" y="${yPerchaStart}" width="${wPercha}" height="${PERCHA_THICK}" rx="0.5" fill="var(--madera-dark-activa)" />`;
+
+    if (placaTV) {
+        let xTV = xEjeCostilla0 + (placaTV.tramo * SPACING_X) + (WOOD_THICK / 2);
+        let yTV = yEjeNivel1 + ((placaTV.nivel - 1) * SPACING_Y) + (WOOD_THICK / 2);
+        let wTV = SPACING_X - WOOD_THICK; let hTV = SPACING_Y - WOOD_THICK;
+
+        svgContent += `<rect x="${xTV}" y="${yTV}" width="${wTV}" height="${hTV}" rx="0.5" fill="var(--vison-suave)" stroke="var(--vison-oscuro)" stroke-width="0.3" />`;
+        svgContent += `<text x="${xTV + (wTV/2)}" y="${yTV + (hTV/2) + 1}" font-size="3" font-weight="bold" fill="var(--vison-oscuro)" text-anchor="middle">SOPORTE TV</text>`;
+
+        let { wTele, hTele } = getTvDimensions(placaTV.tvPulgadas);
+        let xTele = (xTV + (wTV / 2)) - (wTele / 2);
+        let yTele = (yTV + (hTV / 2)) - (hTele / 2);
+
+        svgContent += `<rect x="${xTele}" y="${yTele}" width="${wTele}" height="${hTele}" rx="1" fill="rgba(36, 36, 35, 0.08)" stroke="#242423" stroke-width="0.5" stroke-dasharray="1.5,1" pointer-events="none" />`;
+        svgContent += `<text x="${xTV + (wTV/2)}" y="${yTele - 1.5}" font-size="3.5" font-weight="bold" fill="#242423" text-anchor="middle" pointer-events="none">TELEVISOR ${placaTV.tvPulgadas}"</text>`;
+    }
+
+    for(let c = 0; c < cantCostillas; c++) {
+        let xCostillaEje = xEjeCostilla0 + (c * SPACING_X);
+        let nivelMasBajoOcupado = 1;
+
+        for(let key in celdasActivas) {
+            let parts = key.split('-');
+            let nv = parseInt(parts[0]); let tr = parseInt(parts[1]);
+            if (c === tr || c === (tr + 1)) {
+                if (nv > nivelMasBajoOcupado) nivelMasBajoOcupado = nv;
+            }
+        }
+        if (placaTV && (c === placaTV.tramo || c === placaTV.tramo + 1)) {
+            let nvTV = placaTV.nivel + 1;
+            if (nvTV > nivelMasBajoOcupado) nivelMasBajoOcupado = nvTV;
+        }
+
+        let yInicioCostilla = yEjeNivel1 - OVERHANG_COSTILLA;
+        let yFinEje = yEjeNivel1 + ((nivelMasBajoOcupado - 1) * SPACING_Y);
+        let largoCostilla = (yFinEje + OVERHANG_COSTILLA) - yInicioCostilla;
+
+        svgContent += `<rect x="${xCostillaEje - (WOOD_THICK / 2)}" y="${yInicioCostilla}" width="${WOOD_THICK}" height="${largoCostilla}" rx="0.4" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="0.3"/>`;
+    }
+
+    for(let n = 1; n <= cantNiveles; n++) {
+        let yEje = yEjeNivel1 + ((n - 1) * SPACING_Y);
+        for(let t = 0; t < tramosAncho; t++) {
+            let xEjeInicio = xEjeCostilla0 + (t * SPACING_X);
+
+            if (accesorioModo === 'tv' && n < cantNiveles) {
+                svgContent += `<rect x="${xEjeInicio}" y="${yEje}" width="${SPACING_X}" height="${SPACING_Y}" fill="transparent" style="cursor:pointer;" onclick="seleccionarPlacaTV(${n}, ${t})" />`;
+            }
+
+            if (!celdasActivas[`${n}-${t}`]) {
+                svgContent += `<line x1="${xEjeInicio + (WOOD_THICK/2)}" y1="${yEje}" x2="${xEjeInicio + SPACING_X - (WOOD_THICK/2)}" y2="${yEje}" stroke="#b0aaf5" stroke-width="0.4" stroke-dasharray="1.5,1.5" pointer-events="none" />`;
+                if (accesorioModo !== 'tv') {
+                    svgContent += `<rect x="${xEjeInicio}" y="${yEje - 5}" width="${SPACING_X}" height="10" fill="transparent" style="cursor:pointer;" onclick="toggleCelda(${n}, ${t})" />`;
+                }
+            }
+        }
+    }
+
+    for(let n = 1; n <= cantNiveles; n++) {
+        let yEje = yEjeNivel1 + ((n - 1) * SPACING_Y);
+        let t = 0;
+        while (t < tramosAncho) {
+            if (celdasActivas[`${n}-${t}`]) {
+                let tipoAcc = celdasActivas[`${n}-${t}`];
+                let tramoInicio = t; let longitud = 1;
+                while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`] === tipoAcc) { longitud++; t++; }
+                
+                let xInicioEstante = xEjeCostilla0 + (tramoInicio * SPACING_X) - (tramoInicio === 0 ? OVERHANG_ESTANTE : 0);
+                let xFinEstante = xEjeCostilla0 + ((tramoInicio + longitud) * SPACING_X) + ((tramoInicio + longitud) === tramosAncho ? OVERHANG_ESTANTE : 0);
+                let wEstanteTotal = xFinEstante - xInicioEstante;
+
+                if (tipoAcc === 'escritorio') {
+                    let hEscritorio = 4.5;
+                    svgContent += `<rect x="${xInicioEstante}" y="${yEje - (hEscritorio/2)}" width="${wEstanteTotal}" height="${hEscritorio}" rx="0.5" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="0.4" />`;
+                    svgContent += `<text x="${xInicioEstante + (wEstanteTotal/2)}" y="${yEje + 0.8}" font-size="2.8" font-weight="bold" fill="var(--vison-oscuro)" text-anchor="middle">ESCRITORIO</text>`;
+                } else {
+                    svgContent += `<rect x="${xInicioEstante}" y="${yEje - (WOOD_THICK/2)}" width="${wEstanteTotal}" height="${WOOD_THICK}" rx="0.3" fill="var(--madera-activa)" stroke="var(--madera-dark-activa)" stroke-width="0.3" />`;
+                }
+
+                if (accesorioModo !== 'tv') {
+                    svgContent += `<rect x="${xInicioEstante}" y="${yEje - 5}" width="${wEstanteTotal}" height="10" fill="transparent" style="cursor:pointer;" onclick="removerBloqueAcumulado(${n}, ${tramoInicio}, ${longitud})" />`;
+                }
+            }
+            t++;
+        }
+    }
+
+    svgContent += `</svg>`;
+    document.getElementById('tablero-biblioteca').innerHTML = svgContent;
+    calcularDespieceEstructural();
+}
+
+function removerBloqueAcumulado(nivel, inicio, longitud) {
+    for (let i = 0; i < longitud; i++) { delete celdasActivas[`${nivel}-${inicio + i}`]; }
+    buildTablero();
+}
+
+let despieceGlobalTexto = "";
+function calcularDespieceEstructural() {
+    let conteoEstantes = { simple: 0, doble: 0, triple: 0, cuadruple: 0 };
+    let conteoEscritorios = { simple: 0, doble: 0, triple: 0, cuadruple: 0 };
+    let costillasNormales = 0; let costillasEscritorio = 0;
+    const tramosAncho = cantCostillas - 1;
+
+    let costillasAfectadasEscritorio = new Set();
+    for (let key in celdasActivas) {
+        if (celdasActivas[key] === 'escritorio') {
+            let parts = key.split('-');
+            let tr = parseInt(parts[1]);
+            costillasAfectadasEscritorio.add(tr); costillasAfectadasEscritorio.add(tr + 1);
+        }
+    }
+
+    for (let c = 0; c < cantCostillas; c++) {
+        if (costillasAfectadasEscritorio.has(c)) costillasEscritorio++;
+        else costillasNormales++;
+    }
+
+    for (let n = 1; n <= cantNiveles; n++) {
+        let t = 0;
+        while (t < tramosAncho) {
+            if (celdasActivas[`${n}-${t}`]) {
+                let tipoAcc = celdasActivas[`${n}-${t}`];
+                let longitud = 1;
+                while (t + 1 < tramosAncho && celdasActivas[`${n}-${(t + 1)}`] === tipoAcc) { longitud++; t++; }
+                
+                let tamañoNombre = 'simple';
+                if (longitud === 2) tamañoNombre = 'doble';
+                if (longitud === 3) tamañoNombre = 'triple';
+                if (longitud === 4) tamañoNombre = 'cuadruple';
+
+                if (tipoAcc === 'escritorio') conteoEscritorios[tamañoNombre]++;
+                else conteoEstantes[tamañoNombre]++;
+            }
+            t++;
+        }
+    }
+
+    let anchoEjesTotal = tramosAncho * SPACING_X;
+    let anchoTotalCm = anchoEjesTotal + (OVERHANG_ESTANTE * 2);
+
+    let submodeloPercha = 'simple';
+    if (tramosAncho === 2) submodeloPercha = 'doble';
+    if (tramosAncho === 3) submodeloPercha = 'triple';
+    if (tramosAncho === 4) submodeloPercha = 'cuadruple';
+
+    let precioTotalCalculado = 0;
+    const colorKey = terminacionBiblioteca.toLowerCase().trim();
+
+    if (tablaPreciosMatriz) {
+        const buscarPrecio = (posiblesClaves) => {
+            for (let clave of posiblesClaves) {
+                let cNorm = clave.toLowerCase().trim();
+                if (tablaPreciosMatriz[cNorm]) {
+                    let p = tablaPreciosMatriz[cNorm][colorKey] || 
+                            tablaPreciosMatriz[cNorm]['base'] || 
+                            Object.values(tablaPreciosMatriz[cNorm])[0] || 0;
+                    if (p > 0) return Number(p);
+                }
+            }
+            return 0;
+        };
+
+        precioTotalCalculado += buscarPrecio([`percha-${submodeloPercha}`, `percha ${submodeloPercha}`, 'percha']) * 1;
+        precioTotalCalculado += buscarPrecio(['costilla', 'costilla-estandar', 'costilla estandar']) * costillasNormales;
+        precioTotalCalculado += buscarPrecio(['costilla esc', 'costilla-esc', 'costilla escritorio']) * costillasEscritorio;
+        precioTotalCalculado += buscarPrecio(['estante-simple', 'simple', 'estante simple']) * conteoEstantes.simple;
+        precioTotalCalculado += buscarPrecio(['estante-doble', 'doble', 'estante doble']) * conteoEstantes.doble;
+        precioTotalCalculado += buscarPrecio(['estante-triple', 'triple', 'estante triple']) * conteoEstantes.triple;
+        precioTotalCalculado += buscarPrecio(['estante-cuadruple', 'cuadruple', 'cuádrulpe', 'estante cuadruple']) * conteoEstantes.cuadruple;
+        precioTotalCalculado += buscarPrecio(['estante esc-simple', 'estante esc simple', 'escritorio-simple']) * conteoEscritorios.simple;
+        precioTotalCalculado += buscarPrecio(['estante esc-doble', 'estante esc doble', 'escritorio-doble']) * conteoEscritorios.doble;
+        precioTotalCalculado += buscarPrecio(['estante esc-triple', 'estante esc triple', 'escritorio-triple']) * conteoEscritorios.triple;
+        precioTotalCalculado += buscarPrecio(['estante esc-cuadruple', 'estante esc cuadruple', 'escritorio-cuadruple']) * conteoEscritorios.cuadruple;
+
+        if (placaTV) {
+            precioTotalCalculado += buscarPrecio(['soporte tv', 'soporte-tv', 'soporte tv-simple', 'soporte tv simple']) * 1;
+        }
+    }
+
+    let desglose = `• PERCHA DE SOPORTE: 1 Unidad (${anchoTotalCm.toFixed(1)} cm)\n• COSTILLAS:`;
+    if (costillasNormales > 0) desglose += `\n   - Costillas Estándar: ${costillasNormales}`;
+    if (costillasEscritorio > 0) desglose += `\n   - Costillas con Calado especial para Escritorio: ${costillasEscritorio}`;
+    
+    desglose += `\n• ESTANTES Y COMPONENTES:`;
+    if (conteoEstantes.simple > 0) desglose += `\n   - Estantes Simples (65cm de corte): ${conteoEstantes.simple}`;
+    if (conteoEstantes.doble > 0) desglose += `\n   - Estantes Dobles (122cm de corte): ${conteoEstantes.doble}`;
+    if (conteoEstantes.triple > 0) desglose += `\n   - Estantes Triples (179cm de corte): ${conteoEstantes.triple}`;
+    if (conteoEstantes.cuadruple > 0) desglose += `\n   - Estantes Cuádruples (236cm de corte): ${conteoEstantes.cuadruple}`;
+    
+    let totalEscritorios = conteoEscritorios.simple + conteoEscritorios.doble + conteoEscritorios.triple + conteoEscritorios.cuadruple;
+    if (totalEscritorios > 0) desglose += `\n   - Placa/Estante Escritorio Profundo: ${totalEscritorios}`;
+    if (placaTV) desglose += `\n   - Placa Soporte TV Encastrable (para TV de ${placaTV.tvPulgadas}"): 1 Módulo`;
+
+    let textoPrecioHtml = "";
+    if (precioTotalCalculado > 0) {
+        const precioFormateado = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(precioTotalCalculado);
+        textoPrecioHtml = precioFormateado;
+        despieceGlobalTexto = `${desglose}\n\nPRECIO ESTIMADO TOTAL: ${precioFormateado}`;
+    } else {
+        textoPrecioHtml = "Consultar cotización";
+        despieceGlobalTexto = `${desglose}\n\nPRECIO ESTIMADO TOTAL: Consultar cotización`;
+    }
+
+    const contenedorSummary = document.getElementById('library-summary');
+    if (contenedorSummary) {
+        contenedorSummary.innerHTML = `
+            <div class="summary-desglose-text">${desglose}</div>
+            <div class="summary-highlight-price">
+                <span>Precio Final Estimado:</span>
+                <div>${textoPrecioHtml}</div>
+            </div>
+        `;
+    }
+}
+
+window.onload = () => {
+    buildTablero();
+    cargarPreciosDesdeCSV();
+    actualizarContadorNav();
+    if(new URLSearchParams(window.location.search).get('openCart') === 'true') toggleSidebar(true);
+};
     </script>
 </body>
 </html>

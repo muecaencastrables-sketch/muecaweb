@@ -5,107 +5,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mueca — muebles de encastre de diseño</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
-            --blanco: #ffffff; --crema-fondo: #fcfbfa; --vison-suave: #ebe7e0;
-            --vison-oscuro: #8c857b; --negro-mueca: #242423; --encabezado-amarillo: #FFC770;
-            --texto-suave: #666666; --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --blanco: #ffffff; 
+            --arena-fondo: #F5EBDB; 
+            --vison-suave: #ebe7e0;
+            --vison-oscuro: #8c857b; 
+            --negro-mueca: #0D0D0D; 
+            --amarillo-mueca: #FFC770;
+            --azul-acento: #6298AC;
+            --texto-suave: #525252; 
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--crema-fondo); color: var(--negro-mueca); line-height: 1.6; overflow-x: hidden; }
+        
+        html { scroll-behavior: smooth; }
 
-        /* HEADER UNIFICADO */
-        header { 
-            position: fixed; top: 0; width: 100%; background: var(--encabezado-amarillo); 
-            border-bottom: 1px solid rgba(0,0,0,0.08); z-index: 1000; min-height: 90px; 
-            display: flex; align-items: center; justify-content: space-between; padding: 0 5%; flex-wrap: wrap;
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--arena-fondo); 
+            color: var(--negro-mueca); 
+            line-height: 1.5; 
+            overflow-x: hidden; 
         }
-        .logo a { display: flex; align-items: center; }
-        .logo img { height: 100px; width: auto; object-fit: contain; }
+
+        section { scroll-margin-top: 90px; }
+
+        /* HEADER UNIFICADO AL ESTILO CONFIGURADOR */
+        header { 
+            position: fixed; top: 0; width: 100%; 
+            background: var(--arena-fondo); 
+            border-bottom: 1px solid rgba(0,0,0,0.06); 
+            z-index: 1000; min-height: 70px; 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 5%; flex-wrap: wrap;
+        }
+        .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo img { height: 36px; width: auto; object-fit: contain; }
+        .logo-text { font-size: 20px; font-weight: 800; color: var(--negro-mueca); letter-spacing: -0.5px; }
         
         .hamburger-btn {
-            display: none; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--negro-mueca); padding: 5px;
+            display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--negro-mueca); padding: 5px;
         }
 
-        nav { display: flex; align-items: center; gap: 20px; }
-        .nav-links { display: flex; list-style: none; gap: 25px; align-items: center; }
-        .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 14px; font-weight: 600; }
-        
-        .dropdown { position: relative; }
-        .dropdown-menu { 
-            display: none; position: absolute; top: 100%; left: 0; background: var(--blanco); 
-            min-width: 200px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 1px solid var(--vison-suave); 
-            list-style: none; padding: 10px 0; border-radius: 4px; margin-top: 0; z-index: 1100;
+        nav { display: flex; align-items: center; gap: 15px; }
+        .nav-links { display: flex; list-style: none; gap: 20px; align-items: center; }
+        .nav-links li a { text-decoration: none; color: var(--negro-mueca); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-links li a:hover { color: var(--azul-acento); }
+
+        .btn-cart-nav { 
+            background: var(--negro-mueca); color: var(--blanco); border: none; 
+            padding: 6px 14px; border-radius: 16px; font-size: 11px; font-weight: 600; 
+            cursor: pointer; display: flex; align-items: center; gap: 5px; transition: var(--transition);
         }
-        .dropdown-menu::before { content: ''; position: absolute; top: -15px; left: 0; width: 100%; height: 15px; background: transparent; }
-        .dropdown:hover .dropdown-menu { display: block; }
-        .dropdown-menu li a { padding: 10px 20px; display: block; color: var(--negro-mueca); font-weight: 500; font-size: 13px; text-decoration: none; }
+        .btn-cart-nav:hover { background: var(--texto-suave); }
 
-        .btn-cart-nav { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        /* HERO COMPACTO */
+        .hero-banner { 
+            background-color: var(--amarillo-mueca); 
+            margin-top: 70px; 
+            padding: 40px 5% 50px;
+        }
+        .hero-container {
+            max-width: 1100px; margin: 0 auto; 
+            display: flex; gap: 30px; align-items: center;
+        }
+        .hero-text { flex: 1.1; display: flex; flex-direction: column; gap: 12px; }
+        .hero-text h1 { 
+            font-size: 26px; font-weight: 800; letter-spacing: -0.8px; line-height: 1.15; 
+            color: var(--negro-mueca); text-transform: uppercase; 
+        }
+        .hero-text p { font-size: 13px; color: var(--texto-suave); max-width: 480px; }
+        .hero-video-box { 
+            flex: 0.9; position: relative; border-radius: 8px; overflow: hidden; 
+            background: #000; box-shadow: 0 10px 25px rgba(0,0,0,0.08); aspect-ratio: 16/10;
+        }
+        .hero-video-box video, .hero-video-box img { width: 100%; height: 100%; object-fit: cover; }
+        .video-overlay-btn {
+            position: absolute; bottom: 12px; left: 12px; background: rgba(13,13,13,0.8);
+            color: #fff; padding: 6px 12px; border-radius: 14px; font-size: 11px; font-weight: 600;
+            display: flex; align-items: center; gap: 6px; backdrop-filter: blur(4px);
+        }
 
-        /* SECCIONES Y CONTENIDO */
-        .intro-hero-section { max-width: 1200px; margin: 120px auto 40px; padding: 0 20px; display: flex; gap: 40px; align-items: center; }
-        .intro-text-block { flex: 1.1; display: flex; flex-direction: column; gap: 15px; }
-        .intro-text-block h1 { font-size: 32px; font-weight: 800; letter-spacing: -1.2px; line-height: 1.2; text-transform: uppercase; }
-        .intro-text-block p { font-size: 15px; color: var(--texto-suave); text-align: justify; }
-        .intro-image-block { flex: 0.9; aspect-ratio: 4/3; background: var(--vison-suave); border-radius: 6px; overflow: hidden; }
-        .intro-image-block img { width: 100%; height: 100%; object-fit: contain; background-color: var(--vison-suave); }
+        /* BANNER PERSONALIZADOR */
+        .featured-builder-section {
+            max-width: 1100px; margin: 35px auto; padding: 0 20px;
+        }
+        .builder-card-banner {
+            background: var(--blanco); border-radius: 8px; border: 1px solid var(--vison-suave);
+            padding: 25px; display: flex; gap: 30px; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .builder-card-img { flex: 1; aspect-ratio: 4/3; background: #f2f0ea; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .builder-card-img img { width: 100%; height: 100%; object-fit: contain; }
+        .builder-card-content { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .builder-card-content h2 { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
+        .builder-card-content p { font-size: 12px; color: var(--texto-suave); }
+        .btn-cta-azul {
+            align-self: flex-start; background: var(--azul-acento); color: var(--blanco);
+            text-decoration: none; padding: 10px 20px; border-radius: 4px; font-weight: 700;
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; transition: var(--transition);
+        }
+        .btn-cta-azul:hover { opacity: 0.9; }
 
-        .novedades-section { max-width: 1200px; margin: 60px auto; padding: 0 20px; position: relative; }
-        .section-title { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 25px; text-align: center; }
+        /* CATÁLOGOS Y SECCIONES CON TÍTULOS DE 18PX */
+        .catalog-section { max-width: 1100px; margin: 50px auto; padding: 0 20px; }
+        .section-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 20px; }
         
-        .carousel-wrapper { position: relative; overflow: hidden; width: 100%; border-radius: 6px; }
-        .carousel-container-track { display: flex; transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }
-        
-        .novedad-slide { min-width: 100%; display: flex; gap: 40px; align-items: center; background: var(--blanco); border: 1px solid var(--vison-suave); padding: 30px; border-radius: 6px; text-decoration: none; color: inherit; }
-        .novedad-img { flex: 1.2; aspect-ratio: 16/10; background: #eee; border-radius: 4px; overflow: hidden; }
-        .novedad-img img { width: 100%; height: 100%; object-fit: contain; background-color: var(--vison-suave); }
-        .novedad-info { flex: 0.8; display: flex; flex-direction: column; gap: 15px; padding-right: 20px; }
-        .novedad-number { font-size: 12px; font-weight: 800; color: var(--vison-oscuro); letter-spacing: 1px; }
-        .novedad-info h3 { font-size: 22px; font-weight: 800; text-transform: uppercase; line-height: 1.3; }
-        .novedad-info p { font-size: 14px; color: var(--texto-suave); }
-        .novedad-link-btn { align-self: flex-start; font-size: 12px; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid var(--negro-mueca); padding-bottom: 2px; margin-top: 5px; }
+        .catalog-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 15px;
+        }
+        .product-card {
+            background: var(--blanco); border-radius: 6px; border: 1px solid var(--vison-suave);
+            overflow: hidden; display: flex; flex-direction: column; transition: var(--transition);
+            text-decoration: none; color: inherit;
+        }
+        .product-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.04); }
+        .product-card-img { aspect-ratio: 4/3; background: #f8f6f0; overflow: hidden; }
+        .product-card-img img { width: 100%; height: 100%; object-fit: cover; }
+        .product-card-body { padding: 14px; display: flex; flex-direction: column; flex-grow: 1; gap: 6px; }
+        .product-card-title { font-size: 13px; font-weight: 800; text-transform: uppercase; }
+        .product-card-desc { font-size: 11px; color: var(--texto-suave); line-height: 1.35; flex-grow: 1; }
+        .btn-card-action {
+            margin-top: 8px; background: var(--vison-oscuro); color: var(--blanco);
+            text-align: center; padding: 8px; border-radius: 4px; font-size: 10px; font-weight: 700;
+            text-transform: uppercase; transition: var(--transition);
+        }
+        .product-card:hover .btn-card-action { background: var(--negro-mueca); }
 
-        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--negro-mueca); color: var(--blanco); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; font-weight: bold; z-index: 10; display: flex; align-items: center; justify-content: center; opacity: 0.8; transition: var(--transition); }
-        .nav-arrow:hover { opacity: 1; scale: 1.05; }
+        /* PROCESO */
+        .process-section { max-width: 1100px; margin: 50px auto; padding: 0 20px; }
+        .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+        .process-item {
+            background: var(--blanco); padding: 20px; border-radius: 6px; border: 1px solid var(--vison-suave);
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .process-icon { font-size: 24px; color: var(--azul-acento); }
+        .process-item h3 { font-size: 12px; font-weight: 800; text-transform: uppercase; }
+        .process-item p { font-size: 11px; color: var(--texto-suave); }
 
-        .content-split-section { display: flex; max-width: 1200px; margin: 80px auto; padding: 0 20px; gap: 50px; align-items: center; }
-        .content-split-section.reverse { flex-direction: row-reverse; }
-        .text-block { flex: 1; display: flex; flex-direction: column; gap: 15px; }
-        .text-block h2 { font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
-        .text-block p { font-size: 14px; color: var(--texto-suave); text-align: justify; }
-        .image-block { flex: 1; aspect-ratio: 4/3; background: var(--vison-suave); border-radius: 6px; overflow: hidden; }
-        .image-block img { width: 100%; height: 100%; object-fit: contain; background-color: var(--vison-suave); }
+        /* SPLIT SECTIONS */
+        .split-section { display: flex; max-width: 1100px; margin: 50px auto; padding: 0 20px; gap: 30px; align-items: center; }
+        .split-section.reverse { flex-direction: row-reverse; }
+        .split-text { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .split-text h2 { font-size: 18px; font-weight: 800; text-transform: uppercase; }
+        .split-text p { font-size: 12px; color: var(--texto-suave); text-align: justify; }
+        .split-image { flex: 1; aspect-ratio: 4/3; background: #eae5dc; border-radius: 6px; overflow: hidden; }
+        .split-image img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* SIDEBAR / CONSULTAS */
+        /* SIDEBAR DE CONSULTAS */
         .sidebar-modal { position: fixed; top: 0; right: -450px; width: 420px; height: 100vh; background: var(--blanco); box-shadow: -10px 0 30px rgba(0,0,0,0.06); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
         .sidebar-modal.active { right: 0; }
         .sidebar-body { flex-grow: 1; overflow-y: auto; padding: 25px; }
-        .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+        .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
         .form-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--vison-oscuro); }
-        .form-group input { padding: 10px; border: 1px solid var(--vison-suave); border-radius: 4px; font-family: inherit; }
-        .btn-send-email { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 15px; width: 100%; border-radius: 4px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+        .form-group input { padding: 8px; border: 1px solid var(--vison-suave); border-radius: 4px; font-family: inherit; font-size: 12px; }
+        .btn-send-email { background: var(--negro-mueca); color: var(--blanco); border: none; padding: 14px; width: 100%; border-radius: 4px; font-weight: 700; font-size: 11px; text-transform: uppercase; cursor: pointer; }
 
-        footer { background: var(--negro-mueca); color: var(--vison-suave); padding: 30px 20px; text-align: center; font-size: 12px; margin-top: 80px; }
+        footer { background: var(--negro-mueca); color: var(--arena-fondo); padding: 30px 20px; text-align: center; font-size: 11px; margin-top: 60px; }
 
-        /* ESTILOS MÓVIL UNIFICADOS */
         @media(max-width: 768px) { 
-            header { padding: 15px 20px !important; height: auto !important; }
+            header { padding: 12px 15px !important; min-height: auto !important; }
             .hamburger-btn { display: block; }
-            nav { display: none; width: 100%; flex-direction: column; padding-top: 15px; gap: 15px !important; }
+            nav { display: none; width: 100%; flex-direction: column; padding-top: 12px; gap: 12px !important; }
             nav.active { display: flex; }
-            .nav-links { flex-direction: column !important; gap: 15px !important; width: 100%; text-align: center; }
-            .dropdown-menu { position: relative !important; width: 100% !important; box-shadow: none !important; text-align: center; }
+            .nav-links { flex-direction: column !important; gap: 12px !important; width: 100%; text-align: center; }
 
-            .intro-text-block h1 { font-size: 24px !important; }
-            .text-block h2 { font-size: 20px !important; }
-
-            .intro-hero-section { flex-direction: column-reverse; margin-top: 110px; gap: 20px; } 
-            .novedad-slide { flex-direction: column; padding: 15px; gap: 20px; }
-            .content-split-section, .content-split-section.reverse { flex-direction: column; gap: 30px; margin: 40px auto; } 
-            
-            .intro-image-block, .image-block, .novedad-img { width: 100% !important; max-width: 100% !important; }
+            .hero-banner { margin-top: 60px; padding: 30px 15px; }
+            .hero-container { flex-direction: column; gap: 20px; }
+            .builder-card-banner { flex-direction: column; padding: 18px; gap: 15px; }
+            .process-grid { grid-template-columns: 1fr; }
+            .split-section, .split-section.reverse { flex-direction: column; gap: 20px; margin: 30px auto; }
             .sidebar-modal { width: 100%; right: -100%; }
         }
     </style>
@@ -113,113 +185,156 @@
 <body>
 
     <header>
-        <div class="logo"><a href="index.html"><img src="logo.png" alt="mueca logo"></a></div>
+        <div class="logo">
+            <a href="index.html">
+                <img src="Dibujo.png" alt="mueca isotipo" onerror="this.src='https://placehold.co/80x40?text=mueca'">
+                <span class="logo-text">mueca</span>
+            </a>
+        </div>
         <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
         <nav id="mainNav">
             <ul class="nav-links">
-                <li class="dropdown">
-                    <a href="#novedades">Muebles ▾</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="mesita-apoyo.html">Mesita de Apoyo</a></li>
-                        <li><a href="repisa-recibidor.html">Repisa Recibidor</a></li>
-                        <li><a href="hanger-modular.html">Hanger Modular</a></li>
-                        <li><a href="escritorio-colgante.html">Escritorio Colgante</a></li>
-                    </ul>
-                </li>
-                <li><a href="configurador-biblioteca.html">Bibliotecas</a></li>
+                <li><a href="#catalogo">Catálogo</a></li>
+                <li><a href="configurador-biblioteca.html">Bibliotecas Personalizables</a></li>
+                <li><a href="#proceso">Proceso</a></li>
+                <li><a href="#sobre-nosotros">Sobre Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
             </ul>
             <button class="btn-cart-nav" onclick="toggleSidebar(true)">Consultas (<span id="cart-count">0</span>)</button>
         </nav>
     </header>
 
-    <section class="intro-hero-section">
-        <div class="intro-text-block">
-            <h1>Muebles de encastre, armado fácil e intuitivo, sin herramientas</h1>
-            <p>Diseño flat-pack de alta gama que redefine el montaje residencial mediante encastres naturales por gravedad, eliminando tornillos y herrajes para dar vida a estructuras limpias, estables y sumamente funcionales.</p>
-        </div>
-        <div class="intro-image-block">
-            <img src="intro-principal.jpg" alt="Muebles Encastre Mueca" onerror="this.src='https://placehold.co/600x450?text=Imagen+Introducción'">
-        </div>
-    </section>
-
-    <section class="novedades-section" id="novedades">
-        <h2 class="section-title">Novedades del Estudio</h2>
-        <button class="nav-arrow" style="left: -15px;" onclick="moveNovedadesCarousel(-1)">‹</button>
-        <div class="carousel-wrapper">
-            <div class="carousel-container-track" id="novedadesTrack">
-                <a href="configurador-biblioteca.html" class="novedad-slide">
-                    <div class="novedad-img">
-                        <img src="novedad-configurador.jpg" alt="Configurador Mueca" onerror="this.src='https://placehold.co/600x375?text=Configurador+Biblioteca'">
-                    </div>
-                    <div class="novedad-info">
-                        <span class="novedad-number">NOVEDAD 01</span>
-                        <h3>Ahora podés diseñar tu propia biblioteca con el configurador</h3>
-                        <p>Experimentá con nuestro sistema inteligente en tiempo real. Modulá anchos, altos y combiná estantes simples o continuos de manera libre adaptándose por completo a tu espacio.</p>
-                        <span class="novedad-link-btn">Probar Configurador</span>
-                    </div>
-                </a>
-
-                <a href="mesita-apoyo.html" class="novedad-slide">
-                    <div class="novedad-img">
-                        <img src="novedad-mesitas.jpg" alt="Mesitas Apoyo Mueca" onerror="this.src='https://placehold.co/600x375?text=Nuevas+Mesitas+de+Apoyo'">
-                    </div>
-                    <div class="novedad-info">
-                        <span class="novedad-number">NOVEDAD 02</span>
-                        <h3>Nuevas Mesitas de Apoyo</h3>
-                        <p>Explorá los formatos Oval y Estadio. Una propuesta versátil y exenta diseñada para acompañar de forma orgánica tus sillones o funcionar como soporte auxiliar dinámico.</p>
-                        <span class="novedad-link-btn">Ver Modelos</span>
-                    </div>
-                </a>
-
-                <a href="repisa-recibidor.html" class="novedad-slide">
-                    <div class="novedad-img">
-                        <img src="novedad-repisas.jpg" alt="Repisas Mueca" onerror="this.src='https://placehold.co/600x375?text=Nuevas+Repisas+Recibidoras'">
-                    </div>
-                    <div class="novedad-info">
-                        <span class="novedad-number">NOVEDAD 03</span>
-                        <h3>Nuevas Repisas Recibidoras</h3>
-                        <p>Consolas aéreas minimalistas que resuelven tus accesos cotidianos. Cuentan con un anclaje invisible a muro que preserva la pureza visual y estructural del mueble.</p>
-                        <span class="novedad-link-btn">Ver Detalle</span>
-                    </div>
-                </a>
+    <section class="hero-banner">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1>Muebles de madera listos para armar. Sin tornillos, sin complicaciones.</h1>
+                <p>Diseño inteligente de encastre por gravedad que se arma en minutos con la máxima precisión CNC.</p>
+            </div>
+            <div class="hero-video-box">
+                <img src="intro-principal.jpg" alt="Video de encastre mueca" onerror="this.src='https://placehold.co/600x375?text=Video+Encastre+Mueca'">
+                <div class="video-overlay-btn">▶ ¿Cómo se arma?</div>
             </div>
         </div>
-        <button class="nav-arrow" style="right: -15px;" onclick="moveNovedadesCarousel(1)">›</button>
     </section>
 
-    <section class="content-split-section">
-        <div class="text-block">
+    <section class="featured-builder-section" id="bibliotecas">
+        <div class="builder-card-banner">
+            <div class="builder-card-img">
+                <img src="novedad-configurador.jpg" alt="Configurador Mueca" onerror="this.src='https://placehold.co/500x375?text=Personalizador+Bibliotecas'">
+            </div>
+            <div class="builder-card-content">
+                <h2>Diseñá tu propia Biblioteca</h2>
+                <p>Configurá las medidas, estantes y distribución que mejor se adapten a tu espacio. ¡Armala a tu gusto en tiempo real!</p>
+                <a href="configurador-biblioteca.html" class="btn-cta-azul">Ir al personalizador</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="catalog-section" id="catalogo">
+        <h2 class="section-title">Catálogo</h2>
+        <div class="catalog-grid">
+            
+            <a href="mesita-apoyo.html" class="product-card">
+                <div class="product-card-img">
+                    <img src="mesita-apoyo-1.jpg" alt="Mesitas de Apoyo" onerror="this.src='https://placehold.co/400x300?text=Mesitas+de+Apoyo'">
+                </div>
+                <div class="product-card-body">
+                    <h3 class="product-card-title">Mesita de Apoyo</h3>
+                    <p class="product-card-desc">Formatos Oval y Estadio. Versatilidad táctil ideal para acompañar tu sillón o un rincón especial.</p>
+                    <div class="btn-card-action">Ver detalles y dimensiones</div>
+                </div>
+            </a>
+
+            <a href="hanger-modular.html" class="product-card">
+                <div class="product-card-img">
+                    <img src="hanger-modular-1.jpg" alt="Hanger Modular" onerror="this.src='https://placehold.co/400x300?text=Hanger+Modular'">
+                </div>
+                <div class="product-card-body">
+                    <h3 class="product-card-title">Hanger Modular</h3>
+                    <p class="product-card-desc">Organización compacta suspendida para cocinas, recibidores o baños con perchas móviles.</p>
+                    <div class="btn-card-action">Ver detalles y dimensiones</div>
+                </div>
+            </a>
+
+            <a href="repisa-recibidor.html" class="product-card">
+                <div class="product-card-img">
+                    <img src="repisa-recibidor-1.jpg" alt="Repisa Recibidor" onerror="this.src='https://placehold.co/400x300?text=Repisas'">
+                </div>
+                <div class="product-card-body">
+                    <h3 class="product-card-title">Repisa Recibidor</h3>
+                    <p class="product-card-desc">Consola aérea minimalista con anclaje invisible para organizar tus objetos de paso diario.</p>
+                    <div class="btn-card-action">Ver detalles y dimensiones</div>
+                </div>
+            </a>
+
+            <a href="steps.html" class="product-card">
+                <div class="product-card-img">
+                    <img src="steps-1.jpg" alt="Steps" onerror="this.src='https://placehold.co/400x300?text=Steps'">
+                </div>
+                <div class="product-card-body">
+                    <h3 class="product-card-title">Steps</h3>
+                    <p class="product-card-desc">Módulo elevador y taburete auxiliar de encastre firme para múltiples usos en tu hogar.</p>
+                    <div class="btn-card-action">Ver detalles y dimensiones</div>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+    <section class="process-section" id="proceso">
+        <h2 class="section-title">Nuestro Proceso: De la fábrica a tu casa</h2>
+        <div class="process-grid">
+            <div class="process-item">
+                <div class="process-icon">⚙</div>
+                <h3>1. Diseño Digital CNC</h3>
+                <p>Mecanizado de precisión milimétrica sobre placas de madera seleccionadas para encastres perfectos.</p>
+            </div>
+            <div class="process-item">
+                <div class="process-icon">🪵</div>
+                <h3>2. Hidrolaca de Alta Gama</h3>
+                <p>Tratamiento de sellado ecológico que protege el mueble contra líquidos, marcas y calor diario.</p>
+            </div>
+            <div class="process-item">
+                <div class="process-icon">📦</div>
+                <h3>3. Encastre Natural Flat-Pack</h3>
+                <p>Embalaje plano ultracompacto para traslados sencillos y armado sin herrajes ni herramientas.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="split-section" id="sobre-nosotros">
+        <div class="split-text">
             <h2>Sobre Nosotros</h2>
             <p>Mueca nace de la búsqueda de simplificar el vínculo con el mobiliario que nos rodea. Somos un estudio enfocado en el desarrollo de piezas de diseño contemporáneo que combinan la precisión tecnológica del mecanizado industrial con la calidez y el acabado manual del oficio artesano.</p>
-            <p>Creemos en un diseño honesto, duradero y desarmable, pensado para mudarse con vos y transformarse a lo largo del tiempo sin perder vigencia ni calidad estructural.</p>
+            <p>Creemos en un diseño honesto, duradero y desarmable, pensado para mudarse con vos y transformarse a lo largo del tiempo sin perder su vigencia estructural.</p>
         </div>
-        <div class="image-block">
-            <img src="sobre-nosotros.jpg" alt="Estudio Mueca Artesanal" onerror="this.src='https://placehold.co/500x375?text=Sobre+Nosotros'">
+        <div class="split-image">
+            <img src="sobre-nosotros.jpg" alt="Estudio Mueca" onerror="this.src='https://placehold.co/500x375?text=Sobre+Nosotros'">
         </div>
     </section>
 
-    <section class="content-split-section reverse">
-        <div class="text-block">
-            <h2>Muebles Encastrables & Flat Pack</h2>
-            <p>Nuestras piezas utilizan la lógica global flat-pack: se entregan completamente desmontadas en cajas ultra planas, optimizando el espacio de traslado y reduciendo la huella de carbono. Gracias a nuestro sistema de encastre de alta tolerancia, el armado es 100% intuitivo y placentero, logrando un mueble sólido sin usar un solo tornillo.</p>
-            <p><strong>El Diferencial de la Terminación:</strong> Cada uno de nuestros muebles recibe un tratamiento riguroso de pulido superficial protegido mediante múltiples capas de hidrolaca ecológica de alta gama. Esto sella los poros de la madera, dotándola de una resistencia total al agua, tazas calientes o marcas diarias, manteniendo el relieve orgánico y la veta táctil de la madera intactos.</p>
+    <section class="split-section reverse" id="contacto">
+        <div class="split-text">
+            <h2>Contacto & Consultas</h2>
+            <p>¿Tenés alguna duda técnica, querés coordinar un pedido especial o consultar stock de acabados? Podés agregar los muebles a tu lista de consulta o enviarnos un mensaje directo.</p>
+            <p><strong>Email:</strong> mueca.encastrables@gmail.com<br><strong>Ubicación:</strong> Buenos Aires, Argentina</p>
         </div>
-        <div class="image-block">
-            <img src="diferencial-terminacion.jpg" alt="Logística Flat Pack Hidrolaca" onerror="this.src='https://placehold.co/500x375?text=Flat-Pack+y+Terminación'">
+        <div class="split-image">
+            <img src="diferencial-terminacion.jpg" alt="Contacto Mueca" onerror="this.src='https://placehold.co/500x375?text=Contacto'">
         </div>
     </section>
 
     <div class="sidebar-modal" id="consulta-sidebar">
-        <div style="padding:20px; border-bottom:1px solid var(--vison-suave); display:flex; justify-content:space-between; background:var(--crema-fondo);">
+        <div style="padding:20px; border-bottom:1px solid var(--arena-fondo); display:flex; justify-content:space-between; background:var(--arena-fondo);">
             <h3 style="font-size:14px; font-weight:800; text-transform:uppercase;">Lista de Consulta</h3>
             <button onclick="toggleSidebar(false)" style="background:none; border:none; font-size:22px; cursor:pointer; color:var(--vison-oscuro);">×</button>
         </div>
         <div class="sidebar-body">
             <div id="items-consulta-container"></div>
-            <form onsubmit="enviarConsultaPorEmail(event)" style="margin-top:20px; border-top:1px solid var(--vison-suave); padding-top:20px;">
-                <div class="form-group"><label>Nombre Completo *</label><input type="text" id="form-nombre" required></div>
-                <div class="form-group"><label>Email de Contacto *</label><input type="email" id="form-email" required></div>
-                <div class="form-group"><label>Teléfono</label><input type="tel" id="form-telefono"></div>
+            <form onsubmit="enviarConsultaPorEmailModal(event)" style="margin-top:20px; border-top:1px solid var(--vison-suave); padding-top:20px;">
+                <div class="form-group"><label>Nombre Completo *</label><input type="text" id="modal-nombre" required></div>
+                <div class="form-group"><label>Email de Contacto *</label><input type="email" id="modal-email" required></div>
+                <div class="form-group"><label>Teléfono</label><input type="tel" id="modal-telefono"></div>
                 <button type="submit" class="btn-send-email">Enviar Solicitud</button>
             </form>
         </div>
@@ -230,15 +345,10 @@
     </footer>
 
     <script>
+        (function(){ emailjs.init("_RxYQ5EVnN6coQIl_"); })();
+
         function toggleMobileMenu() {
             document.getElementById('mainNav').classList.toggle('active');
-        }
-
-        let currentNovedadIndex = 0;
-        function moveNovedadesCarousel(dir) {
-            const track = document.getElementById('novedadesTrack');
-            currentNovedadIndex = (currentNovedadIndex + dir + 3) % 3;
-            track.style.transform = `translateX(-${currentNovedadIndex * 100}%)`;
         }
 
         function toggleSidebar(show) {
@@ -254,14 +364,14 @@
         function renderListaConsultas() {
             const contenedor = document.getElementById('items-consulta-container');
             const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
-            if(cart.length === 0) { contenedor.innerHTML = "<p style='font-size:13px; color:#666;'>No hay muebles en tu lista.</p>"; return; }
+            if(cart.length === 0) { contenedor.innerHTML = "<p style='font-size:12px; color:#666;'>No hay muebles en tu lista.</p>"; return; }
             let html = "";
             cart.forEach((item, index) => {
                 html += `
                     <div style="padding:12px 0; border-bottom:1px solid #ebe7e0; position:relative;">
                         <h4 style="font-size:12px; font-weight:700; text-transform:uppercase;">${item.nombre}</h4>
                         <p style="font-size:11px; color:#666;">Terminación: ${item.terminacion}</p>
-                        ${item.esCustom ? `<pre style="font-size:10px; background:#fcfbfa; padding:5px; margin-top:5px; font-family:monospace;">${item.despachado}</pre>` : ''}
+                        ${item.despachado ? `<pre style="font-size:10px; background:#fcfbfa; padding:5px; margin-top:5px; font-family:monospace;">${item.despachado}</pre>` : ''}
                         <button onclick="eliminarItem(${index})" style="position:absolute; right:0; top:12px; background:none; border:none; color:#8c857b; cursor:pointer; font-size:11px; font-weight:600;">Quitar</button>
                     </div>`;
             });
@@ -276,16 +386,45 @@
             actualizarContadorNav();
         }
 
-        function enviarConsultaPorEmail(e) {
+        async function enviarConsultaPorEmailModal(e) {
             e.preventDefault();
             const cart = JSON.parse(localStorage.getItem('mueca_cart')) || [];
             if(cart.length === 0) return;
-            let cuerpo = `Consulta de Cotización — Mueca\n\nNombre: ${document.getElementById('form-nombre').value}\nEmail: ${document.getElementById('form-email').value}\nTeléfono: ${document.getElementById('form-telefono').value || 'No indicado'}\n\nProductos:\n`;
-            cart.forEach((i, idx) => {
-                cuerpo += `${idx+1}. ${i.nombre.toUpperCase()} [${i.terminacion}]\n`;
-                if(i.despachado) cuerpo += `${i.despachado}\n`;
+
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
+            const textoOriginal = btnSubmit.innerText;
+            btnSubmit.innerText = "Enviando...";
+            btnSubmit.disabled = true;
+
+            let detalleProductos = "";
+            cart.forEach((item, idx) => {
+                detalleProductos += `=== PRODUCTO ${idx + 1}: ${item.nombre.toUpperCase()} ===\n`;
+                detalleProductos += `Terminación: ${item.terminacion}\n\n`;
             });
-            window.location.href = `mailto:mueca.encastrables@gmail.com?subject=Nueva Cotizacion Mueca&body=${encodeURIComponent(cuerpo)}`;
+
+            const templateParams = {
+                from_name: document.getElementById('modal-nombre').value,
+                from_email: document.getElementById('modal-email').value,
+                phone: document.getElementById('modal-telefono').value || 'No indicado',
+                comments: 'Consulta general desde la portada mueca',
+                summary_detail: detalleProductos
+            };
+
+            try {
+                await emailjs.send('service_fpyoqnb', 'template_catalogo', templateParams);
+                alert("¡Consulta enviada con éxito! Nos pondremos en contacto a la brevedad.");
+                localStorage.removeItem('mueca_cart');
+                actualizarContadorNav();
+                renderListaConsultas();
+                toggleSidebar(false);
+                e.target.reset();
+            } catch (error) {
+                console.error("Error EmailJS Catálogo:", error);
+                alert("Ocurrió un error al enviar la consulta.");
+            } finally {
+                btnSubmit.innerText = textoOriginal;
+                btnSubmit.disabled = false;
+            }
         }
 
         window.onload = () => {
